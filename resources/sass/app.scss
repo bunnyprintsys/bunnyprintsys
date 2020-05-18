@@ -1,0 +1,99 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Select 2
+@import 'select2';
+
+// sidenav
+@import 'sidenav';
+
+// font awesome
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+
+.navbar-laravel {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  /*select2 fullwidth*/
+  .select2-container {
+      width: 100% !important;
+      padding: 0;
+  }
+
+  .select2-drop li {
+    white-space: pre;
+  }
+
+  /*select2 height*/
+  .select2-container .select2-selection--single {
+      height: 35px !important;
+  }
+
+  // buttons
+  .back-happyrent-light-green {
+    background-color: #87C540;
+  }
+
+  .back-light-green {
+    background-color: lightgreen;
+  }
+
+  ::-webkit-input-placeholder {
+     font-style: italic;
+  }
+  :-moz-placeholder {
+     font-style: italic;
+  }
+  ::-moz-placeholder {
+     font-style: italic;
+  }
+  :-ms-input-placeholder {
+     font-style: italic;
+  }
+
+  // set card header as theme color happyrent
+  .card-header, .modal-header {
+    background: #FF8484;
+    color: white;
+  }
+
+  .required:after{
+      content: " *";
+      font-size: 14px;
+      color: #e3342f;
+  }
+
+  .date-picker[readonly] {
+     background-color: #ffffff;
+  }
+  // pull the flash alert to the most front
+  /*
+  .alert-flash {
+    z-index: 9999999;
+  } */
+
+  .img-thumbnail {
+      width: 250px;
+      height: 150px;
+  }
+
+  @media (max-width: 767px) {
+      .table-responsive .dropdown-menu {
+          position: static !important;
+      }
+  }
+  @media (min-width: 768px) {
+      .table-responsive {
+          overflow: visible;
+      }
+  }

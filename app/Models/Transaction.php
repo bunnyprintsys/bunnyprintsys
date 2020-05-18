@@ -1,0 +1,226 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use App\Traits\RunningNumber;
+
+class Transaction extends Model
+{
+    use RunningNumber;
+
+    const STATUSES = [
+        'PENDING_ARTWORK' => [
+            'id' => 1,
+            'desc' => 'Pending Artwork'
+        ],
+        'PENDING_PAYMENT'  => [
+            'id' => 2,
+            'desc' => 'Pending Payment'
+        ],
+        'PRODUCTION' => [
+            'id' => 3,
+            'desc' => 'Production'
+        ],
+        'DELIVERED' => [
+            'id' => 4,
+            'desc' => 'Delivered'
+        ]
+    ];
+
+    protected $fillable = [
+        'order_date', 'job_id', 'job', 'cost', 'receiver_id',
+        'is_artwork_provided', 'is_design_required', 'invoice_id', 'dispatch_date', 'status',
+        'tracking_number', 'customer_id', 'admin_id'
+    ];
+
+    // relationships
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\Customer');
+    }
+
+    public function handler()
+    {
+        return $this->belongsTo('App\Models\User', 'admin_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo('App\Models\Receiver');
+    }
+
+    /**
+     * @param $query
+     * @param $value
+     * @return mixed
+     */
+    public function scopeId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeJobId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('job_id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeRoc($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('roc');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeProfileId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('profile_id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeStatus($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('status');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    /**
+     * @param $query
+     * @param $input
+     * @param bool $like
+     * @param null $alias
+     * @return mixed
+     */
+    public function scopeFilter($query, $input, $like = true, $alias = null)
+    {
+        if ($alias) {
+            $this->alias = $alias;
+        }
+
+        if (Arr::get($input, 'id', false)) {
+            $query->id($input['id']);
+        }
+
+        if (Arr::get($input, 'excluded_id', false)) {
+            $query->whereNotIn('id', $input['excluded_id']);
+        }
+
+        if (Arr::get($input, 'customer_name', false)) {
+            $query->whereHas('customer', function ($query) use ($input) {
+                $query->whereHas('user', function ($query) use ($input) {
+                    return $query->filter([
+                        'name' => $input['customer_name']
+                    ]);
+                });
+            });
+        }
+
+        if (Arr::get($input, 'customer_phone_number', false)) {
+            $query->whereHas('customer', function ($query) use ($input) {
+                $query->whereHas('user', function ($query) use ($input) {
+                    return $query->filter([
+                        'phone_number' => $input['customer_phone_number']
+                    ]);
+                });
+            });
+        }
+
+        if (Arr::get($input, 'job_id', false)) {
+            $query->jobId($input['job_id'], $like);
+        }
+
+        if (Arr::get($input, 'roc', false)) {
+            $query->roc($input['roc'], $like);
+        }
+
+        if (Arr::get($input, 'profile_id', false)) {
+            $query->profileId($input['profile_id']);
+        }
+
+        if (Arr::get($input, 'status', false)) {
+            $query->status($input['status'], $like);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param $query
+     * @param $input
+     * @param null $alias
+     * @return mixed
+     */
+    public function scopeSortBy($query, $input, $alias = null)
+    {
+        if ($alias) {
+            $this->alias = $alias;
+        }
+
+        $sortable = ['id', 'users.name', 'is_company', 'phone_number', 'alt_phone_number', 'email', 'status', 'company_name'];
+
+        $inputKeys = array_keys($input);
+        $notSupportedKeys = array_diff($inputKeys, $sortable);
+        foreach ($notSupportedKeys as $key) {
+            unset($input[$key]);
+        }
+
+        foreach ($input as $key => $value) {
+            if (Arr::get($input, $key, false)) {
+                $columnName = $key;
+                // dd($columnName, $value);
+                $query->orderBy($columnName, $value);
+            }
+        }
+        return $query;
+    }
+
+    /**
+     * Make sure got DB transaction cover this function
+     * @return string
+     */
+    public function generateNextJobId()
+    {
+        $number = $this->getRunningNumByYearMonth($this->job_id);
+        $this->job_id = $number;
+        $this->save();
+        return $number;
+    }
+
+    /**
+     * @param $columnName
+     * @return string
+     */
+    protected function getAliasColumnName($columnName)
+    {
+        if (strpos($columnName, '.') !== false) {
+            return $columnName;
+        }
+
+        if ($this->alias) {
+            $columnName = $this->alias . '.' . $columnName;
+        }
+        return $columnName;
+    }
+}
