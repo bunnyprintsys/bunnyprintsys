@@ -11,6 +11,8 @@ require('./error');
 
 // global
 window.Vue = require('vue');
+window.moment = require('moment-timezone');
+window.moment.tz.setDefault('Asia/Kuala_Lumpur');
 window.select2 = require('select2');
 window.events = new Vue();
 window.flash = function (message, level = 'info') {
@@ -27,6 +29,9 @@ Vue.component('select2', Select2);
 
 import Select2MustChoose from './components/Select2MustChoose.vue';
 Vue.component('select2-must', Select2MustChoose);
+
+import DatePicker from './components/DatePicker.vue';
+Vue.component('date-picker', DatePicker);
 
 // flash vue
 import Flash from './components/Flash.vue';
@@ -53,6 +58,7 @@ require('./controllers/indexPriceController');
 require('./controllers/indexRegistrationController');
 require('./controllers/indexTransactionController');
 require('./controllers/indexProfileController');
+require('./controllers/indexVoucherController');
 
 $(".sidebar-dropdown > a").click(function () {
   $(".sidebar-submenu").slideUp(200);
@@ -93,9 +99,9 @@ $(document).ready(function () {
 
 $(window).resize(function() {
     if ($(this).width() < 576) {
-      $(".page-wrapper").addClass("toggled");
-    } else {
       $(".page-wrapper").removeClass("toggled");
+    } else {
+      $(".page-wrapper").addClass("toggled");
     }
 });
 

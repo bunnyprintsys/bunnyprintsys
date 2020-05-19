@@ -116,4 +116,9 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/self', 'UserController@getLoginUser');
         Route::post('/store-update', 'UserController@storeUpdateUserApi');
     });
+
+    Route::group(['prefix' => 'voucher'], function() {
+        Route::get('/', 'VoucherController@getVouchersApi');
+        Route::post('/store-update', 'VoucherController@storeUpdateVoucherApi');
+    });
 });

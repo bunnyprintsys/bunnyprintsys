@@ -64,7 +64,7 @@
                             <strong>@{{ formErrors['is_percentage'][0] }}</strong>
                         </span>
                     </div>
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group col-md-6 col-sm-6 col-xs-12">
                         <label class="control-label required">
                             Value
                             (
@@ -75,6 +75,27 @@
                         <input type="text" name="value" class="form-control" v-model="form.value" :class="{ 'is-invalid' : formErrors['value'] }">
                         <span class="invalid-feedback" role="alert" v-if="formErrors['value']">
                             <strong>@{{ formErrors['value'][0] }}</strong>
+                        </span>
+                    </div>
+                    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                        <label class="control-label required">
+                            Is Count Limit?
+                        </label>
+                        <select class="custom-select" v-model="form.is_count_limit">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <span class="invalid-feedback" role="alert" v-if="formErrors['is_count_limit']">
+                            <strong>@{{ formErrors['is_count_limit'][0] }}</strong>
+                        </span>
+                    </div>
+                    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                        <label class="control-label required">
+                            Count Limit
+                        </label>
+                        <input type="text" name="count_limit" class="form-control" v-model="form.count_limit" :class="{ 'is-invalid' : formErrors['value'] }">
+                        <span class="invalid-feedback" role="alert" v-if="formErrors['value']">
+                            <strong>@{{ formErrors['count_limit'][0] }}</strong>
                         </span>
                     </div>
 {{--
