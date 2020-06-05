@@ -2,10 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\Customer;
+use App\Models\Country;
+use App\Models\User;
 use DB;
 
-class CustomerRepository
+class CountryRepository
 {
     /**
      * @param $input
@@ -13,7 +14,7 @@ class CustomerRepository
      */
     public function getOne($input)
     {
-        return Customer::filter($input)->first();
+        return Country::filter($input)->first();
     }
 
     /**
@@ -25,7 +26,7 @@ class CustomerRepository
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
 
-        $query = Customer::query();
+        $query = Country::query();
         if (!empty($filter)) {
             $query->filter($filter);
         }
@@ -41,12 +42,13 @@ class CustomerRepository
     }
 
     /**
+     * @param User $user
      * @param $input
-     * @return Customer
+     * @return Country
      */
-    public function create($input)
+    public function create(User $user, $input)
     {
-        $model = new Customer();
+        $model = new Country();
         $model->fill($input);
         // $model->profile_id = $user->profile_id;
         $model->save();
@@ -54,11 +56,12 @@ class CustomerRepository
     }
 
     /**
-     * @param Customer $model
+     * @param User $user
+     * @param Country $model
      * @param $input
-     * @return Customer
+     * @return Country
      */
-    public function update(Customer $model, $input)
+    public function update(User $user, Country $model, $input)
     {
         $model->fill($input);
         $model->save();

@@ -6,11 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, EntrustUserTrait;
+    use Notifiable, HasRoles;
 
     const STATUS_PENDING = 1;
     const STATUS_ACTIVE = 2;
@@ -27,9 +27,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'phone_number', 'alt_phone_number', 'country_code', 'id_type', 'id_value',
+        'name', 'phone_number', 'alt_phone_number', 'id_type', 'id_value',
         'email', 'password', 'typeable_id', 'typeable_type', 'status',
-        'creator_id', 'updater_id', 'profile_id'
+        'creator_id', 'updater_id', 'profile_id', 'phone_country_id', 'alt_phone_country_id'
     ];
 
     /**

@@ -101,9 +101,14 @@ if (document.querySelector('#indexProfileController')) {
             name: '',
             roc: '',
             address: '',
+            country_id: '',
           },
-          formErrors: {}
+          formErrors: {},
+          countries: []
         }
+      },
+      mounted() {
+        this.getCountriesOption()
       },
       methods: {
         onSubmit() {
@@ -120,6 +125,11 @@ if (document.querySelector('#indexProfileController')) {
               this.formErrors = error.response.data.errors
           });
         },
+        getCountriesOption() {
+          axios.get('/api/country').then((response) => {
+            this.countries = response.data
+          })
+        }
       },
       watch: {
         'data'(val) {

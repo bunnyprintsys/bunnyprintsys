@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerResource;
+use App\Models\Country;
 use App\Models\Member;
+use App\Models\Customer;
 use App\Models\User;
+use App\Services\CustomerService;
+use App\Services\UserService;
+use App\Traits\FilterPhoneNumber;
+use App\Traits\RunningNumber;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -24,8 +32,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use FilterPhoneNumber, RegistersUsers, RunningNumber;
 
+    private $customerService, $userService;
     /**
      * Where to redirect users after registration.
      *
@@ -38,9 +47,11 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(CustomerService $customerService, UserService $userService)
     {
         $this->middleware('guest');
+        $this->customerService = $customerService;
+        $this->userService = $userService;
     }
 
     /**
@@ -61,10 +72,10 @@ class RegisterController extends Controller
 
     // register user via sign up page
     // param Request $request
-    public function store()
+    public function store(Request $request)
     {
-        if(request('is_cooperate') == 'true') {
-            request()->validate([
+        if($request->is_cooperate == 'true') {
+            $request->validate([
                 'company_name' => 'required',
                 'roc' => 'required',
                 'name' => 'required',
@@ -72,31 +83,51 @@ class RegisterController extends Controller
                 'phone_number' => 'required'
             ]);
         }else {
-            request()->validate([
+            $request->validate([
                 'name' => 'required',
                 'email' => 'email|required|unique:users,email',
                 'phone_number' => 'required'
             ]);
         }
 
-        $member = Member::create([
-            'is_company' => request('is_company'),
-            'company_name' => request('company_name'),
-            'roc' => request('roc'),
-            'company_address' => request('company_address'),
-            'credit' => request('credit')
-        ]);
+        $input = $request->all();
+        $input['phone_country_id'] = $request->phone_country_id['id'];
 
-        $member->user()->create([
-            'name' => request('name'),
-            'email' => request('email'),
-            'phone_number' => request('phone_number')
-        ]);
+        $latest_otp = $this->getRandomDigits(6);
+        $input['latest_otp'] = $latest_otp;
+        // $this->smsService->sendSms()
+
+        if ($request->has('id')) { // update
+            $obj = $this->customerService->updateCustomer($input);
+        } else { // create
+            $obj = $this->customerService->createNewCustomer($input);
+        }
+
+        return $this->success(new CustomerResource($obj));
     }
 
     // new signup registration logic
     public function register(Request $request)
     {
-        $this->store($request->all());
+        $this->store($request);
+    }
+
+    // phone number validation
+    public function validatePhoneNumber(Request $request)
+    {
+        $phone_country_id = $request->phone_country_id['id'];
+        $phone_number = $request->phone_number;
+
+        $country = Country::find($phone_country_id);
+
+        if($country) {
+            $request->validate([
+                'phone_country_id' => 'required',
+                'phone_number' => 'required|phone:'.$country->symbol.',mobile'
+            ], [
+                'phone_number.phone' => 'Please ensure your phone number is correct'
+            ]);
+        }
+
     }
 }

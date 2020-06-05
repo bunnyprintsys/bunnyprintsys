@@ -1,11 +1,12 @@
 <?php
 
-auth()->loginUsingId(1, true);
+// auth()->loginUsingId(1, true);
 Route::get('/', 'HomeController@index')->name('home.index');
 
 Route::group(['prefix' => 'api'],function() {
     Route::group(['prefix' => 'registration'], function() {
         Route::post('/', 'Auth\RegisterController@register');
+        Route::post('/validate/phonenumber', 'Auth\RegisterController@validatePhoneNumber');
     });
 });
 
@@ -50,6 +51,10 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'admin'], function() {
         Route::get('/', 'AdminController@getAdminsApi');
         Route::post('/store-update', 'AdminController@storeUpdateAdminApi');
+    });
+
+    Route::group(['prefix' => 'country'], function() {
+        Route::get('/', 'CountryController@getCountriesApi');
     });
 
     Route::group(['prefix' => 'customer'], function() {

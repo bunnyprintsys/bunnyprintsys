@@ -41,6 +41,20 @@
                             <strong>@{{ formErrors['address'][0] }}</strong>
                         </span>
                     </div>
+
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="control-label required">
+                            Country
+                        </label>
+                        <select2-must v-model="form.country_id">
+                            <option v-for="country in countries" :value="country.id">
+                                @{{country.name}}
+                            </option>
+                        </select2-must>
+                        <span class="invalid-feedback" role="alert" v-if="formErrors['country_id']">
+                            <strong>@{{ formErrors['country_id'][0] }}</strong>
+                        </span>
+                    </div>
 {{--
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
                         <label class="control-label required">

@@ -3,38 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
-class Profile extends Model
+class Country extends Model
 {
-
-    const TYPE_INDIVIDUAL = 1;
-    const TYPE_COORPERATE = 2;
-
-    const PROFILE_TYPE = [
-        self::TYPE_INDIVIDUAL => 'Individual',
-        self::TYPE_COORPERATE => 'Coorperate',
-    ];
-
     protected $fillable = [
-        'name', 'roc', 'address', 'user_id', 'country_id'
+        'name', 'symbol', 'code', 'currency_name', 'currency_symbol'
     ];
-
-    // relationships
-    public function taxes()
-    {
-        return $this->hasMany('App\Models\Tax');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo('App\Models\User');
-    }
-
-    public function country()
-    {
-        return $this->belongsTo('App\Models\Country');
-    }
 
     /**
      * @param $query
@@ -48,6 +22,41 @@ class Profile extends Model
         if (is_array($value)) {
             return $query->whereIn($columnName, $value);
         }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeName($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('name');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeSymbol($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('symbol');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeCode($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('code');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeCurrencyName($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('currency_name');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeCurrencyCode($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('currency_code');
+
         return $query->where($columnName, $value);
     }
 
@@ -76,32 +85,20 @@ class Profile extends Model
             $query->name($input['name'], $like);
         }
 
-        if (Arr::get($input, 'roc', false)) {
-            $query->name($input['roc'], $like);
+        if (Arr::get($input, 'symbol', false)) {
+            $query->symbol($input['symbol']);
         }
 
-        if (Arr::get($input, 'email', false)) {
-            $query->whereHas('user', function ($query) use ($input) {
-                return $query->filter([
-                    'email' => $input['email']
-                ]);
-            });
+        if (Arr::get($input, 'code', false)) {
+            $query->code($input['code']);
         }
 
-        if (Arr::get($input, 'attn_name', false)) {
-            $query->whereHas('user', function ($query) use ($input) {
-                return $query->filter([
-                    'name' => $input['name']
-                ]);
-            });
+        if (Arr::get($input, 'currency_name', false)) {
+            $query->currencyName($input['currency_name']);
         }
 
-        if (Arr::get($input, 'phone_number', false)) {
-            $query->whereHas('user', function ($query) use ($input) {
-                return $query->filter([
-                    'phone_number' => $input['phone_number']
-                ]);
-            });
+        if (Arr::get($input, 'currency_symbol', false)) {
+            $query->currencySymbol($input['currency_symbol']);
         }
 
         return $query;
@@ -119,7 +116,7 @@ class Profile extends Model
             $this->alias = $alias;
         }
 
-        $sortable = ['id', 'name', 'roc', 'users.name', 'phone_number', 'email'];
+        $sortable = ['id', 'name', 'symbol', 'code', 'currency_name', 'currency_symbol'];
 
         $inputKeys = array_keys($input);
         $notSupportedKeys = array_diff($inputKeys, $sortable);

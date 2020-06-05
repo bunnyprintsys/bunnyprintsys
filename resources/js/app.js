@@ -19,6 +19,11 @@ window.flash = function (message, level = 'info') {
   window.events.$emit('flash', {message, level});
 };
 
+// loading overlay
+import LoadingOverlay from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.component('loading-overlay', LoadingOverlay);
+
 // vue multiselect
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
@@ -37,6 +42,13 @@ Vue.component('date-picker', DatePicker);
 import Flash from './components/Flash.vue';
 Vue.component('flash', Flash);
 
+// OTP vue input template
+import VueOtp2 from 'vue-otp-2';
+Vue.component('vue-otp-2', VueOtp2);
+
+import OtpInput from "@bachdgvn/vue-otp-input";
+Vue.component("v-otp-input", OtpInput);
+
 // vue pagination component
 import Pagination from './components/Pagination.vue';
 Vue.component('pagination', Pagination);
@@ -47,6 +59,9 @@ Vue.component('pulse-loader', PulseLoader);
 
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 Vue.component('clip-loader', ClipLoader);
+
+import VueFileAgent from 'vue-file-agent';
+Vue.component('vue-file-agent', VueFileAgent);
 
 // vue controllers
 require('./controllers/accountUserController');

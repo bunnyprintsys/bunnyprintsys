@@ -8,7 +8,8 @@ use Illuminate\Support\Arr;
 class Customer extends Model
 {
     protected $fillable = [
-        'is_company', 'company_name', 'roc', 'company_address'
+        'is_company', 'company_name', 'roc', 'company_address', 'latest_otp',
+        'is_verified'
     ];
 
     // relationships

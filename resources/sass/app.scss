@@ -22,6 +22,12 @@
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 
+// vue file agent
+@import '~vue-file-agent/dist/vue-file-agent.css';
+
+// vue multiselect
+@import '~vue-multiselect/dist/vue-multiselect.min.css';
+
 .navbar-laravel {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

@@ -2,22 +2,20 @@
 
 namespace App\Services;
 
-use App\Models\Customer;
-use App\Repositories\CustomerRepository;
-use App\Repositories\UserRepository;
+use App\Models\Country;
+use App\Models\User;
+use App\Repositories\CountryRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
-class CustomerService
+class CountryService
 {
 
-    private $customerRepository;
-    private $userRepository;
+    private $countryRepository;
 
-    public function __construct(CustomerRepository $customerRepository, UserRepository $userRepository)
+    public function __construct(CountryRepository $countryRepository)
     {
-        $this->customerRepository = $customerRepository;
-        $this->userRepository = $userRepository;
+        $this->countryRepository = $countryRepository;
     }
 
     /**
@@ -33,15 +31,16 @@ class CustomerService
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
         } */
-        return $this->customerRepository->all($filter, $sortBy, $pagination);
+        return $this->countryRepository->all($filter, $sortBy, $pagination);
     }
 
     /**
+     * @param User $user
      * @param $input
-     * @return \App\Models\Customer
+     * @return \App\Models\Country
      * @throws \Exception
      */
-    public function createNewCustomer($input)
+    public function createNewCountry(User $user, $input)
     {
         $this->validateMandatoryFields($input);
         // remove null value
@@ -51,9 +50,7 @@ class CustomerService
             }
         }
 
-        $data = $this->customerRepository->create($input);
-
-        $data->user()->create($input);
+        $data = $this->countryRepository->create($user, $input);
 
         return $data;
     }
@@ -61,39 +58,34 @@ class CustomerService
     /**
      * @param User $user
      * @param $input
-     * @return \App\Models\Customer
+     * @return \App\Models\Country
      * @throws \Exception
      */
-    public function updateCustomer($input)
+    public function updateCountry(User $user, $input)
     {
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
         }
-        $model = $this->getOneById($input['id']);
+        $model = $this->getOneById($user, $input['id']);
         if (!$model) {
-            throw new \Exception('Member not found', 404);
+            throw new \Exception('Country not found', 404);
         }
 
-        $data = $this->customerRepository->update($model, $input);
-
-        $data->user()->update($input);
+        $data = $this->countryRepository->update($user, $model, $input);
 
         return $data;
     }
 
     /**
+     * @param User $user
      * @param $id
      * @return Tenant
      */
-    public function getOneById($id)
+    public function getOneById(User $user, $id)
     {
-/*
-        if (!$user->hasRole('super-admin')) {
-            $filter['profile_id'] = $user->profile_id;
-        } */
         $filter['id'] = $id;
 
-        return $this->customerRepository->getOne($filter);
+        return $this->countryRepository->getOne($filter);
     }
 
     /**
@@ -102,7 +94,7 @@ class CustomerService
      */
     protected function validateMandatoryFields($input)
     {
-        $mandatory = ['name', 'phone_number', 'email'];
+        $mandatory = ['name'];
         foreach ($mandatory as $value) {
             if (!Arr::get($input, $value, false)) {
                 throw new \Exception($value . ' is mandatory');
