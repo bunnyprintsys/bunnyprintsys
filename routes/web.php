@@ -1,6 +1,6 @@
 <?php
 
-// auth()->loginUsingId(1, true);
+auth()->loginUsingId(1, true);
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home.index');
