@@ -22,8 +22,7 @@ class ProfileResource extends JsonResource
             'attn_name' => $this->user ? $this->user->name : null,
             'email' => $this->user ? $this->user->email : null,
             'attn_phone_number' => $this->user ? $this->user->phone_number : null,
-            'currency' => $this->currency,
-            'country_code' => $this->country_code,
+            'country_id' => $this->country_id,
             'user_id' => $this->user ? $this->user->id : null
         ];
     }

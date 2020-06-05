@@ -1,3 +1,4 @@
+@inject('profiles', 'App\Models\Profile')
 <template id="label-sticker-template">
     <div>
         {{-- order panel step 1 --}}
@@ -130,15 +131,16 @@
             <h4>
             Total:
             <span>
-                RM @{{orderForm.total.toFixed(2)}}
+                {{$profiles::first()->country ? $profiles::first()->country->currency_symbol : 'RM'}}
+                @{{orderForm.total.toFixed(2)}}
             </span>
             </h4>
         </div>
-
+{{--
         <button class="btn btn-success btn-block" @click="onOrderNextButtonClicked()" :disabled="orderForm.total == 0">
             <i class="fas fa-forward"></i>
             Place Order
-        </button>
+        </button> --}}
       </div>
     </div>
 

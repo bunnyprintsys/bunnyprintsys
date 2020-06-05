@@ -1,16 +1,9 @@
 <?php
 
 // auth()->loginUsingId(1, true);
-Route::get('/', 'HomeController@index')->name('home.index');
-
-Route::group(['prefix' => 'api'],function() {
-    Route::group(['prefix' => 'registration'], function() {
-        Route::post('/', 'Auth\RegisterController@register');
-        Route::post('/validate/phonenumber', 'Auth\RegisterController@validatePhoneNumber');
-    });
-});
-
 Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home.index');
 
 Route::get('/home', 'HomeController@index')->name('home.index');
 
@@ -44,6 +37,10 @@ Route::group(['prefix' => 'profile'], function() {
 
 Route::group(['prefix' => 'voucher'], function() {
     Route::get('/', 'VoucherController@index')->name('voucher.index');
+});
+
+Route::group(['prefix' => 'public'], function(){
+    Route::get('/label-sticker', 'HomeController@getLabelStickerQuotationIndex')->name('public.quotation.label-sticker');
 });
 
 Route::group(['prefix' => 'api'], function() {
@@ -102,6 +99,11 @@ Route::group(['prefix' => 'api'], function() {
     Route::group(['prefix' => 'quantitymultipliers'], function() {
         Route::get('/product/{id}', 'QuantityMultiplierController@getAllQuantitymultipliersByProductIdApi');
         Route::post('/{id}', 'QuantityMultiplierController@updateQuantitymultiplierByIdApi');
+    });
+
+    Route::group(['prefix' => 'registration'], function() {
+        Route::post('/', 'Auth\RegisterController@register');
+        Route::post('/validate/phonenumber', 'Auth\RegisterController@validatePhoneNumber');
     });
 
     Route::group(['prefix' => 'shapes'], function() {

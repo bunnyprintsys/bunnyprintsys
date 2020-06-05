@@ -14,7 +14,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => [
+            'getLabelStickerQuotationIndex'
+        ]]);
     }
 
     /**
@@ -25,5 +27,11 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    // return label sticker quotation index
+    public function getLabelStickerQuotationIndex()
+    {
+        return view('public.quotation.label-sticker');
     }
 }

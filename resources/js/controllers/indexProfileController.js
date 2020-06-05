@@ -127,7 +127,7 @@ if (document.querySelector('#indexProfileController')) {
         },
         getCountriesOption() {
           axios.get('/api/country').then((response) => {
-            this.countries = response.data
+            this.countries = response.data.data
           })
         }
       },

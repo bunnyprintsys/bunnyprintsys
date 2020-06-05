@@ -15,7 +15,9 @@ class OrderController extends Controller
     // constructor
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => [
+            'getLabelstickerQuotationApi'
+        ]]);
     }
 
     // return order quotation index
