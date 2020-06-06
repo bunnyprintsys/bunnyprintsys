@@ -44,22 +44,23 @@ class LoginController extends Controller
      * @param Request $request
      * @return array
      */
+/*
     protected function credentials(Request $request)
     {
-/*
+
         if(is_numeric($request->get('email'))){
             return [
                 'phone_number' => $this->filterMalaysiaPhoneNumber($request->get('email'), $request->get('phone_country_code')),
                 'password' => $request->get('password'),
                 'status' => 1
             ];
-        } */
+        }
         return [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
             'status' => 1
         ];
-    }
+    } */
 
     /**
      * @param Request $request
