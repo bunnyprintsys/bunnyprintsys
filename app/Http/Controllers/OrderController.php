@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Orderquantity;
+use App\Models\OrderQuantity;
 use App\Models\Productmaterial;
 use App\Models\Productshape;
 use App\Models\Productdelivery;
@@ -85,7 +85,7 @@ class OrderController extends Controller
             $area = $area2;
         }
 
-        $orderquantity = Orderquantity::findOrFail($orderquantity_id);
+        $orderquantity = OrderQuantity::findOrFail($orderquantity_id);
         $material = Productmaterial::find($material_id);
         $shape = Productshape::find($shape_id);
         $delivery = Productdelivery::find($delivery_id);
