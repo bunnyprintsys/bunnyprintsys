@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OrderQuantity;
-use App\Models\Productmaterial;
-use App\Models\Productshape;
-use App\Models\Productdelivery;
-use App\Models\Productlamination;
-use App\Models\Quantitymultiplier;
+use App\Models\ProductMaterial;
+use App\Models\ProductShape;
+use App\Models\ProductDelivery;
+use App\Models\ProductLamination;
+use App\Models\QuantityMultiplier;
 
 class OrderController extends Controller
 {
@@ -86,14 +86,14 @@ class OrderController extends Controller
         }
 
         $orderquantity = OrderQuantity::findOrFail($orderquantity_id);
-        $material = Productmaterial::find($material_id);
-        $shape = Productshape::find($shape_id);
-        $delivery = Productdelivery::find($delivery_id);
-        $lamination = Productlamination::find($lamination_id);
+        $material = ProductMaterial::find($material_id);
+        $shape = ProductShape::find($shape_id);
+        $delivery = ProductDelivery::find($delivery_id);
+        $lamination = ProductLamination::find($lamination_id);
 
         $formula = intval(round($orderquantity->qty/ $area) + 1);
 
-        $quantitymultiplier = Quantitymultiplier::where('min', '<=', $formula)
+        $quantitymultiplier = QuantityMultiplier::where('min', '<=', $formula)
             ->where('max', '>=', $formula)
             ->where('product_id', $product_id)
             ->first();
