@@ -43,12 +43,12 @@
             Lamination
             {{-- <label for="required" class="control-label" style="color:red;">*</label> --}}
             </label>
-            <select2 v-model="orderForm.lamination_id" class="form-control" @input="getQuotation()">
+            <select2-must v-model="orderForm.lamination_id" class="form-control" @input="getQuotation()">
                 <option value="null">Nope</option>
                 <option v-for="lamination in laminations" :value="lamination.id">
                 @{{lamination.name}}
                 </option>
-            </select2>
+            </select2-must>
             <input type="hidden" class="form-control" :class="{ 'is-invalid' : formErrors['lamination_id'] }">
             <span class="invalid-feedback" role="alert" v-if="formErrors['lamination_id']">
                 <strong>@{{ formErrors['lamination_id'][0] }}</strong>

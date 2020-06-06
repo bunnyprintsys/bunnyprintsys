@@ -3,6 +3,7 @@ if(document.querySelector('#indexPriceController')) {
     template: '#price-labelsticker-template',
     data() {
       return {
+          laminations: [],
           materials: [],
           orderquantities: [],
           shapes: [],
@@ -11,6 +12,7 @@ if(document.querySelector('#indexPriceController')) {
       }
   },
     mounted() {
+      this.getAllLaminations()
       this.getAllMaterials()
       this.getAllOrderquantities()
       this.getQuantitymultipliers()
@@ -18,6 +20,11 @@ if(document.querySelector('#indexPriceController')) {
       this.getAllDeliveries()
     },
     methods: {
+      getAllLaminations() {
+        axios.get('/api/laminations/product/1').then((response) => {
+          this.laminations = response.data
+        })
+      },
       getAllMaterials() {
         axios.get('/api/materials/product/1').then((response) => {
           this.materials = response.data
@@ -42,6 +49,10 @@ if(document.querySelector('#indexPriceController')) {
         axios.get('/api/quantitymultipliers/product/1').then((response) => {
           this.quantitymultipliers = response.data
         })
+      },
+      onProductLaminationMultiplierChanged(id, value) {
+          axios.post('/api/laminations/' + id, {multiplier: value}).then((response) => {
+          })
       },
       onProductShapeMultiplierChanged(id, value) {
           axios.post('/api/shapes/' + id, {multiplier: value}).then((response) => {
