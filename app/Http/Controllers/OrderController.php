@@ -45,12 +45,11 @@ class OrderController extends Controller
 
         $width = request('width');
         $height = request('height');
-        $material_id = request('material_id');
-        $orderquantity_id = request('orderquantity_id');
-        $lamination_id = request('lamination_id');
-        $shape_id = request('shape_id');
-        $delivery_fee = request('delivery_fee');
-        $delivery_id = request('delivery_id');
+        $material_id = request('material_id')['id'];
+        $orderquantity_id = request('orderquantity_id')['id'];
+        $lamination_id = request('lamination_id')['id'];
+        $shape_id = request('shape_id')['id'];
+        $delivery_id = request('delivery_id')['id'];
         $dimension = [
             'width' => 0,
             'height' => 0
@@ -60,6 +59,7 @@ class OrderController extends Controller
         $area = 0;
         $formula = 0;
         $total = 0;
+        // dd($material_id, $shape_id, $lamination_id, $orderquantity_id, $delivery_id);
 
         $dimension = [
             'width' => 305,

@@ -111,7 +111,10 @@ if(document.querySelector('#indexOrderController')) {
       onIsCompanyChosen(value) {
         this.customerForm.is_company = value
         this.formErrors = {}
-      }
+      },
+      customLabelName(option) {
+        return `${option.name}`
+      },
     }
   });
 
@@ -266,7 +269,7 @@ if(document.querySelector('#indexOrderController')) {
               this.formErrors = error.response.data.errors
             });
           }, 500),
-          customLabel(option) {
+          customLabelName() {
             return `${option.name}`
           },
           returnNoneMultiplierOption() {

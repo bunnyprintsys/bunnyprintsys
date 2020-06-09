@@ -86342,6 +86342,9 @@ if (document.querySelector('#indexOrderController')) {
       onIsCompanyChosen: function onIsCompanyChosen(value) {
         this.customerForm.is_company = value;
         this.formErrors = {};
+      },
+      customLabelName: function customLabelName(option) {
+        return "".concat(option.name);
       }
     }
   });
@@ -86507,7 +86510,7 @@ if (document.querySelector('#indexOrderController')) {
           _this14.formErrors = error.response.data.errors;
         });
       }, 500),
-      customLabel: function customLabel(option) {
+      customLabelName: function customLabelName() {
         return "".concat(option.name);
       },
       returnNoneMultiplierOption: function returnNoneMultiplierOption() {

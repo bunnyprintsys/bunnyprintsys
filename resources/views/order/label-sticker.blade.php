@@ -9,12 +9,16 @@
             Materials
             <label for="required" class="control-label" style="color:red;">*</label>
             </label>
-            <select2 v-model="orderForm.material_id" class="form-control" @input="materialIdSelected()">
-                <option value="">All</option>
-                <option v-for="material in materials" :value="material.id">
-                @{{material.name}}
-                </option>
-            </select2>
+
+            <multiselect
+              v-model="orderForm.material_id"
+              :options="materials"
+              :close-on-select="true"
+              placeholder="Select..."
+              :custom-label="customLabelName"
+              track-by="id"
+              @input="getQuotation"
+            ></multiselect>
             <input type="hidden" class="form-control" :class="{ 'is-invalid' : formErrors['material_id'] }">
             <span class="invalid-feedback" role="alert" v-if="formErrors['material_id']">
                 <strong>@{{ formErrors['material_id'][0] }}</strong>
@@ -26,12 +30,15 @@
             Shape
             <label for="required" class="control-label" style="color:red;">*</label>
             </label>
-            <select2 v-model="orderForm.shape_id" class="form-control" @input="getQuotation()">
-                <option value="">All</option>
-                <option v-for="shape in shapes" :value="shape.id">
-                @{{shape.name}}
-                </option>
-            </select2>
+            <multiselect
+              v-model="orderForm.shape_id"
+              :options="shapes"
+              :close-on-select="true"
+              placeholder="Select..."
+              :custom-label="customLabelName"
+              track-by="id"
+              @input="getQuotation"
+            ></multiselect>
             <input type="hidden" class="form-control" :class="{ 'is-invalid' : formErrors['shape_id'] }">
             <span class="invalid-feedback" role="alert" v-if="formErrors['shape_id']">
                 <strong>@{{ formErrors['shape_id'][0] }}</strong>
@@ -43,12 +50,15 @@
             Lamination
             {{-- <label for="required" class="control-label" style="color:red;">*</label> --}}
             </label>
-            <select2-must v-model="orderForm.lamination_id" class="form-control" @input="getQuotation()">
-                <option value="null">Nope</option>
-                <option v-for="lamination in laminations" :value="lamination.id">
-                @{{lamination.name}}
-                </option>
-            </select2-must>
+            <multiselect
+              v-model="orderForm.lamination_id"
+              :options="laminations"
+              :close-on-select="true"
+              placeholder="Select..."
+              :custom-label="customLabelName"
+              track-by="id"
+              @input="getQuotation"
+            ></multiselect>
             <input type="hidden" class="form-control" :class="{ 'is-invalid' : formErrors['lamination_id'] }">
             <span class="invalid-feedback" role="alert" v-if="formErrors['lamination_id']">
                 <strong>@{{ formErrors['lamination_id'][0] }}</strong>
@@ -89,12 +99,15 @@
             Quantities
             <label for="required" class="control-label" style="color:red;">*</label>
             </label>
-            <select2 v-model="orderForm.orderquantity_id" class="form-control" @input="getQuotation()">
-                <option value="">All</option>
-                <option v-for="orderquantity in orderquantities" :value="orderquantity.id">
-                @{{orderquantity.name}}
-                </option>
-            </select2>
+            <multiselect
+              v-model="orderForm.orderquantity_id"
+              :options="orderquantities"
+              :close-on-select="true"
+              placeholder="Select..."
+              :custom-label="customLabelName"
+              track-by="id"
+              @input="getQuotation"
+            ></multiselect>
             <input type="hidden" class="form-control" :class="{ 'is-invalid' : formErrors['orderquantity_id'] }">
             <span class="invalid-feedback" role="alert" v-if="formErrors['orderquantity_id']">
                 <strong>@{{ formErrors['orderquantity_id'][0] }}</strong>
@@ -105,12 +118,16 @@
             <label class="control-label">
             Delivery
             </label>
-            <select2 v-model="orderForm.delivery_id" class="form-control" @input="getQuotation()">
-            <option value="">All</option>
-            <option v-for="delivery in deliveries" :value="delivery.id">
-                @{{delivery.name}}
-            </option>
-            </select2>
+            <multiselect
+              v-model="orderForm.delivery_id"
+              :options="deliveries"
+              :close-on-select="true"
+              placeholder="Select..."
+              :custom-label="customLabelName"
+              track-by="id"
+              @input="getQuotation"
+            ></multiselect>
+
 {{--
             <select2 v-model="form.delivery_fee" class="form-control" @input="getQuotation()">
                 <option value="">None</option>
