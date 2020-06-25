@@ -52,7 +52,6 @@ class CustomerService
         }
 
         $data = $this->customerRepository->create($input);
-
         $data->user()->create($input);
 
         return $data;
@@ -92,7 +91,6 @@ class CustomerService
             $filter['profile_id'] = $user->profile_id;
         } */
         $filter['id'] = $id;
-
         return $this->customerRepository->getOne($filter);
     }
 

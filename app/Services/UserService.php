@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Models\Country;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\User;
@@ -51,6 +52,21 @@ class UserService
         return $this->userRepository->getOne($filter);
     }
 
+    // get one by id
+    public function getOneById($id)
+    {
+        $filter['id'] = $id;
+        return $this->userRepository->getOne($filter);
+    }
+
+    // get one by phone number
+    public function getOneByPhoneNumber($phone_country_id, $phone_number)
+    {
+        $filter['phone_country_id'] = $phone_country_id;
+        $filter['phone_number'] = $phone_number;
+
+        return $this->userRepository->getOne($filter);
+    }
     /**
      * @param User $user
      * @param array $filter
@@ -122,6 +138,22 @@ class UserService
             DB::rollback();
             throw $e;
         }
+    }
+
+    // update user password
+    public function updateUser($input)
+    {
+        if (!isset($input['id']) || !$input['id']) {
+            throw new \Exception('ID must defined', 404);
+        }
+        $model = $this->getOneById($input['id']);
+        if (!$model) {
+            throw new \Exception('User not found', 404);
+        }
+
+        $data = $this->userRepository->update($model, $input);
+
+        return $data;
     }
 
     /**

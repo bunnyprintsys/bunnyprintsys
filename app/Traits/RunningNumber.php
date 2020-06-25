@@ -24,10 +24,4 @@ trait RunningNumber
 
         return $runningNumber + 1;
     }
-
-    // get random running number
-    public function getRandomDigits($digits)
-    {
-        return rand(pow(10, $digits-1), pow(10, $digits)-1);
-    }
 }

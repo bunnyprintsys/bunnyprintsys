@@ -85134,6 +85134,8 @@ __webpack_require__(/*! ./controllers/indexPriceController */ "./resources/js/co
 
 __webpack_require__(/*! ./controllers/indexRegistrationController */ "./resources/js/controllers/indexRegistrationController.js");
 
+__webpack_require__(/*! ./controllers/indexPasswordResetController */ "./resources/js/controllers/indexPasswordResetController.js");
+
 __webpack_require__(/*! ./controllers/indexTransactionController */ "./resources/js/controllers/indexTransactionController.js");
 
 __webpack_require__(/*! ./controllers/indexProfileController */ "./resources/js/controllers/indexProfileController.js");
@@ -86542,6 +86544,147 @@ if (document.querySelector('#indexOrderController')) {
 
 /***/ }),
 
+/***/ "./resources/js/controllers/indexPasswordResetController.js":
+/*!******************************************************************!*\
+  !*** ./resources/js/controllers/indexPasswordResetController.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+if (document.querySelector('#indexPasswordResetController')) {
+  Vue.component('index-password-reset', {
+    template: '#index-password-reset-template',
+    data: function data() {
+      return {
+        loading: false,
+        form: this.getFormDefault(),
+        steps: this.getRegistrationStepsDefault(),
+        countries: [],
+        formErrors: []
+      };
+    },
+    mounted: function mounted() {
+      this.getCountriesOption();
+    },
+    methods: {
+      getCountriesOption: function getCountriesOption() {
+        var _this = this;
+
+        axios.get('/api/country').then(function (response) {
+          _this.countries = response.data.data;
+          _this.form.phone_country_id = _this.countries[0];
+        });
+      },
+      onPhoneNumberEntered: _.debounce(function (e) {
+        var _this2 = this;
+
+        this.formErrors = []; // this.loading = true
+
+        this.form.otp_request_count = 0;
+        axios.post('/api/registration/validate/user-phonenumber', this.form).then(function (response) {
+          flash(response.data.msg, response.data.status);
+          _this2.form.phone_number_format_valid = true;
+        })["catch"](function (error) {
+          flash(error.response.data.msg, error.response.data.status);
+          _this2.formErrors = error.response.data.errors;
+          _this2.form.phone_number_format_valid = false;
+        })["finally"](function () {// this.loading = false
+        });
+      }, 800),
+      onSendOTPClicked: function onSendOTPClicked() {
+        var _this3 = this;
+
+        axios.post('/api/registration/create-otp', this.form).then(function (response) {
+          _this3.form.otp_countdown = true;
+          _this3.form.otp_request_count += 1;
+          var countTime = setInterval(function () {
+            this.form.countdown = this.form.countdown - 1;
+
+            if (this.form.countdown === 0) {
+              clearInterval(countTime);
+              this.form.countdown = 30;
+              this.form.otp_countdown = false;
+            }
+          }.bind(_this3), 1000);
+        })["catch"](function (error) {
+          _this3.formErrors = error.response.data.errors;
+        });
+      },
+      onOTPCompleted: function onOTPCompleted(value) {
+        var _this4 = this;
+
+        this.form.otp = value;
+        this.loading = true;
+        axios.post('/api/registration/validate-otp', this.form).then(function (response) {
+          flash(response.data.msg, response.data.status);
+          _this4.form.is_otp_validated = true;
+
+          _this4.onProceedButtonClicked('step_1', 'step_2');
+        })["catch"](function (error) {
+          _this4.formErrors = error.response.data.errors;
+          flash(error.response.data.msg, error.response.data.status);
+        })["finally"](function () {
+          _this4.loading = false;
+        });
+      },
+      onSubmit: function onSubmit() {
+        var _this5 = this;
+
+        axios.post('/api/registration/password/update', this.form).then(function (response) {
+          flash(response.data.msg, response.data.status);
+          window.location.href = '/';
+        })["catch"](function (error) {
+          _this5.formErrors = error.response.data.errors;
+          flash(error.response.data.msg, error.response.data.status);
+        });
+      },
+      validatePassword: _.debounce(function (e) {
+        var _this6 = this;
+
+        this.formErrors = [];
+        this.loading = true;
+        axios.post('/api/registration/validate/password', this.form).then(function (response) {
+          _this6.form.is_password_validated = true;
+        })["catch"](function (error) {
+          _this6.formErrors = error.response.data.errors;
+        })["finally"](function () {
+          _this6.loading = false;
+        });
+      }, 1000),
+      onProceedButtonClicked: function onProceedButtonClicked(prev, next) {
+        this.steps[prev] = false;
+        this.steps[next] = true;
+      },
+      customLabelCountriesOption: function customLabelCountriesOption(option) {
+        return "".concat(option.symbol, " (+").concat(option.code, ")");
+      },
+      getFormDefault: function getFormDefault() {
+        return {
+          phone_country_id: '',
+          phone_number: '',
+          phone_number_format_valid: false,
+          otp_countdown: false,
+          otp_request_count: 0,
+          is_otp_validated: false,
+          is_password_validated: false,
+          countdown: 30
+        };
+      },
+      getRegistrationStepsDefault: function getRegistrationStepsDefault() {
+        return {
+          step_1: true,
+          step_2: false
+        };
+      }
+    }
+  });
+  new Vue({
+    el: '#indexPasswordResetController'
+  });
+}
+
+/***/ }),
+
 /***/ "./resources/js/controllers/indexPriceController.js":
 /*!**********************************************************!*\
   !*** ./resources/js/controllers/indexPriceController.js ***!
@@ -86854,57 +86997,95 @@ if (document.querySelector('#indexRegistrationController')) {
       onPhoneNumberEntered: _.debounce(function (e) {
         var _this2 = this;
 
-        this.formErrors = [];
-        this.loading = true;
+        this.formErrors = []; // this.loading = true
+
         this.form.otp_request_count = 0;
         axios.post('/api/registration/validate/phonenumber', this.form).then(function (response) {
           _this2.form.phone_number_format_valid = true;
         })["catch"](function (error) {
           _this2.formErrors = error.response.data.errors;
           _this2.form.phone_number_format_valid = false;
-        })["finally"](function () {
-          _this2.loading = false;
+        })["finally"](function () {// this.loading = false
         });
       }, 800),
       onSendOTPClicked: function onSendOTPClicked() {
-        this.form.otp_countdown = true;
-        this.form.otp_request_count += 1;
-        var countTime = setInterval(function () {
-          this.form.countdown = this.form.countdown - 1;
-
-          if (this.form.countdown === 0) {
-            clearInterval(countTime);
-            this.form.countdown = 30;
-            this.form.otp_countdown = false;
-          }
-        }.bind(this), 1000);
-      },
-      onOTPCompleted: function onOTPCompleted(value) {
         var _this3 = this;
 
-        this.form.otp = value; // this.loading = true
+        // this.$refs.otpInput.clearInput()
+        axios.post('/api/registration/create-otp', this.form).then(function (response) {
+          _this3.form.otp_countdown = true;
+          _this3.form.otp_request_count += 1;
+          var countTime = setInterval(function () {
+            this.form.countdown = this.form.countdown - 1;
 
-        axios.post('/api/registration', this.form).then(function (response) {
-          flash('Thanks you for signing up', 'success'); // this.form = this.getFormDefault()
+            if (this.form.countdown === 0) {
+              clearInterval(countTime);
+              this.form.countdown = 30;
+              this.form.otp_countdown = false;
+            }
+          }.bind(_this3), 1000);
         })["catch"](function (error) {
           _this3.formErrors = error.response.data.errors;
-        })["finally"](function () {// this.loading = false
+        });
+      },
+      onOTPCompleted: function onOTPCompleted(value) {
+        var _this4 = this;
+
+        this.form.otp = value;
+        this.loading = true;
+        axios.post('/api/registration/validate-otp', this.form).then(function (response) {
+          flash('OTP validated', 'success');
+          _this4.form.is_otp_validated = true;
+
+          _this4.onProceedButtonClicked('step_2', 'step_3');
+        })["catch"](function (error) {
+          flash('Incorrect OTP, please try again', 'danger');
+        })["finally"](function () {
+          _this4.loading = false;
         });
       },
       onSubmit: function onSubmit() {
-        var _this4 = this;
+        var _this5 = this;
 
         axios.post('/api/registration', this.form).then(function (response) {
-          flash('Your registration has submitted, we will contact you shortly', 'success');
-          _this4.form = _this4.getFormDefault();
+          flash('Successfully signed up, login automatically', 'success'); // this.form = this.getFormDefault()
+
+          window.location.href = '/';
         })["catch"](function (error) {
-          _this4.formErrors = error.response.data.errors;
+          _this5.formErrors = error.response.data.errors;
+          flash('Failed, please try again', 'danger');
         });
       },
       onIsCompanyChosen: function onIsCompanyChosen(value) {
         this.form.is_company = value;
         this.formErrors = [];
       },
+      onApplicantInfoFilled: function onApplicantInfoFilled(prev, next) {
+        var _this6 = this;
+
+        this.formErrors = [];
+        this.loading = true;
+        axios.post('/api/registration/validate/info', this.form).then(function (response) {
+          _this6.onProceedButtonClicked(prev, next);
+        })["catch"](function (error) {
+          _this6.formErrors = error.response.data.errors;
+        })["finally"](function () {
+          _this6.loading = false;
+        });
+      },
+      validatePassword: _.debounce(function (e) {
+        var _this7 = this;
+
+        this.formErrors = [];
+        this.loading = true;
+        axios.post('/api/registration/validate/password', this.form).then(function (response) {
+          _this7.form.is_password_validated = true;
+        })["catch"](function (error) {
+          _this7.formErrors = error.response.data.errors;
+        })["finally"](function () {
+          _this7.loading = false;
+        });
+      }, 1000),
       onProceedButtonClicked: function onProceedButtonClicked(prev, next) {
         this.steps[prev] = false;
         this.steps[next] = true;
@@ -86923,6 +87104,8 @@ if (document.querySelector('#indexRegistrationController')) {
           phone_number_format_valid: false,
           otp_countdown: false,
           otp_request_count: 0,
+          is_otp_validated: false,
+          is_password_validated: false,
           countdown: 30
         };
       },

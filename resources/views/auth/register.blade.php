@@ -26,7 +26,6 @@
       margin-left: 10px;
     }
   }
-
 </style>
 
 
@@ -40,7 +39,7 @@
                 <div class="card-body">
                     <loading-overlay :active.sync="loading"></loading-overlay>
                     <flash message="{{ session('flash') }}"></flash>
-                    <form action="#" @submit.prevent="onSubmit" method="POST" autocomplete="off">
+                    {{-- <form action="#" @submit.prevent="onSubmit" method="POST" autocomplete="off"> --}}
                         @csrf
 
                         <div v-show="steps.step_1">
@@ -131,7 +130,7 @@
                             </div>
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="button" class="btn btn-primary" @click="onProceedButtonClicked('step_1', 'step_2')">
+                                    <button type="button" class="btn btn-primary" @click="onApplicantInfoFilled('step_1', 'step_2')">
                                         <i class="fas fa-forward"></i>
                                         Next
                                     </button>
@@ -153,12 +152,6 @@
                                 </label>
                                 <div class="form-row">
                                     <div class="col-md-4">
-{{--
-                                        <select2-must v-model="form.phone_country_id" class="form-control" @input="onPhoneNumberEntered" :disabled="form.otp_countdown">
-                                            <option v-for="country in countries" value="country.id">
-                                                @{{country.symbol}} (+@{{country.code}})
-                                            </option>
-                                        </select2-must> --}}
                                         <multiselect
                                           v-model="form.phone_country_id"
                                           :options="countries"
@@ -169,7 +162,6 @@
                                           :disabled="form.otp_countdown"
                                           @input="onPhoneNumberEntered"
                                         ></multiselect>
-
                                     </div>
                                     <div class="col-md-8">
                                         <div class="input-group">
@@ -195,11 +187,10 @@
                                 </div>
                             </div>
 
-                            {{-- <div v-if="form.otp_request_count > 0"> --}}
-                              <div class="row justify-content-center form-group" style="padding-top: 30px;">
-                                <div class="col-md-4">
+                            <div v-if="form.otp_request_count > 0">
+                              <div class="d-flex justify-content-center" style="padding-top: 30px;">
                                   <v-otp-input
-                                  ref="form.otp"
+                                  ref="otpInput"
                                   input-classes="otp-input"
                                   separator="-"
                                   :num-inputs="5"
@@ -207,21 +198,42 @@
                                   :is-input-num="false"
                                   @on-complete="onOTPCompleted"
                                 />
-                                </div>
                               </div>
-                              <div class="row justify-content-center form-group">
-                                <div class="col-md-5">
+                              <div class="d-flex justify-content-center form-group">
                                   <p class="text-center">
                                     <small>
                                       Please enter 5 digits OTP sent to your phone number
                                     </small>
                                   </p>
-                                </div>
                               </div>
-                            {{-- </div> --}}
+                            </div>
+                        </div>
+                        <div v-show="steps.step_3">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <label for="art" style="color:red;">*</label>
+                                    <input type="password" class="form-control" v-model="form.password" :class="{'is-invalid': formErrors['password']}" @input="validatePassword">
+                                    <small class="text-danger">@{{formErrors['password'] ? formErrors['password'][0] : ''}}</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirm Password</label>
+                                    <label for="art" style="color:red;">*</label>
+                                    <input type="password" class="form-control" v-model="form.password_confirmation" :class="{'is-invalid': formErrors['password']}" @input="validatePassword">
+                                    <small class="text-danger">@{{formErrors['password'] ? formErrors['password'][0] : ''}}</small>
+                                </div>
+                                <div class="float-right">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" @click="onSubmit()">
+                                            <i class="fas fa-check"></i>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                    </form>
+                    {{-- </form> --}}
                 </div>
             </div>
         </div>
