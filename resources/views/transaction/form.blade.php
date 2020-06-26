@@ -14,7 +14,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-8 col-sm-8 col-xs-12">
                                 <label class="control-label required">
-                                    Company Name
+                                    Job ID
                                 </label>
                                 <input type="text" name="company_name" class="form-control" v-model="form.company_name" :class="{ 'is-invalid' : formErrors['company_name'] }">
                                 <span class="invalid-feedback" role="alert" v-if="formErrors['company_name']">
@@ -23,7 +23,7 @@
                             </div>
                             <div class="form-group col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label required">
-                                    ROC
+                                    Order Date
                                 </label>
                                 <input type="text" name="roc" class="form-control" v-model="form.roc" :class="{ 'is-invalid' : formErrors['roc'] }">
                                 <span class="invalid-feedback" role="alert" v-if="formErrors['roc']">

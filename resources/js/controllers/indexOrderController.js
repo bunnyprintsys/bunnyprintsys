@@ -34,6 +34,7 @@ if(document.querySelector('#indexOrderController')) {
           material_id: '',
           orderquantity_id: '',
           shape_id: '',
+          lamination_id: '',
           delivery_fee: '',
           delivery_id: '',
           total: 0.00
@@ -79,7 +80,11 @@ if(document.querySelector('#indexOrderController')) {
       },
       getAllLaminations() {
         axios.get('/api/laminations/product/1').then((response) => {
-          this.laminations = response.data
+          const laminationOptions = response.data
+          laminationOptions.unshift(this.getNoneOption())
+          this.laminations = laminationOptions
+
+          this.orderForm.lamination_id = this.getNoneOption()
         })
       },
       getAllDeliveries() {
@@ -115,6 +120,13 @@ if(document.querySelector('#indexOrderController')) {
       customLabelName(option) {
         return `${option.name}`
       },
+      getNoneOption() {
+        return {
+          id: '',
+          multiplier: 1,
+          name: 'None'
+        }
+      }
     }
   });
 
