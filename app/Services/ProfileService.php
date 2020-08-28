@@ -4,18 +4,37 @@ namespace App\Services;
 
 use App\Models\Profile;
 use App\Models\User;
+use App\Repositories\AddressRepository;
 use App\Repositories\ProfileRepository;
+use App\Repositories\UserRepository;
+use App\Services\AddressService;
+use App\Services\UserService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class ProfileService
 {
 
     private $profileRepository;
+    private $addressRepository;
+    private $userRepository;
+    private $addressService;
+    private $userService;
 
-    public function __construct(ProfileRepository $profileRepository)
+    public function __construct(
+        ProfileRepository $profileRepository,
+        AddressRepository $addressRepository,
+        UserRepository $userRepository,
+        AddressService $addressService,
+        UserService $userService
+        )
     {
+        $this->addressRepository = $addressRepository;
         $this->profileRepository = $profileRepository;
+        $this->userRepository = $userRepository;
+        $this->addressService = $addressService;
+        $this->userService = $userService;
     }
 
     /**
@@ -42,6 +61,8 @@ class ProfileService
      */
     public function createNewProfile(User $user, $input)
     {
+        DB::beginTransaction();
+
         $this->validateMandatoryFields($input);
         // remove null value
         foreach ($input as $key => $value) {
@@ -49,10 +70,23 @@ class ProfileService
                 unset($input[$key]);
             }
         }
+        $companyInput = $input;
+        $companyInput['name'] = $input['company_name'];
 
-        $data = $this->profileRepository->create($user, $input);
+        $profile = $this->profileRepository->create($user, $companyInput);
 
-        return $data;
+        if($input['unit']) {
+            $profile->address()->create($input);
+        }
+
+        if($input['name']) {
+            $input['phone_country_id'] = $input['country_id'];
+            $profile->user()->create($input);
+        }
+
+        DB::commit();
+
+        return $profile;
     }
 
     /**
@@ -64,16 +98,35 @@ class ProfileService
     public function updateProfile(User $user, $input)
     {
         if (!isset($input['id']) || !$input['id']) {
-            throw new \Exception('ID must defined', 404);
+            throw new \Exception('ID not found', 404);
         }
-        $model = $this->getOneById($user, $input['id']);
-        if (!$model) {
-            throw new \Exception('Member not found', 404);
+        $profileModel = $this->getOneById($user, $input['id']);
+        if (!$profileModel) {
+            throw new \Exception('User not found', 404);
         }
 
-        $data = $this->profileRepository->update($user, $model, $input);
+        $profileInput = $input;
+        $profileInput['name'] = $input['company_name'];
+        unset($profileInput['user_id']);
+        $profile = $this->profileRepository->update($user, $profileModel, $profileInput);
 
-        return $data;
+        $addressInput = $input;
+        $addressInput['id'] = $addressInput['address_id'];
+        if(isset($addressInput['id']) || $addressInput['id']) {
+            if($addressModel = $this->addressService->getOneById($addressInput['id'])) {
+                $this->addressRepository->update($user, $addressModel, $addressInput);
+            }
+        }
+
+        $userInput = $input;
+        $userInput['id'] = $userInput['user_id'];
+        if(isset($userInput['id']) || $userInput['id']) {
+            if($userModel = $this->userService->getOneById($userInput['id'])) {
+                $this->userRepository->update($userModel, $userInput);
+            }
+        }
+
+        return $profile;
     }
 
     /**
@@ -94,7 +147,7 @@ class ProfileService
      */
     protected function validateMandatoryFields($input)
     {
-        $mandatory = ['name'];
+        $mandatory = ['company_name', 'job_prefix', 'invoice_prefix'];
         foreach ($mandatory as $value) {
             if (!Arr::get($input, $value, false)) {
                 throw new \Exception($value . ' is mandatory');

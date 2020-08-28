@@ -18,33 +18,29 @@ class CountryController extends Controller
     // middleware auth
     public function __construct(CountryService $countryService)
     {
-        $this->middleware('auth', ['except' => 'getCountriesApi']);
+        $this->middleware('auth');
         $this->countryService = $countryService;
     }
 
     // return countries api
-    public function getCountriesApi(Request $request)
+    public function getAllCountriesApi(Request $request)
     {
-        try {
-            $input = $request->all();
-            $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
-            if (isset($input['sortkey']) && !empty($input['sortkey'])) {
-                $sortBy = [
-                    $request->get('sortkey') => $order
-                ];
-            } else {
-                $sortBy = [
-                    'created_at' => 'desc'
-                ];
-            }
-            $data = $this->countryService->all($input, $sortBy, $this->getPerPage());
-            if ($this->isWithoutPagination()) {
-                return $this->success(CountryResource::collection($data));
-            }
-            CountryResource::collection($data);
-            return $this->success($data);
-        } catch (\Exception $e) {
-            return $this->fail(null, $e->getMessage());
+        $input = $request->all();
+        $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
+        if (isset($input['sortkey']) && !empty($input['sortkey'])) {
+            $sortBy = [
+                $request->get('sortkey') => $order
+            ];
+        } else {
+            $sortBy = [
+                'created_at' => 'desc'
+            ];
         }
+        $data = $this->countryService->all($input, $sortBy, $this->getPerPage());
+        if ($this->isWithoutPagination()) {
+            return $this->success(CountryResource::collection($data));
+        }
+        CountryResource::collection($data);
+        return $this->success($data);
     }
 }

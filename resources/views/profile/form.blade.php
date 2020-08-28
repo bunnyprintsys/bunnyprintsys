@@ -10,68 +10,167 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-row">
-                            <div class="form-group col-md-8 col-sm-8 col-xs-12">
+                    <div class="form-row">
+                        <div class="form-group col-md-8 col-sm-8 col-xs-12">
+                            <label class="control-label required">
+                                Company Name
+                            </label>
+                            <input type="text" name="company_name" class="form-control" v-model="form.company_name" :class="{ 'is-invalid' : formErrors['company_name'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['company_name']">
+                                <strong>@{{ formErrors['company_name'][0] }}</strong>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <label class="control-label">
+                                ROC
+                            </label>
+                            <input type="text" name="roc" class="form-control" v-model="form.roc" :class="{ 'is-invalid' : formErrors['roc'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['roc']">
+                                <strong>@{{ formErrors['roc'][0] }}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                            <label class="control-label required">
+                                Attn Name
+                            </label>
+                            <input type="text" name="name" class="form-control" v-model="form.name" :class="{ 'is-invalid' : formErrors['name'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
+                                <strong>@{{ formErrors['name'][0] }}</strong>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                            <label class="control-label required">
+                                Email
+                            </label>
+                            <input type="text" name="email" class="form-control" v-model="form.email" :class="{ 'is-invalid' : formErrors['email'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['email']">
+                                <strong>@{{ formErrors['email'][0] }}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                            <label class="control-label required">
+                                Phone Number
+                            </label>
+                            <input type="text" name="phone_number" class="form-control" v-model="form.phone_number" :class="{ 'is-invalid' : formErrors['phone_number'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['phone_number']">
+                                <strong>@{{ formErrors['phone_number'][0] }}</strong>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                            <label class="control-label">
+                                Alt Phone Number
+                            </label>
+                            <input type="text" name="alt_phone_number" class="form-control" v-model="form.alt_phone_number">
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <div class="form-row pt-2">
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label required">
-                                    Company Name
+                                    Unit #
                                 </label>
-                                <input type="text" name="name" class="form-control" v-model="form.name" :class="{ 'is-invalid' : formErrors['name'] }">
-                                <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
-                                    <strong>@{{ formErrors['name'][0] }}</strong>
+                                <input type="text" name="unit" class="form-control" v-model="form.unit" :class="{ 'is-invalid' : formErrors['unit'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['unit']">
+                                    <strong>@{{ formErrors['unit'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label ">
+                                    Block #
+                                </label>
+                                <input type="text" name="block" class="form-control" v-model="form.block" :class="{ 'is-invalid' : formErrors['block'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['block']">
+                                    <strong>@{{ formErrors['block'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label">
+                                    Building Name
+                                </label>
+                                <input type="text" name="building_name" class="form-control" v-model="form.building_name" :class="{ 'is-invalid' : formErrors['building_name'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['building_name']">
+                                    <strong>@{{ formErrors['building_name'][0] }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label required">
+                                    Street Name
+                                </label>
+                                <input type="text" name="road_name" class="form-control" v-model="form.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
+                                    <strong>@{{ formErrors['road_name'][0] }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label required">
+                                    Postcode
+                                </label>
+                                <input type="text" name="postcode" class="form-control" v-model="form.postcode" :class="{ 'is-invalid' : formErrors['postcode'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['postcode']">
+                                    <strong>@{{ formErrors['postcode'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label">
+                                    State
+                                </label>
+                                <select2-must class="form-group" name="state" v-model="form.state_id">
+                                    <option value="">Nope</option>
+                                    <option v-for="state in states" :value="state.id">
+                                        @{{state.name}}
+                                    </option>
+                                </select2-must>
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['state_id']">
+                                    <strong>@{{ formErrors['state_id'][0] }}</strong>
                                 </span>
                             </div>
                             <div class="form-group col-md-4 col-sm-4 col-xs-12">
                                 <label class="control-label required">
-                                    ROC
+                                    Country
                                 </label>
-                                <input type="text" name="roc" class="form-control" v-model="form.roc" :class="{ 'is-invalid' : formErrors['roc'] }">
-                                <span class="invalid-feedback" role="alert" v-if="formErrors['roc']">
-                                    <strong>@{{ formErrors['roc'][0] }}</strong>
+                                <select2-must class="form-group" name="country" v-model="form.country_id">
+                                    <option value="">Nope</option>
+                                    <option v-for="country in countries" :value="country.id">
+                                        @{{country.name}}
+                                    </option>
+                                </select2-must>
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['country_id']">
+                                    <strong>@{{ formErrors['country_id'][0] }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                <label class="control-label required">
+                                    Job ID Prefix
+                                </label>
+                                <input type="text" name="job_prefix" class="form-control" v-model="form.job_prefix" :class="{ 'is-invalid' : formErrors['job_prefix'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['job_prefix']">
+                                    <strong>@{{ formErrors['job_prefix'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                <label class="control-label required">
+                                    Invoice Num Prefix
+                                </label>
+                                <input type="text" name="invoice_prefix" class="form-control" v-model="form.invoice_prefix" :class="{ 'is-invalid' : formErrors['invoice_prefix'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['invoice_prefix']">
+                                    <strong>@{{ formErrors['invoice_prefix'][0] }}</strong>
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="control-label required">
-                            Address
-                        </label>
-                        <textarea name="address" rows="3" class="form-control" v-model="form.address" :class="{ 'is-invalid' : formErrors['address'] }"></textarea>
-                        <span class="invalid-feedback" role="alert" v-if="formErrors['address']">
-                            <strong>@{{ formErrors['address'][0] }}</strong>
-                        </span>
-                    </div>
-
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="control-label required">
-                            Country
-                        </label>
-                        <select2-must v-model="form.country_id">
-                            <option v-for="country in countries" :value="country.id">
-                                @{{country.name}}
-                            </option>
-                        </select2-must>
-                        <span class="invalid-feedback" role="alert" v-if="formErrors['country_id']">
-                            <strong>@{{ formErrors['country_id'][0] }}</strong>
-                        </span>
-                    </div>
-{{--
-                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        <label class="control-label required">
-                            ID Type
-                        </label>
-                        <select class="custom-select" v-model="form.id_type">
-                            <option value="">All</option>
-                            @foreach($idTypes as $idType)
-                                <option value="{{ $idType['code'] }}">
-                                    {{ $idType['name'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <span class="invalid-feedback" role="alert" v-if="formErrors['id_type']">
-                            <strong>@{{ formErrors['id_type'][0] }}</strong>
-                        </span>
-                    </div>                     --}}
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">

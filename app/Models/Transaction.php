@@ -10,35 +10,34 @@ class Transaction extends Model
 {
     use RunningNumber;
 
-    const STATUSES = [
-        'PENDING_ARTWORK' => [
-            'id' => 1,
-            'desc' => 'Pending Artwork'
-        ],
-        'PENDING_PAYMENT'  => [
-            'id' => 2,
-            'desc' => 'Pending Payment'
-        ],
-        'PRODUCTION' => [
-            'id' => 3,
-            'desc' => 'Production'
-        ],
-        'DELIVERED' => [
-            'id' => 4,
-            'desc' => 'Delivered'
-        ]
-    ];
-
     protected $fillable = [
         'order_date', 'job_id', 'job', 'cost', 'receiver_id',
-        'is_artwork_provided', 'is_design_required', 'invoice_id', 'dispatch_date', 'status',
-        'tracking_number', 'customer_id', 'admin_id'
+        'is_artwork_provided', 'is_design_required', 'dispatch_date', 'status_id',
+        'tracking_number', 'subtotal', 'grandtotal', 'remarks',
+        'customer_id', 'admin_id', 'profile_id', 'invoice_id', 'invoice_number',
+        'address_id', 'sales_channel_id', 'delivery_method_id',
+        'created_by', 'updated_by'
     ];
 
     // relationships
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
     public function customer()
     {
-        return $this->belongsTo('App\Models\Customer');
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function deals()
+    {
+        return $this->hasMany(Deal::class);
+    }
+
+    public function deliveryMethod()
+    {
+        return $this->belongsTo(DeliveryMethod::class, 'delivery_method_id');
     }
 
     public function handler()
@@ -46,9 +45,40 @@ class Transaction extends Model
         return $this->belongsTo('App\Models\User', 'admin_id');
     }
 
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
+
     public function receiver()
     {
-        return $this->belongsTo('App\Models\Receiver');
+        return $this->belongsTo(Receiver::class);
+    }
+
+    public function salesChannel()
+    {
+        return $this->belongsTo(SalesChannel::class, 'sales_channel_id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    // setter and getter
+    public function setCostAttribute($value)
+    {
+        $this->attributes['cost'] = $value ? $value : 0;
     }
 
     /**

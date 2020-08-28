@@ -18,46 +18,44 @@
 
 <template id="index-transaction-template">
   <div>
-    <div class="card">
-      <div class="card-header">
+      <div class="card">
+          <loading-overlay :active.sync="loading"></loading-overlay>
+          <div class="card-header text-white">
           <div class="form-row">
           <span class="mr-auto">
-            <i class="far fa-credit-card"></i>
+              <i class="far fa-credit-card"></i>
               Transaction
           </span>
-          <button type="button" class="btn bg-primary text-white btn-sm ml-auto" data-toggle="modal" data-target="#transaction_modal" @click="createSingleTransaction">
+          <button type="button" class="btn btn-primary text-white btn-sm ml-auto" data-toggle="modal" data-target="#transaction_modal" @click="createSingleEntry">
               <i class="fas fa-plus"></i>
           </button>
           </div>
       </div>
       <div class="card-body">
-        <flash message="{{ session('flash') }}"></flash>
-        <form action="#" @submit.prevent="searchData" method="GET" autocomplete="off">
-        <div class="form-row">
-            <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                <label for="name" class="control-label">Job ID</label>
-                <input type="text" name="name" class="form-control" v-model="search.job_id" placeholder="Job ID" autocomplete="off" @keyup="onFilterChanged">
-            </div>
-            <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                <label for="customer_name" class="control-label">Name</label>
-                <input type="text" name="customer_name" class="form-control" v-model="search.customer_name" placeholder="Customer Name" autocomplete="off" @keyup="onFilterChanged">
-            </div>
-            <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                <label for="customer_phone_number" class="control-label">Phone Number</label>
-                <input type="text" name="customer_phone_number" class="form-control" v-model="search.customer_phone_number" placeholder="Customer Phone Number" autocomplete="off" @keyup="onFilterChanged">
-            </div>
-            <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                <label for="city" class="control-label">Status</label>
-                <select2 v-model="search.status" @input="onFilterChanged">
-                    <option value="">All</option>
-                    @foreach(\App\Models\Transaction::STATUSES as $status)
-                        <option value="{{$status['id']}}">
-                            {{$status['desc']}}
+          <form action="#" @submit.prevent="searchData" method="GET" autocomplete="off">
+            <div class="form-row">
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                    <label for="name" class="control-label">Job ID</label>
+                    <input type="text" name="name" class="form-control" v-model="search.job_id" placeholder="Job ID" autocomplete="off" @keyup="onFilterChanged">
+                </div>
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                    <label for="customer_name" class="control-label">Name</label>
+                    <input type="text" name="customer_name" class="form-control" v-model="search.customer_name" placeholder="Customer Name" autocomplete="off" @keyup="onFilterChanged">
+                </div>
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                    <label for="customer_phone_number" class="control-label">Phone Number</label>
+                    <input type="text" name="customer_phone_number" class="form-control" v-model="search.customer_phone_number" placeholder="Customer Phone Number" autocomplete="off" @keyup="onFilterChanged">
+                </div>
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                    <label for="city" class="control-label">Status</label>
+                    <select2 v-model="search.status" @input="onFilterChanged">
+                        <option value="">All</option>
+                        <option v-for="status in statuses" :value="status.id">
+                            @{{status.name}}
                         </option>
-                    @endforeach
-                </select2>
+                    </select2>
+                </div>
             </div>
-        </div>
         <div class="form-row">
             <div class="mr-auto">
                 <div class="btn-group" role="group">
@@ -69,13 +67,12 @@
                 <div class="form-row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="mr-auto">
-                            <span class="font-weight-light" v-if="filterchanged">
+                            <span class="font-weight-light" v-if="filterChanged">
                                 <small>You have changed the filter, Search?</small>
                             </span>
                         </div>
                     </div>
                 </div>
-                <pulse-loader :loading="searching" :height="50" :width="100" style="padding-top:5px;"></pulse-loader>
             </div>
             <div class="ml-auto">
                 <div>
@@ -94,9 +91,10 @@
         </div>
         </form>
 
-        <div class="form-row" style="padding-top: 20px;">
+        <loading-overlay :active.sync="loading"></loading-overlay>
+        <div style="padding-top: 20px;">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover table-sm" style="font-size: 13px;">
                     <tr class="table-secondary">
                         <th class="text-center">
                             #
@@ -112,11 +110,6 @@
                             <span v-if="sortkey == 'job_id' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
-                            <a href="#" @click="sortBy('job')">Job</a>
-                            <span v-if="sortkey == 'job' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'job' && reverse" class="fa fa-caret-up"></span>
-                        </th>
-                        <th class="text-center">
                             <a href="#" @click="sortBy('customer_name')">Customer Name</a>
                             <span v-if="sortkey == 'customer_name' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'customer_name' && reverse" class="fa fa-caret-up"></span>
@@ -125,11 +118,6 @@
                             <a href="#" @click="sortBy('phone_number')">Phone Number</a>
                             <span v-if="sortkey == 'phone_number' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'phone_number' && reverse" class="fa fa-caret-up"></span>
-                        </th>
-                        <th class="text-center">
-                            <a href="#" @click="sortBy('alt_phone_number')">Alt Phone Number</a>
-                            <span v-if="sortkey == 'alt_phone_number' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'alt_phone_number' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
                             <a href="#" @click="sortBy('delivery_address')">Delivery Address</a>
@@ -142,21 +130,22 @@
                             <span v-if="sortkey == 'amount' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
-                            <a href="#" @click="sortBy('is_artwork_provided')">Artwork</a>
+                            <a href="#" @click="sortBy('is_artwork_provided')">Artwork Provided?</a>
                             <span v-if="sortkey == 'is_artwork_provided' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'is_artwork_provided' && reverse" class="fa fa-caret-up"></span>
                         </th>
-{{--
+
                         <th class="text-center">
-                            <a href="#" @click="sortBy('is_design_required')">Design</a>
+                            <a href="#" @click="sortBy('is_design_required')">Design Needed?</a>
                             <span v-if="sortkey == 'is_design_required' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'is_design_required' && reverse" class="fa fa-caret-up"></span>
-                        </th> --}}
-                        <th class="text-center">
-                            <a href="#" @click="sortBy('invoice_id')">Invoice#</a>
-                            <span v-if="sortkey == 'invoice_id' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'invoice_id' && reverse" class="fa fa-caret-up"></span>
                         </th>
+{{--
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('invoice_number')">Invoice#</a>
+                            <span v-if="sortkey == 'invoice_number' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'invoice_number' && reverse" class="fa fa-caret-up"></span>
+                        </th> --}}
                         <th class="text-center">
                             <a href="#" @click="sortBy('dispatch_date')">Dispatch Date</a>
                             <span v-if="sortkey == 'dispatch_date' && !reverse" class="fa fa-caret-down"></span>
@@ -173,11 +162,13 @@
                             <span v-if="sortkey == 'tracking_number' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
-                            <a href="#" @click="sortBy('user_name')">Handle By</a>
-                            <span v-if="sortkey == 'user_name' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'user_name' && reverse" class="fa fa-caret-up"></span>
+                            <a href="#" @click="sortBy('created_by')">Created By</a>
+                            <span v-if="sortkey == 'created_by' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'created_by' && reverse" class="fa fa-caret-up"></span>
                         </th>
-                        <th></th>
+                        <th>
+                            Action
+                        </th>
                     </tr>
 
                     <tr v-for="(data, index) in list" class="row_edit">
@@ -185,10 +176,10 @@
                             @{{ index + pagination.from }}
                         </td>
                         <td class="text-center">
-                            @{{ data.job_id }}
+                            @{{ data.order_date }}
                         </td>
                         <td class="text-center">
-                            @{{ data.job }}
+                            @{{ data.job_id }}
                         </td>
                         <td class="text-center">
                             @{{ data.customer_name }}
@@ -199,36 +190,48 @@
                             @{{ data.alt_phone_number }}
                         </td>
                         <td class="text-center">
-                            @{{ data.delivery_address }}
+                            @{{ data.address.full_address }}
                         </td>
                         <td class="text-right">
-                            @{{ data.amount }}
+                            @{{ data.grandtotal }}
                         </td>
                         <td class="text-center">
-                            <span v-if="data.is_artwork_provided" style="color: green;">
+                            <span v-if="data.is_artwork_provided.id" style="color: green;">
                                 <i class="fas fa-check-circle"></i>
                             </span>
-                            <span v-if="!data.is_artwork_provided" style="color: red;">
+                            <span v-if="!data.is_artwork_provided.id" style="color: red;">
                                 <i class="fas fa-times-circle"></i>
                             </span>
                         </td>
                         <td class="text-center">
-                            @{{ data.invoice_id }}
+                            <span v-if="data.is_design_required.id" style="color: green;">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <span v-if="!data.is_design_required.id" style="color: red;">
+                                <i class="fas fa-times-circle"></i>
+                            </span>
                         </td>
+{{--
+                        <td class="text-center">
+                            @{{ data.invoice_number }}
+                        </td> --}}
                         <td class="text-center">
                             @{{ data.dispatch_date }}
                         </td>
                         <td class="text-center">
-                            @{{ data.status }}
+                            @{{ data.status.name }}
                         </td>
                         <td class="text-center">
                             @{{ data.tracking_number }}
                         </td>
                         <td class="text-center">
-                            @{{ data.user_name }}
+                            @{{ data.created_by }}
                         </td>
                         <td class="text-center">
                             <div class="btn-group">
+                                <button type="button" class="btn btn-light btn-outline-secondary btn-sm" data-toggle="modal" data-target="#transaction_modal" @click="editSingleEntry(data)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -242,8 +245,8 @@
             </div>
         </div>
       </div>
-    </div>
-    <form-transaction @updatetable="searchData" :clearform="clearform" :data="formdata"></form-transaction>
+      </div>
+      <form-transaction @updatetable="searchData" :clearform="clearform" :data="formdata" :action="action"></form-transaction>
   </div>
 </template>
 

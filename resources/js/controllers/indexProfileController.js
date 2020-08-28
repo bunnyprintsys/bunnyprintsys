@@ -6,7 +6,7 @@ if (document.querySelector('#indexProfileController')) {
           list: [],
           unit_options: [],
           search: {
-            name: '',
+            company_name: '',
           },
           searching: false,
           sortkey: '',
@@ -38,7 +38,7 @@ if (document.querySelector('#indexProfileController')) {
             sortkey: this.sortkey,
             reverse: this.reverse,
             per_page: this.selected_page,
-            name: this.search.name
+            name: this.search.company_name
           };
           axios.get(
             // subject to change (search list and pagination)
@@ -46,7 +46,7 @@ if (document.querySelector('#indexProfileController')) {
             '&per_page=' + data.per_page +
             '&sortkey=' + data.sortkey +
             '&reverse=' + data.reverse +
-            '&name=' + data.name
+            '&name=' + data.company_name
           ).then((response) => {
             const result = response.data;
             if (result) {
@@ -69,13 +69,21 @@ if (document.querySelector('#indexProfileController')) {
         },
         createSingleProfile() {
           this.clearform = {}
-          this.formdata = '';
+          this.formdata = {}
         },
         editSingleProfile(data) {
+          console.log(JSON.parse(JSON.stringify(data)))
           this.clearform = {}
-          this.formdata = '';
+          this.formdata = {}
           this.formdata = {
               ...data,
+              'address_id': data.address.id,
+              'unit': data.address.unit,
+              'block': data.address.block,
+              'building_name': data.address.building_name,
+              'road_name': data.address.road_name,
+              'postcode': data.address.postcode,
+              'state_id': data.address.state_id,
           }
         },
         onFilterChanged() {
@@ -98,17 +106,32 @@ if (document.querySelector('#indexProfileController')) {
         return {
           form: {
             id: '',
-            name: '',
+            address_id: '',
+            user_id: '',
+            company_name: '',
             roc: '',
-            address: '',
+            name: '',
+            email: '',
+            phone_number: '',
+            alt_phone_number: '',
+            unit: '',
+            block: '',
+            building_name: '',
+            road_name: '',
+            postcode: '',
+            state_id: '',
             country_id: '',
+            job_prefix: '',
+            invoice_prefix: ''
           },
           formErrors: {},
+          states: [],
           countries: []
         }
       },
       mounted() {
-        this.getCountriesOption()
+        this.getStateOptions()
+        this.getCountryOptions()
       },
       methods: {
         onSubmit() {
@@ -125,11 +148,16 @@ if (document.querySelector('#indexProfileController')) {
               this.formErrors = error.response.data.errors
           });
         },
-        getCountriesOption() {
-          axios.get('/api/country').then((response) => {
+        getStateOptions() {
+          axios.get('/api/state/country/1').then((response) => {
+            this.states = response.data.data
+          })
+        },
+        getCountryOptions() {
+          axios.get('/api/country/all').then((response) => {
             this.countries = response.data.data
           })
-        }
+        },
       },
       watch: {
         'data'(val) {

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Customer;
+use App\Models\User;
 use App\Repositories\CustomerRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Arr;
@@ -28,11 +29,11 @@ class CustomerService
      */
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-/*
+
         $user = Auth::user();
         if (!$user->hasRole('super-admin')) {
-            $filter['profile_id'] = $user->profile_id;
-        } */
+            // $filter['profile_id'] = $user->profile_id;
+        }
         return $this->customerRepository->all($filter, $sortBy, $pagination);
     }
 
@@ -51,7 +52,9 @@ class CustomerService
             }
         }
 
-        $data = $this->customerRepository->create($input);
+        $user = Auth::user();
+        $data = $this->customerRepository->create($user, $input);
+        // $user = $this->userRepository->create($input);
         $data->user()->create($input);
 
         return $data;
@@ -63,7 +66,7 @@ class CustomerService
      * @return \App\Models\Customer
      * @throws \Exception
      */
-    public function updateCustomer($input)
+    public function updateCustomer(User $user, $input)
     {
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
@@ -73,7 +76,7 @@ class CustomerService
             throw new \Exception('Member not found', 404);
         }
 
-        $data = $this->customerRepository->update($model, $input);
+        $data = $this->customerRepository->update($user, $model, $input);
 
         $data->user()->update($input);
 

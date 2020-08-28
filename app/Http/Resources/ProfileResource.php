@@ -16,14 +16,19 @@ class ProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'user_id' => $this->user ? $this->user->id : null,
+            'company_name' => $this->name,
             'roc' => $this->roc,
-            'address' => $this->address,
-            'attn_name' => $this->user ? $this->user->name : null,
+            'address' => $this->address ? new AddressResource($this->address) : null,
+            'name' => $this->user ? $this->user->name : null,
             'email' => $this->user ? $this->user->email : null,
-            'attn_phone_number' => $this->user ? $this->user->phone_number : null,
+            'phone_number' => $this->user ? $this->user->phone_number : null,
+            'alt_phone_number' => $this->user ? $this->user->alt_phone_number : null,
             'country_id' => $this->country_id,
-            'user_id' => $this->user ? $this->user->id : null
+            'country_name' => $this->country ? $this->country->name : null,
+            'user_id' => $this->user ? $this->user->id : null,
+            'job_prefix' => $this->job_prefix,
+            'invoice_prefix' => $this->invoice_prefix
         ];
     }
 }

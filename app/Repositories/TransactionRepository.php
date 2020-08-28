@@ -50,7 +50,8 @@ class TransactionRepository
     {
         $model = new Transaction();
         $model->fill($input);
-        // $model->profile_id = $user->profile_id;
+        $model->profile_id = $user->profile_id;
+        $model->created_by = $user->id;
         $model->save();
         return $model;
     }
@@ -64,6 +65,7 @@ class TransactionRepository
     public function update(User $user, Transaction $model, $input)
     {
         $model->fill($input);
+        $model->updated_by = $user->id;
         $model->save();
         return $model;
     }

@@ -35,8 +35,8 @@
         <form action="#" @submit.prevent="searchData" method="GET" autocomplete="off">
         <div class="form-row">
             <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                <label for="name" class="control-label">Name</label>
-                <input type="text" name="name" class="form-control" v-model="search.name" placeholder="Name" autocomplete="off" @keyup="onFilterChanged">
+                <label for="name" class="control-label">Company Name</label>
+                <input type="text" name="company_name" class="form-control" v-model="search.company_name" placeholder="Company Name" autocomplete="off" @keyup="onFilterChanged">
             </div>
         </div>
         <div class="form-row">
@@ -83,7 +83,7 @@
                             #
                         </th>
                         <th class="text-center">
-                            Name
+                            Company Name
                         </th>
                         <th class="text-center">
                             RoC
@@ -112,22 +112,22 @@
                             @{{ index + pagination.from }}
                         </td>
                         <td class="text-center">
-                            @{{ data.name }}
+                            @{{ data.company_name }}
                         </td>
                         <td class="text-center">
                             @{{ data.roc }}
                         </td>
                         <td class="text-left">
-                            @{{ data.address }}
+                            @{{ data.address ? data.address.full_address : null }}
                         </td>
                         <td class="text-center">
                             @{{ data.country_name }}
                         </td>
                         <td class="text-center">
-                            @{{ data.attn_name }}
+                            @{{ data.name }}
                         </td>
                         <td class="text-center">
-                            @{{ data.attn_phone_number }}
+                            @{{ data.phone_number }}
                         </td>
                         <td class="text-center">
                             <div class="btn-group">

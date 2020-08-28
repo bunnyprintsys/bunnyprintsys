@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\RunningNumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 class Profile extends Model
 {
+    use RunningNumber;
 
     const TYPE_INDIVIDUAL = 1;
     const TYPE_COORPERATE = 2;
@@ -17,10 +19,17 @@ class Profile extends Model
     ];
 
     protected $fillable = [
-        'name', 'roc', 'address', 'user_id', 'country_id'
+        'name', 'roc', 'address', 'user_id', 'country_id',
+        'job_running_number', 'job_prefix', 'invoice_running_number', 'invoice_prefix'
     ];
 
     // relationships
+
+    public function address()
+    {
+        return $this->morphOne(Address::class, 'typeable');
+    }
+
     public function taxes()
     {
         return $this->hasMany('App\Models\Tax');
@@ -28,7 +37,7 @@ class Profile extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->morphOne(User::class, 'typeable');
     }
 
     public function country()
@@ -47,6 +56,26 @@ class Profile extends Model
 
         if (is_array($value)) {
             return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeName($query, $value, $like = true)
+    {
+        $columnName = $this->getAliasColumnName('name');
+
+        if ($like) {
+            return $query->where($columnName, 'LIKE', '%'.$value.'%');
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeRoc($query, $value, $like = true)
+    {
+        $columnName = $this->getAliasColumnName('roc');
+
+        if ($like) {
+            return $query->where($columnName, 'LIKE', '%'.$value.'%');
         }
         return $query->where($columnName, $value);
     }
@@ -72,12 +101,12 @@ class Profile extends Model
             $query->whereNotIn('id', $input['excluded_id']);
         }
 
-        if (Arr::get($input, 'name', false)) {
-            $query->name($input['name'], $like);
+        if (Arr::get($input, 'company_name', false)) {
+            $query->name($input['company_name'], $like);
         }
 
         if (Arr::get($input, 'roc', false)) {
-            $query->name($input['roc'], $like);
+            $query->roc($input['roc'], $like);
         }
 
         if (Arr::get($input, 'email', false)) {
@@ -152,4 +181,29 @@ class Profile extends Model
         }
         return $columnName;
     }
+
+    /**
+     * Make sure got DB transaction cover this function
+     * @return string
+     */
+    public function generateNextJobId()
+    {
+        $number = $this->getRunningNumByYearMonth($this->job_running_number);
+        $this->job_running_number = $number;
+        $this->save();
+        return $this->prefix . $number;
+    }
+
+    /**
+     * Make sure got DB transaction cover this function
+     * @return string
+     */
+    public function generateNextInvoiceId()
+    {
+        $number = $this->getRunningNumByYearMonth($this->invoice_running_number);
+        $this->invoice_running_number = $number;
+        $this->save();
+        return $this->invoice_prefix . $number;
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\ProfileResource;
 use App\Services\ProfileService;
 use App\Traits\Pagination;
@@ -58,25 +59,16 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Illuminate\Http\Resources\Json\Resource
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function storeUpdateProfileApi(Request $request)
+    public function storeUpdateProfileApi(ProfileRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'roc' => 'required',
-        ]);
-
-        try {
-            $input = $request->all();
-            /** @var User $user */
-            $user = Auth::user();
-            if ($request->id) { // update
-                $data = $this->profileService->updateProfile($user, $input);
-            } else { // create
-                $data = $this->profileService->createNewProfile($user, $input);
-            }
-            return $this->success(new ProfileResource($data));
-        } catch (\Exception $e) {
-            return $this->fail(null, $e->getMessage());
+        $input = $request->all();
+        /** @var User $user */
+        $user = Auth::user();
+        if ($request->id) { // update
+            $data = $this->profileService->updateProfile($user, $input);
+        } else { // create
+            $data = $this->profileService->createNewProfile($user, $input);
         }
+        return $this->success(new ProfileResource($data));
     }
 }

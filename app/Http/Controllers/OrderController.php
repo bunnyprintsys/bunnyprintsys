@@ -70,6 +70,18 @@ class OrderController extends Controller
             'height' => 'lte:455'
         ]);
 
+
+/*
+        $width = floor($dimension['width'] / ($width + 3)); [get the floor value, etc 2.38 ---> 2]
+        $height = floor($dimension['height']/ ($height + 3));
+
+        $area = $width x $height;
+
+        $formula = round($qty/ $area) + 1; [rounding quantity divide area]
+
+        $total = ($formula * $quantitymultiplier * $material->multiplier * $shape->multiplier * $lamination->multiplier : 1) + $delivery->multiplier;
+ */
+
         $floor_width1 = floor($dimension['width'] / ($width + 3));
         $floor_height1 = floor($dimension['height']/ ($height + 3));
 

@@ -51,6 +51,16 @@ class User extends Authenticatable
     ];
 
     // relationships
+    public function phoneCountry()
+    {
+        return $this->belongsTo(Country::class, 'phone_country_id');
+    }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
+
     public function typeable()
     {
         return $this->morphTo();

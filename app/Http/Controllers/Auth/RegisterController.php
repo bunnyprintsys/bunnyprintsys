@@ -51,7 +51,6 @@ class RegisterController extends Controller
      */
     public function __construct(CustomerService $customerService, OtpService $otpService, SmsService $smsService, UserService $userService)
     {
-        $this->middleware('guest');
         $this->customerService = $customerService;
         $this->otpService = $otpService;
         $this->smsService = $smsService;
@@ -81,7 +80,7 @@ class RegisterController extends Controller
     {
         $input = request()->all();
         $input['phone_country_id'] = request('phone_country_id')['id'];
-        $obj = $this->customerService->createNewCustomer($input);
+        $obj = $this->customerService->createNewCustomer(null, $input);
         Auth::login($obj->user);
 
         return $this->success(new CustomerResource($obj));

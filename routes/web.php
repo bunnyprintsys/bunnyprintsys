@@ -1,6 +1,6 @@
 <?php
 
-// auth()->loginUsingId(1, true);
+auth()->loginUsingId(1, true);
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home.index');
@@ -21,6 +21,7 @@ Route::group(['prefix' => 'order'], function() {
 });
 Route::group(['prefix' => 'transaction'], function() {
     Route::get('/', 'TransactionController@index')->name('transaction.index');
+    Route::get('/invoice/{transactionId}', 'TransactionController@getInvoice');
 });
 Route::group(['prefix' => 'price'], function() {
     Route::get('/', 'PriceController@index')->name('price.index');
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'voucher'], function() {
 });
 Route::group(['prefix' => 'public'], function(){
     Route::get('/label-sticker', 'HomeController@getLabelStickerQuotationIndex')->name('public.quotation.label-sticker');
+    Route::get('/api/countries', 'HomeController@getCountriesApi');
 });
 
 Route::group(['prefix' => 'api'], function() {
@@ -42,16 +44,20 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/store-update', 'AdminController@storeUpdateAdminApi');
     });
     Route::group(['prefix' => 'country'], function() {
-        Route::get('/', 'CountryController@getCountriesApi');
+        Route::get('/all', 'CountryController@getAllCountriesApi');
     });
     Route::group(['prefix' => 'customer'], function() {
         Route::get('/', 'CustomerController@getCustomersApi');
         Route::post('/store-update', 'CustomerController@storeUpdateCustomerApi');
+        Route::post('/address', 'CustomerController@getAddressApi');
     });
     Route::group(['prefix' => 'deliveries'], function() {
         Route::get('/all', 'DeliveryController@getAllDeliveriesApi');
         Route::get('/product/{product_id}', 'DeliveryController@getAllDeliveriesByProductIdApi');
         Route::post('/{id}', 'DeliveryController@updateProductDeliveryByIdApi');
+    });
+    Route::group(['prefix' => 'delivery-method'], function() {
+        Route::get('/all', 'DeliveryMethodController@getAllDeliveryMethodsApi');
     });
     Route::group(['prefix' => 'laminations'], function() {
         Route::get('/all', 'LaminationController@getAllLaminationsApi');
@@ -74,6 +80,9 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/all', 'OrderQuantityController@getAllOrderquantitiesApi');
         Route::post('/{id}', 'OrderQuantityController@updateOrderquantityByIdApi');
     });
+    Route::group(['prefix' => 'product'], function() {
+        Route::get('/all', 'ProductController@getProductsApi');
+    });
     Route::group(['prefix' => 'profile'], function() {
         Route::get('/', 'ProfileController@getProfilesApi');
         Route::post('/store-update', 'ProfileController@storeUpdateProfileApi');
@@ -92,14 +101,24 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/create-otp', 'Auth\RegisterController@createOtp');
         Route::post('/validate-otp', 'Auth\RegisterController@validateOtp');
     });
+    Route::group(['prefix' => 'sales-channel'], function() {
+        Route::get('/all', 'SalesChannelController@getAllSalesChannelsApi');
+    });
     Route::group(['prefix' => 'shapes'], function() {
         Route::get('/all', 'ShapeController@getAllShapesApi');
-        Route::get('/product/{product_id}', 'ShapeController@getAllShapesByProductIdApi');
-        Route::post('/{id}', 'ShapeController@updateProductShapeByIdApi');
+    });
+    Route::group(['prefix' => 'state'], function() {
+        Route::get('/all', 'StateController@getAllStatesApi');
+        Route::get('/country/{country_id}', 'StateController@getStatesByCountryId');
+    });
+    Route::group(['prefix' => 'status'], function() {
+        Route::get('/all', 'StatusController@getAllStatusesApi');
     });
     Route::group(['prefix' => 'transaction'], function() {
         Route::get('/', 'TransactionController@getTransactionsApi');
         Route::post('/store-update', 'TransactionController@storeUpdateTransactionApi');
+        Route::post('/create', 'TransactionController@createTransactionApi');
+        Route::post('/update/{id}', 'TransactionController@updateTransactionApi');
     });
     Route::group(['prefix' => 'user'], function() {
         Route::post('/{id}/status-toggle', 'UserController@toggleUserStatusApi');

@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\Transaction;
 use App\Models\User;
+use App\Repositories\DealRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
+use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class TransactionService
 {
@@ -15,8 +18,9 @@ class TransactionService
     private $transactionRepository;
     private $userRepository;
 
-    public function __construct(TransactionRepository $transactionRepository, UserRepository $userRepository)
+    public function __construct(DealRepository $dealRepository, TransactionRepository $transactionRepository, UserRepository $userRepository)
     {
+        $this->dealRepository = $dealRepository;
         $this->transactionRepository = $transactionRepository;
         $this->userRepository = $userRepository;
     }
@@ -46,13 +50,19 @@ class TransactionService
     public function createNewTransaction(User $user, $input)
     {
         $this->validateMandatoryFields($input);
+
+        DB::beginTransaction();
+
+        $input['job_id'] = $user->profile->generateNextJobId();
         // remove null value
         foreach ($input as $key => $value) {
             if (!$value) {
                 unset($input[$key]);
             }
         }
+
         $data = $this->transactionRepository->create($user, $input);
+        DB::commit();
 
         return $data;
     }
@@ -68,11 +78,11 @@ class TransactionService
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
         }
-        $model = $this->getOneById($user, $input['id']);
+        $model = $this->getOneById($input['id']);
         if (!$model) {
             throw new \Exception('Member not found', 404);
         }
-
+        unset($input['created_by']);
         $data = $this->transactionRepository->update($user, $model, $input);
 
         return $data;
@@ -83,7 +93,7 @@ class TransactionService
      * @param $id
      * @return Tenant
      */
-    public function getOneById(User $user, $id)
+    public function getOneById($id)
     {
 /*
         if (!$user->hasRole('super-admin')) {
@@ -94,13 +104,69 @@ class TransactionService
         return $this->transactionRepository->getOne($filter);
     }
 
+    // bind deals to transaction
+    public function addDealsToTransaction(Transaction $transaction, $inputs, $user = null)
+    {
+        try {
+            DB::beginTransaction();
+
+            if (empty($inputs)) {
+                throw new \Exception('Items is empty');
+            }
+
+            $total = 0;
+            $items = [];
+            $transaction->deals()->delete();
+            foreach ($inputs as $index => $input) {
+                if (!isset($input['item_id'])) {
+                    throw new \Exception('Items.' . $index . ' item_id not found');
+                }
+                if (!isset($input['qty'])) {
+                    throw new \Exception('Items.' . $index . ' qty not found');
+                }
+                if ($input['qty'] <= 0) {
+                    throw new \Exception('Items.' . $index . ' qty must be positive number');
+                }
+                if ($input['price'] <= 0) {
+                    throw new \Exception('Items.' . $index . ' price must be positive number');
+                }
+
+                $input['transaction_id'] = $transaction->id;
+                $input['product_id'] = $input['item_id'];
+                $input['amount'] = $input['qty'] * $input['price'];
+                $total += round($input['amount'], 2);
+                $items[] = $this->dealRepository->create($user, $input);
+            }
+            $transaction->subtotal = $total;
+            $transaction->grandtotal = $total;
+            $transaction->save();
+            DB::commit();
+            return $items;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    // generate invoices pdf
+    public function generateInvoicePdf(Transaction $transaction)
+    {
+            $pdf = PDF::loadView('pdf.simple_invoice', [
+                'data' => $transaction
+            ]);
+
+            $name = $transaction->job_id . '_' .time() . '.pdf';
+
+            return $pdf->stream($name);
+    }
+
     /**
      * @param $input
      * @throws \Exception
      */
     protected function validateMandatoryFields($input)
     {
-        $mandatory = ['name', 'phone_number', 'email'];
+        $mandatory = [];
         foreach ($mandatory as $value) {
             if (!Arr::get($input, $value, false)) {
                 throw new \Exception($value . ' is mandatory');

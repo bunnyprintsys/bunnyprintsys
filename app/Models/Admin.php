@@ -11,13 +11,18 @@ class Admin extends Model
 {
 
     protected $fillable = [
-        'join_date', 'leave_date'
+        'join_date', 'leave_date', 'profile_id'
     ];
 
     // relationships
-    public function user()
+    public function profile()
     {
-        return $this->morphOne(User::class, 'typeable');
+        return $this->belongsTo(Profile::class);
+    }
+
+    public function users()
+    {
+        return $this->morphMany(User::class, 'typeable');
     }
 
     // getter

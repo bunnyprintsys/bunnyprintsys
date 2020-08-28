@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Customer;
+use App\Models\User;
 use DB;
 
 class CustomerRepository
@@ -44,11 +45,13 @@ class CustomerRepository
      * @param $input
      * @return Customer
      */
-    public function create($input)
+    public function create(User $user, $input)
     {
         $model = new Customer();
         $model->fill($input);
-        // $model->profile_id = $user->profile_id;
+        if($user) {
+            $model->profile_id = $user->profile_id;
+        }
         $model->save();
         return $model;
     }
@@ -58,7 +61,7 @@ class CustomerRepository
      * @param $input
      * @return Customer
      */
-    public function update(Customer $model, $input)
+    public function update(User $user, Customer $model, $input)
     {
         $model->fill($input);
         $model->save();

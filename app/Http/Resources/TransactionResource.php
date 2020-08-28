@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Carbob\Carbon;
+use Carbon\Carbon;
 
 class TransactionResource extends JsonResource
 {
@@ -21,19 +21,43 @@ class TransactionResource extends JsonResource
             'order_date' => Carbon::parse($this->order_date)->toDateString(),
             'job' => $this->job,
             'cost' => $this->cost,
-            'is_artwork_provided' => $this->is_artwork_provided ? true : false,
-            'is_design_required' => $this->is_design_required ? true : false,
+            'is_artwork_provided' => [
+                'id' => $this->is_artwork_provided === 1 ? 1 : 0,
+                'name' => $this->is_artwork_provided === 1 ? 'Yes' : 'No'
+            ],
+            'is_design_required' => [
+                'id' => $this->is_design_required === 1 ? 1 : 0,
+                'name' => $this->is_design_required === 1 ? 'Yes' : 'No'
+            ],
+            'delivery_method' => [
+                'id' => $this->deliveryMethod ? $this->deliveryMethod->id : null,
+                'name' => $this->deliveryMethod ? $this->deliveryMethod->name : null
+            ],
             'invoice_id' => $this->invoice_id,
             'dispatch_date' => Carbon::parse($this->dispatch_date)->toDateString(),
-            'status' => $this->status,
+            'status' => $this->status->name,
             'tracking_number' => $this->tracking_number,
+            'customer' => new CustomerResource($this->customer),
             'customer_id' => $this->customer_id,
-            'receiver_id' => $this->receiver ? $this->receiver_id : null,
-            'receiver_name' => $this->receiver ? $this->receiver->name : null,
-            'receiver_phone_number' => $this->receiver ? $this->receiver->phone_number : null,
-            'receiver_address' => $this->receiver ? $this->receiver->address : null,
-            'handler_id' => $this->handler ? $this->handler->id : null,
-            'handler_name' => $this->handler ? $this->handler->user->name : null,
+            'customer_name' => $this->customer->user->name,
+            'full_address' => $this->address->getFullAdress(),
+            'address' => new AddressResource($this->address),
+            'addresses' => AddressResource::collection($this->customer->addresses),
+            'phone_number' => $this->customer->user->phone_number,
+            'alt_phone_number' => $this->customer->user->alt_phone_number,
+            'grandtotal' => $this->grandtotal,
+            'created_by' => $this->creator ? $this->creator->name : null,
+            'sales_channel' => [
+                'id' => $this->salesChannel ? $this->salesChannel->id : null,
+                'name' => $this->salesChannel ? $this->salesChannel->name : null,
+                'desc' => $this->salesChannel ? $this->salesChannel->desc : null
+            ],
+            'status' => [
+                'id' => $this->status->id,
+                'name' => $this->status->name
+            ],
+            'items' => DealResource::collection($this->deals),
+            'remarks' => $this->remarks
         ];
     }
 }

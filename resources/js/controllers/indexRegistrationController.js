@@ -15,7 +15,7 @@ if (document.querySelector('#indexRegistrationController')) {
       },
       methods: {
         getCountriesOption() {
-          axios.get('/api/country').then((response) => {
+          axios.get('/public/api/countries').then((response) => {
             this.countries = response.data.data
             this.form.phone_country_id = this.countries[0]
           })

@@ -8,20 +8,25 @@ use Illuminate\Support\Arr;
 class Customer extends Model
 {
     protected $fillable = [
-        'is_company', 'company_name', 'roc', 'company_address', 'latest_otp',
-        'is_verified'
+        'is_company', 'company_name', 'roc', 'latest_otp',
+        'is_verified', 'profile_id'
+
     ];
 
     // relationships
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'typeable');
+    }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
+
     public function user()
     {
         return $this->morphOne(User::class, 'typeable');
-    }
-
-    // getter
-    public function getIsCompanyAttribute($value)
-    {
-        return $value == 1 ? 'true' : 'false';
     }
 
     // setter
@@ -38,6 +43,16 @@ class Customer extends Model
     public function scopeId($query, $value)
     {
         $columnName = $this->getAliasColumnName('id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeProfileId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('profile_id');
 
         if (is_array($value)) {
             return $query->whereIn($columnName, $value);

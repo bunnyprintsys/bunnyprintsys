@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\AddressResource;
 use App\Services\CustomerService;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -90,5 +91,15 @@ class CustomerController extends Controller
         } catch (\Exception $e) {
             return $this->fail(null, $e->getMessage());
         }
+    }
+
+    // get addresses by customer id
+    public function getAddressApi(Request $request)
+    {
+        $input = request()->all();
+        $customer = $this->customerService->getOneById($input['id']);
+        $addresses = AddressResource::collection($customer->addresses);
+
+        return $this->success($addresses);
     }
 }

@@ -19,6 +19,9 @@ window.flash = function (message, level = 'info') {
   window.events.$emit('flash', {message, level});
 };
 
+import Datepicker from 'vuejs-datepicker';
+Vue.component('datepicker', Datepicker);
+
 // loading overlay
 import LoadingOverlay from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -34,9 +37,6 @@ Vue.component('select2', Select2);
 
 import Select2MustChoose from './components/Select2MustChoose.vue';
 Vue.component('select2-must', Select2MustChoose);
-
-import DatePicker from './components/DatePicker.vue';
-Vue.component('date-picker', DatePicker);
 
 // flash vue
 import Flash from './components/Flash.vue';
@@ -62,6 +62,10 @@ Vue.component('clip-loader', ClipLoader);
 
 import VueFileAgent from 'vue-file-agent';
 Vue.component('vue-file-agent', VueFileAgent);
+
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
+Vue.component('v-select', vSelect);
 
 // vue controllers
 require('./controllers/accountUserController');

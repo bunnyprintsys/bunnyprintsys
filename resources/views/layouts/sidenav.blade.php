@@ -3,7 +3,7 @@
     <div class="sidebar-content">
       <div class="sidebar-brand" style="background-color:#F5F5F5; border:solid black 1px;">
         <a href="/" class="text-center">
-          <img src="/img/icon.jpeg" height="73" width="108">
+          <img src="/img/icon.png" height="100" width="100">
         </a>
         <div id="close-sidebar">
           <i class="far fa-arrow-alt-circle-left"></i>
