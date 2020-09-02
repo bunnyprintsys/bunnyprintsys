@@ -71,6 +71,7 @@ class TransactionController extends Controller
     {
         DB::beginTransaction();
         $user = auth()->user();
+        // dd($request->all());
 
         $customerForm = $request->get('customer_form');
         $transactionForm = $request->get('transaction_form');

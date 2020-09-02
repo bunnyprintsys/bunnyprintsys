@@ -92,7 +92,7 @@ if (document.querySelector('#indexTransactionController')) {
             ...data
           }
           this.action = 'update'
-          console.log(JSON.parse(JSON.stringify(this.formdata)))
+          // console.log(JSON.parse(JSON.stringify(this.formdata)))
         },
         toggleUserStatus(data, status_code) {
           var approval = confirm('Are you sure to update the status ' + data.name + '?')
