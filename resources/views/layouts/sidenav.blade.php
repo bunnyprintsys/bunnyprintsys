@@ -35,7 +35,6 @@
               <a href="{{ route('transaction.index') }}"><i class="far fa-credit-card"></i>Transactions</a>
           </li>
 
-
           <li class="header-menu">
             <span>Profile Management</span>
           </li>
@@ -43,10 +42,10 @@
           <li class="{{ $name == 'customer.index' ? 'active' : '' }}">
               <a href="{{ route('customer.index') }}"><i class="fas fa-users"></i>Customers</a>
           </li>
-
+{{--
           <li class="{{ $name == 'member.index' ? 'active' : '' }}">
             <a href="{{ route('member.index') }}"><i class="fas fa-address-card"></i>Members</a>
-          </li>
+          </li> --}}
 
           <li class="{{ $name == 'admin.index' ? 'active' : '' }}">
             <a href="{{ route('admin.index') }}"><i class="fas fa-users-cog"></i>Admin</a>
@@ -81,6 +80,10 @@
 
           <li class="{{ $name == 'price.index' ? 'active' : '' }}">
             <a href="{{ route('price.index') }}"><i class="fas fa-tags"></i>Pricing</a>
+          </li>
+
+          <li class="{{ $name == 'transaction.data' ? 'active' : '' }}">
+            <a href="{{ route('transaction.data') }}"><i class="fas fa-database"></i>Transaction</a>
           </li>
 
           <li class="{{ $name == 'voucher.index' ? 'active' : '' }}">

@@ -46,4 +46,11 @@ class SalesChannelController extends Controller
             return $this->fail(null, $e->getMessage());
         }
     }
+
+    // delete single entry api
+    public function deleteSingleSalesChannel($id)
+    {
+        $input['id'] = $id;
+        $this->salesChannelService->delete($input);
+    }
 }

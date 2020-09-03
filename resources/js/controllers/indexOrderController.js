@@ -74,7 +74,7 @@ if(document.querySelector('#indexOrderController')) {
         })
       },
       getAllShapes() {
-        axios.get('/api/shapes/all').then((response) => {
+        axios.get('/api/shapes/product/1').then((response) => {
           this.shapes = response.data
         })
       },

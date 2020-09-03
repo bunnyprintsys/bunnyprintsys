@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-row">
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label required">Source</label>
                                     <multiselect
                                         v-model="transactionForm.sales_channel"
@@ -26,12 +26,13 @@
                                     <strong>@{{ formErrors['sales_channel'][0] }}</strong>
                                 </span>
                             </div>
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label required">
                                     Order Date
                                 </label>
+                                @{{transactionForm.order_date}}
                                 <datepicker
-                                    v-model="order_date"
+                                    v-model="transactionForm.order_date"
                                     :format="dateFormatter"
                                     :bootstrap-styling="true"
                                     :highlighted="{dates: [new Date()]}"
@@ -42,7 +43,7 @@
                                     <strong>@{{ formErrors['order_date'][0] }}</strong>
                                 </span>
                             </div>
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label required">Status</label>
                                     <multiselect
                                         v-model="transactionForm.status"
@@ -56,15 +57,13 @@
                                     <strong>@{{ formErrors['status'][0] }}</strong>
                                 </span>
                             </div>
-                        </div>
-                        <div class="form-row">
-
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label required">
                                     Dispatch Date
                                 </label>
+                                @{{transactionForm.dispatch_date}}
                                 <datepicker
-                                    v-model="dispatch_date"
+                                    v-model="transactionForm.dispatch_date"
                                     :format="dateFormatter"
                                     :bootstrap-styling="true"
                                     :highlighted="{dates: [new Date()]}"
@@ -75,21 +74,9 @@
                                     <strong>@{{ formErrors['dispatch_date'][0] }}</strong>
                                 </span>
                             </div>
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                <label class="control-label">Artwork Provided?</label>
-                                    <multiselect
-                                        v-model="transactionForm.is_artwork_provided"
-                                        :options="booleans"
-                                        :close-on-select="true"
-                                        placeholder="Select..."
-                                        :custom-label="customLabelName"
-                                        track-by="id"
-                                        ></multiselect>
-                                <span class="invalid-feedback" role="alert" v-if="formErrors['is_artwork_provided']">
-                                    <strong>@{{ formErrors['is_artwork_provided'][0] }}</strong>
-                                </span>
-                            </div>
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label">Design Needed?</label>
                                     <multiselect
                                         v-model="transactionForm.is_design_required"
@@ -103,19 +90,7 @@
                                     <strong>@{{ formErrors['is_design_required'][0] }}</strong>
                                 </span>
                             </div>
-                        </div>
-                        <div class="form-row">
-{{--
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                <label class="control-label">
-                                    Invoice Num
-                                </label>
-                                <input type="text" name="invoice_number" class="form-control" v-model="form.invoice_number" :class="{ 'is-invalid' : formErrors['invoice_number'] }">
-                                <span class="invalid-feedback" role="alert" v-if="formErrors['invoice_number']">
-                                    <strong>@{{ formErrors['invoice_number'][0] }}</strong>
-                                </span>
-                            </div> --}}
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label">
                                     Tracking Num
                                 </label>
@@ -124,7 +99,7 @@
                                     <strong>@{{ formErrors['tracking_number'][0] }}</strong>
                                 </span>
                             </div>
-                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label">Delivery Method</label>
                                     <multiselect
                                         v-model="transactionForm.delivery_method"

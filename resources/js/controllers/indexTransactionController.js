@@ -448,7 +448,11 @@ if (document.querySelector('#indexTransactionController')) {
             this.form[key] = this.data[key];
           }
         }, */
-        'data' () {
+        'data' (val) {
+/*
+          for (var key in this.form) {
+            this.form[key] = this.data[key];
+          } */
             this.form = _.clone(this.data);
             this.transactionForm = this.form
             this.customerForm = this.form

@@ -77,8 +77,10 @@ require('./controllers/indexPriceController');
 require('./controllers/indexRegistrationController');
 require('./controllers/indexPasswordResetController');
 require('./controllers/indexTransactionController');
+require('./controllers/indexTransactionDataSettingController');
 require('./controllers/indexProfileController');
 require('./controllers/indexVoucherController');
+
 
 $(".sidebar-dropdown > a").click(function () {
   $(".sidebar-submenu").slideUp(200);

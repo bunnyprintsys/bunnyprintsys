@@ -21,6 +21,7 @@ Route::group(['prefix' => 'order'], function() {
 });
 Route::group(['prefix' => 'transaction'], function() {
     Route::get('/', 'TransactionController@index')->name('transaction.index');
+    Route::get('/data', 'TransactionController@getDataSettingIndex')->name('transaction.data');
     Route::get('/invoice/{transactionId}', 'TransactionController@getInvoice');
 });
 Route::group(['prefix' => 'price'], function() {
@@ -103,9 +104,13 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'sales-channel'], function() {
         Route::get('/all', 'SalesChannelController@getAllSalesChannelsApi');
+        Route::delete('/{id}', 'SalesChannelController@deleteSingleSalesChannel');
     });
     Route::group(['prefix' => 'shapes'], function() {
+        // Route::get('/all', 'ShapeController@getAllShapesApi');
         Route::get('/all', 'ShapeController@getAllShapesApi');
+        Route::get('/product/{id}', 'ShapeController@getAllShapesByProductIdApi');
+        Route::post('/{id}', 'ShapeController@updateProductShapeByIdApi');
     });
     Route::group(['prefix' => 'state'], function() {
         Route::get('/all', 'StateController@getAllStatesApi');

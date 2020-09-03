@@ -36,6 +36,12 @@ class TransactionController extends Controller
         return view('transaction.index');
     }
 
+    // return transaction data setting page
+    public function getDataSettingIndex()
+    {
+        return view('transaction.data.index');
+    }
+
     // return transactions api
     public function getTransactionsApi(Request $request)
     {
