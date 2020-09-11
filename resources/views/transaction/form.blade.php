@@ -30,7 +30,7 @@
                                 <label class="control-label required">
                                     Order Date
                                 </label>
-                                @{{transactionForm.order_date}}
+                                {{-- @{{transactionForm.order_date}} --}}
                                 <datepicker
                                     v-model="transactionForm.order_date"
                                     :format="dateFormatter"
@@ -61,7 +61,7 @@
                                 <label class="control-label required">
                                     Dispatch Date
                                 </label>
-                                @{{transactionForm.dispatch_date}}
+                                {{-- @{{transactionForm.dispatch_date}} --}}
                                 <datepicker
                                     v-model="transactionForm.dispatch_date"
                                     :format="dateFormatter"
