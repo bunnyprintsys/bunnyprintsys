@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\User;
 use App\Repositories\StatusRepository;
 use App\Repositories\UserRepository;
+use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,11 +44,27 @@ class StatusService
      */
     public function getOneById($id)
     {
-
+/*
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
-        }
+        } */
         $filter['id'] = $id;
         return $this->statusRepository->getOne($filter);
+    }
+
+    // create status
+    public function create($input)
+    {
+        DB::beginTransaction();
+        $model = $this->statusRepository->create($input);
+        DB::commit();
+        return $model;
+    }
+
+    // delete status
+    public function delete($input)
+    {
+        $model = $this->getOneById($input['id']);
+        $model->delete();
     }
 }

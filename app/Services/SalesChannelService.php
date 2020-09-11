@@ -8,6 +8,7 @@ use App\Repositories\SalesChannelRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class SalesChannelService
 {
@@ -43,11 +44,27 @@ class SalesChannelService
      */
     public function getOneById($id)
     {
-
+/*
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
-        }
+        } */
         $filter['id'] = $id;
         return $this->salesChannelRepository->getOne($filter);
+    }
+
+    // create sales channel
+    public function create($input)
+    {
+        DB::beginTransaction();
+        $model = $this->salesChannelRepository->create($input);
+        DB::commit();
+        return $model;
+    }
+
+    // delete sales channel
+    public function delete($input)
+    {
+        $model = $this->getOneById($input['id']);
+        $model->delete();
     }
 }

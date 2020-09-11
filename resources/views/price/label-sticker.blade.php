@@ -8,6 +8,10 @@
                     <th class="text-center" colspan="10">
                         Shape
                     </th>
+{{--
+                    <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#status_modal" @click="createSingleEntry()">
+                        <i class="fas fa-plus"></i>
+                      </button> --}}
                 </tr>
                 <tr class="table-secondary">
                     <th class="text-center">
@@ -31,10 +35,6 @@
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductShapeMultiplierChanged(data.id, data.multiplier)">
                     </td>
                 </tr>
-{{--
-                <tr v-if="! pagination.total">
-                    <td colspan="18" class="text-center"> No Results Found </td>
-                </tr> --}}
             </table>
         </div>
 

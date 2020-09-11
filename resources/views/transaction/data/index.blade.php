@@ -54,4 +54,6 @@
   </div>
 
   @include('transaction.data.sales_channel')
+  @include('transaction.data.status')
+  @include('transaction.data.delivery_method')
 @endsection

@@ -1,4 +1,50 @@
 if(document.querySelector('#indexPriceController')) {
+
+  Vue.component('label-shape', {
+    template: '#shape-template',
+    data() {
+      return {
+        shapes: [],
+        form: this.getFormDefault(),
+        action: 'create',
+        formErrors: []
+      }
+  },
+    mounted() {
+      this.getAllShapes()
+    },
+    methods: {
+      getAllShapes() {
+        axios.get('/api/shapes/product/1').then((response) => {
+          this.shapes = response.data
+        })
+      },
+      createSingleEntry() {
+        this.form = this.getFormDefault()
+        this.action = 'create'
+      },
+      onSubmit() {
+        axios.post('/api/shape', this.form).then((response) => {
+          this.getAllSalesChannel()
+          $('.modal').modal('hide')
+          this.$emit('updatetable')
+          this.formErrors = []
+        })
+      },
+      removeSingleEntry(index) {
+        axios.delete('/api/shape/' + this.shapes[index]['id']).then((response) => {
+          this.shapes.splice(index, 1)
+        })
+      },
+      getFormDefault() {
+        return {
+          name: '',
+          multiplier: ''
+        }
+      }
+    }
+  });
+
   Vue.component('price-labelsticker', {
     template: '#price-labelsticker-template',
     data() {

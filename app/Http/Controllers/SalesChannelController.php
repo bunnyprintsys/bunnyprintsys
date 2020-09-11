@@ -47,6 +47,18 @@ class SalesChannelController extends Controller
         }
     }
 
+    // store single sales channel api
+    public function storeSalesChannelsApi(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $input = $request->all();
+        $model = $this->salesChannelService->create($input);
+        return $this->success(new SalesChannelResource($model));
+    }
+
     // delete single entry api
     public function deleteSingleSalesChannel($id)
     {

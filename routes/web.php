@@ -27,6 +27,9 @@ Route::group(['prefix' => 'transaction'], function() {
 Route::group(['prefix' => 'price'], function() {
     Route::get('/', 'PriceController@index')->name('price.index');
 });
+Route::group(['prefix' => 'product'], function() {
+    Route::get('/', 'ProductController@index')->name('product.index');
+});
 Route::group(['prefix' => 'profile'], function() {
     Route::get('/', 'ProfileController@index')->name('profile.index');
 });
@@ -59,6 +62,8 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'delivery-method'], function() {
         Route::get('/all', 'DeliveryMethodController@getAllDeliveryMethodsApi');
+        Route::post('/', 'DeliveryMethodController@storeDeliveryMethodApi');
+        Route::delete('/{id}', 'DeliveryMethodController@deleteSingleDeliveryMethod');
     });
     Route::group(['prefix' => 'laminations'], function() {
         Route::get('/all', 'LaminationController@getAllLaminationsApi');
@@ -104,6 +109,7 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'sales-channel'], function() {
         Route::get('/all', 'SalesChannelController@getAllSalesChannelsApi');
+        Route::post('/', 'SalesChannelController@storeSalesChannelsApi');
         Route::delete('/{id}', 'SalesChannelController@deleteSingleSalesChannel');
     });
     Route::group(['prefix' => 'shapes'], function() {
@@ -111,6 +117,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/all', 'ShapeController@getAllShapesApi');
         Route::get('/product/{id}', 'ShapeController@getAllShapesByProductIdApi');
         Route::post('/{id}', 'ShapeController@updateProductShapeByIdApi');
+        Route::post('/', 'ShapeController@storeProductShapeApi');
+        Route::delete('/{id}', 'ShapeController@deleteSingleProductShape');
     });
     Route::group(['prefix' => 'state'], function() {
         Route::get('/all', 'StateController@getAllStatesApi');
@@ -118,6 +126,8 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'status'], function() {
         Route::get('/all', 'StatusController@getAllStatusesApi');
+        Route::post('/', 'StatusController@storeStatusApi');
+        Route::delete('/{id}', 'StatusController@deleteSingleStatus');
     });
     Route::group(['prefix' => 'transaction'], function() {
         Route::get('/', 'TransactionController@getTransactionsApi');

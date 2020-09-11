@@ -39,4 +39,13 @@ class DeliveryMethodRepository
 
         return $query->get();
     }
+
+    // create delivery method entry
+    public function create($input)
+    {
+        $model = new DeliveryMethod();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

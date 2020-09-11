@@ -21,6 +21,12 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
+    // return product index
+    public function index()
+    {
+        return view('product.index');
+    }
+
     // return states api
     public function getProductsApi(Request $request)
     {

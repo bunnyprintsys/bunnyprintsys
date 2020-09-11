@@ -39,5 +39,24 @@ class ShapeController extends Controller
         $model->multiplier = $multiplier;
         $model->save();
     }
+/*
+    // store single shape api
+    public function storeSalesChannelsApi(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $input = $request->all();
+        $model = $this->salesChannelService->create($input);
+        return $this->success(new SalesChannelResource($model));
+    }
+
+    // delete single entry api
+    public function deleteSingleSalesChannel($id)
+    {
+        $input['id'] = $id;
+        $this->salesChannelService->delete($input);
+    } */
 
 }

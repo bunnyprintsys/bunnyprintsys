@@ -39,4 +39,13 @@ class StatusRepository
 
         return $query->get();
     }
+
+    // create status entry
+    public function create($input)
+    {
+        $model = new Status();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

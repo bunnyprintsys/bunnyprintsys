@@ -46,4 +46,23 @@ class DeliveryMethodController extends Controller
             return $this->fail(null, $e->getMessage());
         }
     }
+
+    // store single delivery method api
+    public function storeDeliveryMethodApi(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $input = $request->all();
+        $model = $this->deliveryMethodService->create($input);
+        return $this->success(new DeliveryMethodResource($model));
+    }
+
+    // delete single entry api
+    public function deleteSingleDeliveryMethod($id)
+    {
+        $input['id'] = $id;
+        $this->deliveryMethodService->delete($input);
+    }
 }

@@ -40,4 +40,13 @@ class SalesChannelRepository
 
         return $query->get();
     }
+
+    // create sales channel entry
+    public function create($input)
+    {
+        $model = new SalesChannel();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

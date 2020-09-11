@@ -47,4 +47,23 @@ class StatusController extends Controller
             return $this->fail(null, $e->getMessage());
         }
     }
+
+    // store single status api
+    public function storeStatusApi(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $input = $request->all();
+        $model = $this->statusService->create($input);
+        return $this->success(new StatusResource($model));
+    }
+
+    // delete single entry api
+    public function deleteSingleStatus($id)
+    {
+        $input['id'] = $id;
+        $this->statusService->delete($input);
+    }
 }
