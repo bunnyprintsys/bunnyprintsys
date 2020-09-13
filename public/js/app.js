@@ -90258,6 +90258,11 @@ if (document.querySelector('#indexTransactionController')) {
           this.itemForm.amount = (this.itemForm.qty * this.itemForm.price).toFixed(2);
         }
       },
+      calculatePrice: function calculatePrice() {
+        if (!isNaN(this.itemForm.qty) && !isNaN(this.itemForm.amount)) {
+          this.itemForm.price = (this.itemForm.amount / this.itemForm.qty).toFixed(3);
+        }
+      },
       addItem: function addItem() {
         var _this12 = this;
 

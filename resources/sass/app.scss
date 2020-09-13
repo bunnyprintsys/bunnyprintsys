@@ -106,3 +106,8 @@
           overflow: visible;
       }
   }
+
+  // mysql breakline appears in vuejs
+  .pre-formatted {
+    white-space: pre-line;
+  }

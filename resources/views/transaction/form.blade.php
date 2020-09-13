@@ -424,7 +424,7 @@
                                 </div>
                                 <div class="form-group col-md-4 col-sm-6 col-xs-12">
                                     <label class="control-label">Amount (RM)</label>
-                                    <input type="text" name="amount" class="form-control text-right" v-model="itemForm.amount" @input="calculateAmount()">
+                                    <input type="text" name="amount" class="form-control text-right" v-model="itemForm.amount" @input="calculatePrice()">
                                     <span class="invalid-feedback" role="alert" v-if="formErrors['amount']">
                                         <strong>@{{ formErrors['amount'][0] }}</strong>
                                     </span>
@@ -486,10 +486,9 @@
                                     <span style="font-weight: bold;">
                                         @{{data.item.name}}
                                     </span>
-                                    <br>
-                                    <small>
-                                        @{{data.description}}
-                                    </small>
+                                    <div class="pre-formatted">
+                                        <small>@{{data.description}}</small>
+                                    </div>
                                 </td>
                                 <td class="text-right">
                                     @{{data.qty}}

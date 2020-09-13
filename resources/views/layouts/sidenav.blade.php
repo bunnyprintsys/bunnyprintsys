@@ -81,10 +81,10 @@
           <li class="{{ $name == 'price.index' ? 'active' : '' }}">
             <a href="{{ route('price.index') }}"><i class="fas fa-tags"></i>Pricing</a>
           </li>
-{{--
+
           <li class="{{ $name == 'product.index' ? 'active' : '' }}">
             <a href="{{ route('product.index') }}"><i class="fas fa-layer-group"></i>Product</a>
-          </li> --}}
+          </li>
 
           <li class="{{ $name == 'transaction.data' ? 'active' : '' }}">
             <a href="{{ route('transaction.data') }}"><i class="fas fa-database"></i>Transaction</a>

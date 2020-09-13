@@ -19339,3 +19339,7 @@ readers do not read off random characters that represent icons */
   }
 }
 
+.pre-formatted {
+  white-space: pre-line;
+}
+
