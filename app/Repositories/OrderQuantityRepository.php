@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\ProductShape;
+use App\Models\OrderQuantity;
 use App\Models\User;
 use DB;
 
-class ProductShapeRepository
+class OrderQuantityRepository
 {
     /**
      * @param $input
@@ -14,7 +14,7 @@ class ProductShapeRepository
      */
     public function getOne($input)
     {
-        return ProductShape::filter($input)->first();
+        return OrderQuantity::filter($input)->first();
     }
 
     /**
@@ -25,25 +25,13 @@ class ProductShapeRepository
      */
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-        $query = ProductShape::with(['product', 'shape']);
-        $query->select('product_shapes.*');
-
-        $sortBy = array_unique($sortBy);
-        foreach ($sortBy as $key => $direction) {
-            switch ($key) {
-                case 'shape_name':
-                    $query->leftJoin('shapes', 'shapes.id', '=', 'product_shapes.shape_id');
-                    $sortBy['shapes.name'] = $direction;
-                    unset($sortBy[$key]);
-                    break;
-            }
-        }
+        $query = OrderQuantity::query();
 
         if (!empty($filter)) {
-            $query->filter($filter, 'product_shapes');
+            $query->filter($filter);
         }
         if (!empty($sortBy)) {
-            $query->sortBy($sortBy, 'product_shapes');
+            $query->sortBy($sortBy);
         }
 
         if ($pagination) {
@@ -56,14 +44,14 @@ class ProductShapeRepository
     // create model entry
     public function create($input)
     {
-        $model = new ProductShape();
+        $model = new OrderQuantity();
         $model->fill($input);
         $model->save();
         return $model;
     }
 
     // udpate model entry
-    public function update(ProductShape $model, $input)
+    public function update(OrderQuantity $model, $input)
     {
         $model->fill($input);
         $model->save();

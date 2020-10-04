@@ -74,7 +74,7 @@ if(document.querySelector('#indexOrderController')) {
         })
       },
       getAllShapes() {
-        axios.get('/api/shapes/product/1').then((response) => {
+        axios.post('/api/shapes/all', {product_id: 1}).then((response) => {
           this.shapes = response.data
         })
       },
@@ -201,7 +201,7 @@ if(document.querySelector('#indexOrderController')) {
             })
           },
           getAllShapes() {
-            axios.get('/api/shapes/product/2').then((response) => {
+            axios.post('/api/shapes/all', {product_id: 2}).then((response) => {
               this.shapes = response.data
             })
           },

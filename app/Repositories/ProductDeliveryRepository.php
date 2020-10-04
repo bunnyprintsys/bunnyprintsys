@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\ProductShape;
+use App\Models\ProductDelivery;
 use App\Models\User;
 use DB;
 
-class ProductShapeRepository
+class ProductDeliveryRepository
 {
     /**
      * @param $input
@@ -14,7 +14,7 @@ class ProductShapeRepository
      */
     public function getOne($input)
     {
-        return ProductShape::filter($input)->first();
+        return ProductDelivery::filter($input)->first();
     }
 
     /**
@@ -25,25 +25,25 @@ class ProductShapeRepository
      */
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-        $query = ProductShape::with(['product', 'shape']);
-        $query->select('product_shapes.*');
+        $query = ProductDelivery::with(['product', 'delivery']);
+        $query->select('product_deliveries.*');
 
         $sortBy = array_unique($sortBy);
         foreach ($sortBy as $key => $direction) {
             switch ($key) {
-                case 'shape_name':
-                    $query->leftJoin('shapes', 'shapes.id', '=', 'product_shapes.shape_id');
-                    $sortBy['shapes.name'] = $direction;
+                case 'delivery_name':
+                    $query->leftJoin('deliveries', 'deliveries.id', '=', 'product_deliveries.delivery_id');
+                    $sortBy['deliveries.name'] = $direction;
                     unset($sortBy[$key]);
                     break;
             }
         }
 
         if (!empty($filter)) {
-            $query->filter($filter, 'product_shapes');
+            $query->filter($filter, 'product_deliveries');
         }
         if (!empty($sortBy)) {
-            $query->sortBy($sortBy, 'product_shapes');
+            $query->sortBy($sortBy, 'product_deliveries');
         }
 
         if ($pagination) {
@@ -56,14 +56,14 @@ class ProductShapeRepository
     // create model entry
     public function create($input)
     {
-        $model = new ProductShape();
+        $model = new ProductDelivery();
         $model->fill($input);
         $model->save();
         return $model;
     }
 
     // udpate model entry
-    public function update(ProductShape $model, $input)
+    public function update(ProductDelivery $model, $input)
     {
         $model->fill($input);
         $model->save();

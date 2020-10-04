@@ -3,26 +3,19 @@
 namespace App\Services;
 
 
-use App\Repositories\ProductLaminationRepository;
-use App\Repositories\ProductRepository;
-use App\Repositories\LaminationRepository;
+use App\Repositories\OrderQuantityRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use DB;
 
-class ProductLaminationService
+class OrderQuantityService
 {
 
-    private $productRepository;
-    private $productLaminationRepository;
+    private $orderQuantityRepository;
     private $userRepository;
 
-    public function __construct(ProductRepository $productRepository, ProductLaminationRepository $productLaminationRepository, LaminationRepository $laminationRepository, UserRepository $userRepository)
+    public function __construct(OrderQuantityRepository $orderQuantityRepository, UserRepository $userRepository)
     {
-        $this->productRepository = $productRepository;
-        $this->productLaminationRepository = $productLaminationRepository;
-        $this->laminationRepository = $laminationRepository;
+        $this->orderQuantityRepository = $orderQuantityRepository;
         $this->userRepository = $userRepository;
     }
 
@@ -39,7 +32,7 @@ class ProductLaminationService
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
         } */
-        return $this->productLaminationRepository->all($filter, $sortBy, $pagination);
+        return $this->orderQuantityRepository->all($filter, $sortBy, $pagination);
     }
 
     /**
@@ -53,10 +46,10 @@ class ProductLaminationService
             $filter['profile_id'] = $user->profile_id;
         } */
         $filter['id'] = $id;
-        return $this->productLaminationRepository->getOne($filter);
+        return $this->orderQuantityRepository->getOne($filter);
     }
 
-    // create product lamination
+    // create OrderQuantity
     public function create($input)
     {
         foreach ($input as $key => $value) {
@@ -65,26 +58,21 @@ class ProductLaminationService
             }
         }
 
-        if($input['name']) {
-            $lamination = $this->laminationRepository->create($input);
-            $input['lamination_id'] = $lamination->id;
-        }
-
-        $model = $this->productLaminationRepository->create($input);
+        $model = $this->orderQuantityRepository->create($input);
         return $model;
     }
 
-    // update product lamination
+    // update OrderQuantity
     public function update($input)
     {
         if($input['id']){
             $model = $this->getOneById($input['id']);
-            $model = $this->productLaminationRepository->update($model, $input);
+            $model = $this->orderQuantityRepository->update($model, $input);
             return $model;
         }
     }
 
-    // delete product lamination
+    // delete OrderQuantity
     public function delete($input)
     {
         $model = $this->getOneById($input['id']);

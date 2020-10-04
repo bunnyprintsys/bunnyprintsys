@@ -60,6 +60,7 @@ class OrderController extends Controller
         $formula = 0;
         $total = 0;
         // dd($material_id, $shape_id, $lamination_id, $orderquantity_id, $delivery_id);
+        // dd($orderquantity_id);
 
         $dimension = [
             'width' => 305,
@@ -109,6 +110,7 @@ class OrderController extends Controller
             ->where('max', '>=', $formula)
             ->where('product_id', $product_id)
             ->first();
+        // dd($quantitymultiplier->multiplier);
 
         $total = ($formula * $quantitymultiplier->multiplier * $material->multiplier * $shape->multiplier * ($lamination ? $lamination->multiplier : 1)) + $delivery->multiplier;
 

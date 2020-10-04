@@ -1,6 +1,6 @@
 <?php
 
-auth()->loginUsingId(1, true);
+// auth()->loginUsingId(1, true);
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home.index');
@@ -59,6 +59,11 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/all', 'DeliveryController@getAllDeliveriesApi');
         Route::get('/product/{product_id}', 'DeliveryController@getAllDeliveriesByProductIdApi');
         Route::post('/{id}', 'DeliveryController@updateProductDeliveryByIdApi');
+        Route::post('/create/product/{product_id}', 'DeliveryController@createProductDeliveryByProductIdApi');
+
+        Route::post('/product-delivery/all', 'ProductDeliveryController@getAllApi');
+        Route::post('/product-delivery/create', 'ProductDeliveryController@createApi');
+        Route::post('/product-delivery/edit', 'ProductDeliveryController@editApi');
     });
     Route::group(['prefix' => 'delivery-method'], function() {
         Route::get('/all', 'DeliveryMethodController@getAllDeliveryMethodsApi');
@@ -69,11 +74,21 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/all', 'LaminationController@getAllLaminationsApi');
         Route::get('/product/{product_id}', 'LaminationController@getAllLaminationsByProductIdApi');
         Route::post('/{id}', 'LaminationController@updateProductLaminationByIdApi');
+        Route::post('/create/product/{product_id}', 'LaminationController@createProductLaminationByProductIdApi');
+
+        Route::post('/product-lamination/all', 'ProductLaminationController@getAllApi');
+        Route::post('/product-lamination/create', 'ProductLaminationController@createApi');
+        Route::post('/product-lamination/edit', 'ProductLaminationController@editApi');
     });
     Route::group(['prefix' => 'materials'], function() {
         Route::get('/all', 'MaterialController@getAllMaterialsApi');
         Route::get('/product/{id}', 'MaterialController@getAllMaterialsByProductIdApi');
         Route::post('/{id}', 'MaterialController@updateProductMaterialByIdApi');
+        Route::post('/create/product/{product_id}', 'MaterialController@createProductMaterialByProductIdApi');
+
+        Route::post('/product-material/all', 'ProductMaterialController@getAllApi');
+        Route::post('/product-material/create', 'ProductMaterialController@createApi');
+        Route::post('/product-material/edit', 'ProductMaterialController@editApi');
     });
     Route::group(['prefix' => 'member'], function() {
         Route::get('/', 'MemberController@getMembersApi');
@@ -83,8 +98,12 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/label-sticker/quotation', 'OrderController@getLabelstickerQuotationApi');
     });
     Route::group(['prefix' => 'orderquantities'], function() {
-        Route::get('/all', 'OrderQuantityController@getAllOrderquantitiesApi');
+        Route::post('/all', 'OrderQuantityController@getAllApi');
+        Route::post('/create', 'OrderQuantityController@createApi');
+        Route::post('/edit', 'OrderQuantityController@editApi');
+
         Route::post('/{id}', 'OrderQuantityController@updateOrderquantityByIdApi');
+        Route::post('/create/product/{product_id}', 'OrderQuantityController@createOrderquantityByProductIdApi');
     });
     Route::group(['prefix' => 'product'], function() {
         Route::get('/all', 'ProductController@getProductsApi');
@@ -94,8 +113,13 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/store-update', 'ProfileController@storeUpdateProfileApi');
     });
     Route::group(['prefix' => 'quantitymultipliers'], function() {
+        Route::post('/all', 'QuantityMultiplierController@getAllApi');
+        Route::post('/create', 'QuantityMultiplierController@createApi');
+        Route::post('/edit', 'QuantityMultiplierController@editApi');
+
         Route::get('/product/{id}', 'QuantityMultiplierController@getAllQuantitymultipliersByProductIdApi');
         Route::post('/{id}', 'QuantityMultiplierController@updateQuantitymultiplierByIdApi');
+        Route::post('/create/product/{product_id}', 'QuantityMultiplierController@createQuantitymultiplierByProductIdApi');
     });
     Route::group(['prefix' => 'registration'], function() {
         Route::post('/', 'Auth\RegisterController@register');
@@ -113,12 +137,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::delete('/{id}', 'SalesChannelController@deleteSingleSalesChannel');
     });
     Route::group(['prefix' => 'shapes'], function() {
-        // Route::get('/all', 'ShapeController@getAllShapesApi');
-        Route::get('/all', 'ShapeController@getAllShapesApi');
-        Route::get('/product/{id}', 'ShapeController@getAllShapesByProductIdApi');
+        Route::post('/all', 'ShapeController@getAllShapesApi');
         Route::post('/{id}', 'ShapeController@updateProductShapeByIdApi');
         Route::post('/', 'ShapeController@storeProductShapeApi');
         Route::delete('/{id}', 'ShapeController@deleteSingleProductShape');
+
+        Route::post('/product-shape/all', 'ProductShapeController@getAllApi');
+        Route::post('/product-shape/create', 'ProductShapeController@createApi');
+        Route::post('/product-shape/edit', 'ProductShapeController@editApi');
+        Route::post('/create/product/{product_id}', 'ShapeController@createProductShapeByProductIdApi');
     });
     Route::group(['prefix' => 'state'], function() {
         Route::get('/all', 'StateController@getAllStatesApi');

@@ -2,41 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductResource;
-use App\Models\ProductShape;
-use App\Services\ProductService;
-use App\Services\ProductShapeService;
-use App\Models\User;
-use DB;
-use App\Traits\Pagination;
 use Illuminate\Http\Request;
+use App\Http\Resources\ProductShapeResource;
+use App\Models\ProductShape;
+use App\Services\ProductShapeService;
+use App\Traits\Pagination;
 use Illuminate\Support\Facades\Auth;
-
 
 class ProductShapeController extends Controller
 {
     use Pagination;
+    // retrieve all shapes list
 
-
-    private $productService;
     private $productShapeService;
 
-    public function __construct(ProductService $productService, ProductShapeService $productShapeService)
+    public function __construct(ProductShapeService $productShapeService)
     {
         $this->middleware('auth');
-        $this->productService = $productService;
         $this->productShapeService = $productShapeService;
     }
 
-    /**
-     * retrieve units by given filter
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function getProductShapesApi(Request $request)
+    public function getAllApi(Request $request)
     {
-
         $input = $request->all();
         $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
         if (isset($input['sortkey']) && !empty($input['sortkey'])) {
@@ -45,7 +32,7 @@ class ProductShapeController extends Controller
             ];
         } else {
             $sortBy = [
-                'created_at' => 'desc'
+                'shape_name' => 'asc'
             ];
         }
         $data = $this->productShapeService->all($input, $sortBy, $this->getPerPage());
@@ -54,6 +41,38 @@ class ProductShapeController extends Controller
         }
         ProductShapeResource::collection($data);
         return $this->success($data);
-
     }
+
+    // create product shape
+    public function createApi(Request $request)
+    {
+        $input = $request->all();
+
+        $productShape = $this->productShapeService->create($input);
+
+        return $this->success(new ProductShapeResource($productShape));
+    }
+
+    // edit product shape
+    public function editApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $productShape = $this->productShapeService->update($input);
+        }
+        return $this->success(new ProductShapeResource($productShape));
+    }
+
+    // update product shape by given id
+    public function updateProductShapeByIdApi($id)
+    {
+        $model = ProductShape::findOrFail($id);
+        $multiplier = request('multiplier');
+
+        $model->multiplier = $multiplier;
+        $model->save();
+    }
+
+
 }

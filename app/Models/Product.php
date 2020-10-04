@@ -19,7 +19,7 @@ class Product extends Model
     public function scopeId($query, $value)
     {
         $columnName = $this->getAliasColumnName('id');
-
+        // dd($columnName);
         if (is_array($value)) {
             return $query->whereIn($columnName, $value);
         }

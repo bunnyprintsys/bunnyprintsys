@@ -49,4 +49,5 @@
   </div>
 
   @include('price.label-sticker')
+
 @endsection

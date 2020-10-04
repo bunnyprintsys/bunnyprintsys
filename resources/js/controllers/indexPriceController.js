@@ -7,7 +7,9 @@ if(document.querySelector('#indexPriceController')) {
         shapes: [],
         form: this.getFormDefault(),
         action: 'create',
-        formErrors: []
+        formErrors: [],
+        formOptions: this.getFormOptionsDefault(),
+        formUrl: ''
       }
   },
     mounted() {
@@ -15,11 +17,26 @@ if(document.querySelector('#indexPriceController')) {
     },
     methods: {
       getAllShapes() {
-        axios.get('/api/shapes/product/1').then((response) => {
+        axios.post('/api/shapes/all', {product_id: 1}).then((response) => {
           this.shapes = response.data
         })
       },
-      createSingleEntry() {
+      createSingleEntry(type) {
+        this.formOptions = this.getFormOptionsDefault()
+        this.formUrl = ''
+        switch(type) {
+          case 'shape':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/shapes/create/product/1'
+            break;
+          case 'material':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/shapes/create/product/1'
+            break;
+        }
+
         this.form = this.getFormDefault()
         this.action = 'create'
       },
@@ -41,6 +58,15 @@ if(document.querySelector('#indexPriceController')) {
           name: '',
           multiplier: ''
         }
+      },
+      getFormOptionsDefault() {
+        return {
+          name: false,
+          multiplier: false,
+          min: false,
+          max: false,
+          qty: false
+        }
       }
     }
   });
@@ -54,7 +80,12 @@ if(document.querySelector('#indexPriceController')) {
           orderquantities: [],
           shapes: [],
           deliveries: [],
-          quantitymultipliers: []
+          quantitymultipliers: [],
+          form: this.getFormDefault(),
+          formOptions: this.getFormOptionsDefault(),
+          formUrl: '',
+          formTitle: '',
+          formErrors: []
       }
   },
     mounted() {
@@ -67,63 +98,134 @@ if(document.querySelector('#indexPriceController')) {
     },
     methods: {
       getAllLaminations() {
-        axios.get('/api/laminations/product/1').then((response) => {
-          this.laminations = response.data
+        axios.post('/api/laminations/product-lamination/all').then((response) => {
+          this.laminations = response.data.data
         })
       },
       getAllMaterials() {
-        axios.get('/api/materials/product/1').then((response) => {
-          this.materials = response.data
+        axios.post('/api/materials/product-material/all', {product_id: 1}).then((response) => {
+          this.materials = response.data.data
         })
       },
       getAllOrderquantities() {
-        axios.get('/api/orderquantities/all').then((response) => {
-          this.orderquantities = response.data
+        axios.post('/api/orderquantities/all', {}).then((response) => {
+          this.orderquantities = response.data.data
         })
       },
       getAllShapes() {
-        axios.get('/api/shapes/product/1').then((response) => {
-          this.shapes = response.data
+        axios.post('/api/shapes/product-shape/all', {product_id: 1}).then((response) => {
+          this.shapes = response.data.data
         })
       },
       getAllDeliveries() {
-        axios.get('/api/deliveries/product/1').then((response) => {
-          this.deliveries = response.data
+        axios.post('/api/deliveries/product-delivery/all', {product_id: 1}).then((response) => {
+          this.deliveries = response.data.data
         })
       },
       getQuantitymultipliers() {
-        axios.get('/api/quantitymultipliers/product/1').then((response) => {
-          this.quantitymultipliers = response.data
+        axios.post('/api/quantitymultipliers/all', {}).then((response) => {
+          this.quantitymultipliers = response.data.data
         })
       },
       onProductLaminationMultiplierChanged(id, value) {
-          axios.post('/api/laminations/' + id, {multiplier: value}).then((response) => {
+          axios.post('/api/laminations/product-lamination/edit', {id: id, multiplier: value}).then((response) => {
           })
       },
       onProductShapeMultiplierChanged(id, value) {
-          axios.post('/api/shapes/' + id, {multiplier: value}).then((response) => {
+          axios.post('/api/shapes/product-shape/edit', {id: id, multiplier: value}).then((response) => {
           })
       },
       onProductMaterialMultiplierChanged(id, value) {
-          axios.post('/api/materials/' + id, {multiplier: value}).then((response) => {
+          axios.post('/api/materials/product-material/edit', {id: id, multiplier: value}).then((response) => {
           })
       },
       onDeliveryMultiplierChanged(id, value) {
-          axios.post('/api/deliveries/' + id, {multiplier: value}).then((response) => {
+          axios.post('/api/deliveries/product-delivery/edit', {id: id, multiplier: value}).then((response) => {
           })
       },
       onQtyNameChanged(id, name) {
-          axios.post('/api/orderquantities/' + id, {name: name}).then((response) => {
+          axios.post('/api/orderquantities/edit', {id: id, name: name}).then((response) => {
           })
       },
       onQtyChanged(id, qty) {
-          axios.post('/api/orderquantities/' + id, {qty: qty}).then((response) => {
+          axios.post('/api/orderquantities/edit', {id: id, qty: qty}).then((response) => {
           })
       },
       onQtyMultiplierChanged(data) {
-        axios.post('/api/quantitymultipliers/' + data.id, data).then((response) => {
+        axios.post('/api/quantitymultipliers/edit', {data: data}).then((response) => {
         })
-      }
+      },
+      getFormOptionsDefault() {
+        return {
+          name: false,
+          multiplier: false,
+          min: false,
+          max: false,
+          qty: false
+        }
+      },
+      getFormDefault() {
+        return {
+          product_id: 1,
+          name: '',
+          multiplier: '',
+          min: '',
+          max: '',
+          qty: ''
+        }
+      },
+      createSingleEntry(type) {
+        this.formOptions = this.getFormOptionsDefault()
+        this.form = this.getFormDefault()
+        this.formUrl = ''
+        this.formTitle = type
+        switch(type) {
+          case 'shape':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/shapes/product-shape/create'
+            break;
+          case 'material':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/materials/product-material/create'
+            break;
+          case 'lamination':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/laminations/product-lamination/create'
+            break;
+          case 'deliveries':
+            this.formOptions.name = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/deliveries/product-delivery/create'
+            break;
+          case 'quantitymultipliers':
+            this.formOptions.min = true
+            this.formOptions.max = true
+            this.formOptions.multiplier = true
+            this.formUrl = '/api/quantitymultipliers/create'
+            break;
+          case 'orderquantities':
+            this.formOptions.name = true
+            this.formOptions.qty = true
+            this.formUrl = '/api/orderquantities/create'
+            break;
+        }
+        this.action = 'create'
+      },
+      onSubmit() {
+        axios.post(this.formUrl, this.form).then((response) => {
+          this.getAllLaminations()
+          this.getAllMaterials()
+          this.getAllOrderquantities()
+          this.getQuantitymultipliers()
+          this.getAllShapes()
+          this.getAllDeliveries()
+          $('.modal').modal('hide')
+          this.formErrors = []
+        })
+      },
     }
   });
 

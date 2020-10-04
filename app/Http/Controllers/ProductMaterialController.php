@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\ProductLaminationResource;
-use App\Models\ProductLamination;
-use App\Services\ProductLaminationService;
+use App\Http\Resources\ProductMaterialResource;
+use App\Models\ProductMaterial;
+use App\Services\ProductMaterialService;
 use App\Traits\Pagination;
 use Illuminate\Support\Facades\Auth;
 
-class ProductLaminationController extends Controller
+class ProductMaterialController extends Controller
 {
     use Pagination;
     // retrieve all shapes list
 
-    private $productLaminationService;
+    private $productMaterialService;
 
-    public function __construct(ProductLaminationService $productLaminationService)
+    public function __construct(ProductMaterialService $productMaterialService)
     {
         $this->middleware('auth');
-        $this->productLaminationService = $productLaminationService;
+        $this->productMaterialService = $productMaterialService;
     }
 
     public function getAllApi(Request $request)
@@ -32,42 +32,42 @@ class ProductLaminationController extends Controller
             ];
         } else {
             $sortBy = [
-                'lamination_name' => 'asc'
+                'material_name' => 'asc'
             ];
         }
-        $data = $this->productLaminationService->all($input, $sortBy, $this->getPerPage());
+        $data = $this->productMaterialService->all($input, $sortBy, $this->getPerPage());
         if ($this->isWithoutPagination()) {
-            return $this->success(ProductLaminationResource::collection($data));
+            return $this->success(ProductMaterialResource::collection($data));
         }
-        ProductLaminationResource::collection($data);
+        ProductMaterialResource::collection($data);
         return $this->success($data);
     }
 
-    // create product lamination
+    // create product material
     public function createApi(Request $request)
     {
         $input = $request->all();
 
-        $model = $this->productLaminationService->create($input);
+        $model = $this->productMaterialService->create($input);
 
-        return $this->success(new ProductLaminationResource($model));
+        return $this->success(new ProductMaterialResource($model));
     }
 
-    // edit product lamination
+    // edit product material
     public function editApi(Request $request)
     {
         $input = $request->all();
 
         if($request->has('id')) {
-            $model = $this->productLaminationService->update($input);
+            $model = $this->productMaterialService->update($input);
         }
-        return $this->success(new ProductLaminationResource($model));
+        return $this->success(new ProductMaterialResource($model));
     }
 
     // update product shape by given id
-    public function updateProductLaminationByIdApi($id)
+    public function updateProductMaterialByIdApi($id)
     {
-        $model = ProductLamination::findOrFail($id);
+        $model = ProductMaterial::findOrFail($id);
         $multiplier = request('multiplier');
 
         $model->multiplier = $multiplier;

@@ -3,26 +3,26 @@
 namespace App\Services;
 
 
-use App\Repositories\ProductLaminationRepository;
+use App\Repositories\ProductDeliveryRepository;
 use App\Repositories\ProductRepository;
-use App\Repositories\LaminationRepository;
+use App\Repositories\DeliveryRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
-class ProductLaminationService
+class ProductDeliveryService
 {
 
     private $productRepository;
-    private $productLaminationRepository;
+    private $productDeliveryRepository;
     private $userRepository;
 
-    public function __construct(ProductRepository $productRepository, ProductLaminationRepository $productLaminationRepository, LaminationRepository $laminationRepository, UserRepository $userRepository)
+    public function __construct(ProductRepository $productRepository, ProductDeliveryRepository $productDeliveryRepository, DeliveryRepository $deliveryRepository, UserRepository $userRepository)
     {
         $this->productRepository = $productRepository;
-        $this->productLaminationRepository = $productLaminationRepository;
-        $this->laminationRepository = $laminationRepository;
+        $this->productDeliveryRepository = $productDeliveryRepository;
+        $this->deliveryRepository = $deliveryRepository;
         $this->userRepository = $userRepository;
     }
 
@@ -39,7 +39,7 @@ class ProductLaminationService
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
         } */
-        return $this->productLaminationRepository->all($filter, $sortBy, $pagination);
+        return $this->productDeliveryRepository->all($filter, $sortBy, $pagination);
     }
 
     /**
@@ -53,10 +53,10 @@ class ProductLaminationService
             $filter['profile_id'] = $user->profile_id;
         } */
         $filter['id'] = $id;
-        return $this->productLaminationRepository->getOne($filter);
+        return $this->productDeliveryRepository->getOne($filter);
     }
 
-    // create product lamination
+    // create product delivery
     public function create($input)
     {
         foreach ($input as $key => $value) {
@@ -66,25 +66,25 @@ class ProductLaminationService
         }
 
         if($input['name']) {
-            $lamination = $this->laminationRepository->create($input);
-            $input['lamination_id'] = $lamination->id;
+            $delivery = $this->deliveryRepository->create($input);
+            $input['delivery_id'] = $delivery->id;
         }
 
-        $model = $this->productLaminationRepository->create($input);
+        $model = $this->productDeliveryRepository->create($input);
         return $model;
     }
 
-    // update product lamination
+    // update product delivery
     public function update($input)
     {
         if($input['id']){
             $model = $this->getOneById($input['id']);
-            $model = $this->productLaminationRepository->update($model, $input);
+            $model = $this->productDeliveryRepository->update($model, $input);
             return $model;
         }
     }
 
-    // delete product lamination
+    // delete product delivery
     public function delete($input)
     {
         $model = $this->getOneById($input['id']);

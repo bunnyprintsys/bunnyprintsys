@@ -7,11 +7,10 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Shape
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('shape')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
-{{--
-                    <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#status_modal" @click="createSingleEntry()">
-                        <i class="fas fa-plus"></i>
-                      </button> --}}
                 </tr>
                 <tr class="table-secondary">
                     <th class="text-center">
@@ -29,7 +28,7 @@
                         @{{ index + 1}}
                     </td>
                     <td class="text-left">
-                        @{{ data.name }}
+                        @{{ data.shape.name }}
                     </td>
                     <td class="text-right">
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductShapeMultiplierChanged(data.id, data.multiplier)">
@@ -43,6 +42,9 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Material
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('material')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
                 </tr>
                 <tr class="table-secondary">
@@ -61,7 +63,7 @@
                         @{{ index + 1}}
                     </td>
                     <td class="text-left">
-                        @{{ data.name }}
+                        @{{ data.material.name }}
                     </td>
                     <td class="text-right">
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductMaterialMultiplierChanged(data.id, data.multiplier)">
@@ -79,6 +81,9 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Lamination
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('lamination')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
                 </tr>
                 <tr class="table-secondary">
@@ -97,7 +102,7 @@
                         @{{ index + 1}}
                     </td>
                     <td class="text-left">
-                        @{{ data.name }}
+                        @{{ data.lamination.name }}
                     </td>
                     <td class="text-right">
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductLaminationMultiplierChanged(data.id, data.multiplier)">
@@ -115,6 +120,9 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Delivery
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('deliveries')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
                 </tr>
                 <tr class="table-secondary">
@@ -133,7 +141,7 @@
                         @{{ index + 1 }}
                     </td>
                     <td class="text-left">
-                        @{{ data.name }}
+                        @{{ data.delivery.name }}
                     </td>
                     <td class="text-right">
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onDeliveryMultiplierChanged(data.id, data.multiplier)">
@@ -151,6 +159,9 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Quantity Multiplier
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('quantitymultipliers')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
                 </tr>
                 <tr class="table-secondary">
@@ -189,6 +200,9 @@
                 <tr class="table-primary">
                     <th class="text-center" colspan="10">
                         Quantities
+                        <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#data_modal" @click="createSingleEntry('orderquantities')">
+                            <i class="fas fa-plus"></i>
+                          </button>
                     </th>
                 </tr>
                 <tr class="table-secondary">
@@ -218,5 +232,7 @@
 
       </div>
     </div>
+        @include('price.form')
     </div>
+
   </template>
