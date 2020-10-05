@@ -15,7 +15,7 @@
               :options="materials"
               :close-on-select="true"
               placeholder="Select..."
-              :custom-label="customLabelName"
+              :custom-label="customMaterialLabelName"
               track-by="id"
               @input="getQuotation"
             ></multiselect>
@@ -35,7 +35,7 @@
               :options="shapes"
               :close-on-select="true"
               placeholder="Select..."
-              :custom-label="customLabelName"
+              :custom-label="customShapeLabelName"
               track-by="id"
               @input="getQuotation"
             ></multiselect>
@@ -55,7 +55,7 @@
               :options="laminations"
               :close-on-select="true"
               placeholder="Select..."
-              :custom-label="customLabelName"
+              :custom-label="customLaminationLabelName"
               track-by="id"
               @input="getQuotation"
             ></multiselect>
@@ -123,7 +123,7 @@
               :options="deliveries"
               :close-on-select="true"
               placeholder="Select..."
-              :custom-label="customLabelName"
+              :custom-label="customDeliveryLabelName"
               track-by="id"
               @input="getQuotation"
             ></multiselect>

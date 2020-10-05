@@ -64,32 +64,33 @@ if(document.querySelector('#indexOrderController')) {
         this.getQuotation()
       },
       getAllMaterials() {
-        axios.get('/api/materials/product/1').then((response) => {
-          this.materials = response.data
+        axios.post('/api/materials/product-material/all', {product_id: 1}).then((response) => {
+          this.materials = response.data.data
         })
       },
       getAllOrderquantities() {
-        axios.get('/api/orderquantities/all').then((response) => {
-          this.orderquantities = response.data
+        axios.post('/api/orderquantities/all').then((response) => {
+          this.orderquantities = response.data.data
         })
       },
       getAllShapes() {
-        axios.post('/api/shapes/all', {product_id: 1}).then((response) => {
-          this.shapes = response.data
+        axios.post('/api/shapes/product-shape/all', {product_id: 1}).then((response) => {
+          this.shapes = response.data.data
         })
       },
       getAllLaminations() {
-        axios.get('/api/laminations/product/1').then((response) => {
-          const laminationOptions = response.data
-          laminationOptions.unshift(this.getNoneOption())
+        axios.post('/api/laminations/product-lamination/all', {product_id: 1}).then((response) => {
+          const laminationOptions = response.data.data
+          console.log(laminationOptions)
+          laminationOptions.unshift(this.getNoneLaminationOption())
           this.laminations = laminationOptions
 
-          this.orderForm.lamination_id = this.getNoneOption()
+          this.orderForm.lamination_id = this.getNoneLaminationOption()
         })
       },
       getAllDeliveries() {
-        axios.get('/api/deliveries/product/1').then((response) => {
-          this.deliveries = response.data
+        axios.post('/api/deliveries/product-delivery/all', {product_id: 1}).then((response) => {
+          this.deliveries = response.data.data
         })
       },
       getQuotation: _.debounce(function(e) {
@@ -117,14 +118,29 @@ if(document.querySelector('#indexOrderController')) {
         this.customerForm.is_company = value
         this.formErrors = {}
       },
+      customMaterialLabelName(option) {
+        return `${option.material.name}`
+      },
+      customShapeLabelName(option) {
+        return `${option.shape.name}`
+      },
+      customLaminationLabelName(option) {
+        return `${option.lamination.name}`
+      },
       customLabelName(option) {
         return `${option.name}`
       },
-      getNoneOption() {
+      customDeliveryLabelName(option) {
+        return `${option.delivery.name}`
+      },
+      getNoneLaminationOption() {
         return {
           id: '',
           multiplier: 1,
-          name: 'None'
+          lamination: {
+            id: '',
+            name: 'None'
+          }
         }
       }
     }
@@ -282,7 +298,7 @@ if(document.querySelector('#indexOrderController')) {
             });
           }, 500),
           customLabelName() {
-            return `${option.name}`
+            return `${option.material.name}`
           },
           returnNoneMultiplierOption() {
             return {'id': '', 'name': 'None', 'multiplier': 0}
