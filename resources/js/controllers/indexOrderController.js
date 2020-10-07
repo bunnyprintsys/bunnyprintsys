@@ -81,7 +81,7 @@ if(document.querySelector('#indexOrderController')) {
       getAllLaminations() {
         axios.post('/api/laminations/product-lamination/all', {product_id: 1}).then((response) => {
           const laminationOptions = response.data.data
-          console.log(laminationOptions)
+          // console.log(laminationOptions)
           laminationOptions.unshift(this.getNoneLaminationOption())
           this.laminations = laminationOptions
 

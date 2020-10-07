@@ -110,7 +110,7 @@ class OrderController extends Controller
             ->where('max', '>=', $formula)
             ->where('product_id', $product_id)
             ->first();
-        // dd($quantitymultiplier->multiplier);
+        // dd($formula, $product_id, $quantitymultiplier);
 
         $total = ($formula * $quantitymultiplier->multiplier * $material->multiplier * $shape->multiplier * ($lamination ? $lamination->multiplier : 1)) + $delivery->multiplier;
 

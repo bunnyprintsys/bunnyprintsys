@@ -123,7 +123,7 @@ if(document.querySelector('#indexPriceController')) {
         })
       },
       getQuantitymultipliers() {
-        axios.post('/api/quantitymultipliers/all', {}).then((response) => {
+        axios.post('/api/quantitymultipliers/all', {product_id: 1}).then((response) => {
           this.quantitymultipliers = response.data.data
         })
       },
