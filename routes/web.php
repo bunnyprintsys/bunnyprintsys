@@ -107,6 +107,9 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'product'], function() {
         Route::get('/all', 'ProductController@getProductsApi');
+        Route::post('/update/{id}', 'ProductController@updateApi');
+        Route::post('/', 'ProductController@createApi');
+        Route::delete('/{id}', 'ProductController@deleteApi');
     });
     Route::group(['prefix' => 'profile'], function() {
         Route::get('/', 'ProfileController@getProfilesApi');

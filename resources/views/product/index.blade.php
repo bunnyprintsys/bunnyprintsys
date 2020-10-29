@@ -17,7 +17,7 @@
           </div>
       </div>
       <div class="card-body">
-        <div id="indexProductDataController">
+        <div id="indexProductController">
           <div>
             <ul class="nav nav-pills nav-justified" role="tablist">
               <li class="nav-item">
@@ -34,7 +34,7 @@
             <div class="tab-content">
               <div class="tab-pane container active" id="main-product">
                   <div class="form-group pt-5">
-                      <main-product></main-product>
+                      <index-product></index-product>
                   </div>
               </div>
 {{--
@@ -55,5 +55,5 @@
     </div>
   </div>
 
-  @include('product.main-product')
+  @include('product.index-product')
 @endsection

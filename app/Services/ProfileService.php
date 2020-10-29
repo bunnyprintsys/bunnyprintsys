@@ -75,15 +75,6 @@ class ProfileService
 
         $profile = $this->profileRepository->create($user, $companyInput);
 
-        if($input['unit']) {
-            $profile->address()->create($input);
-        }
-
-        if($input['name']) {
-            $input['phone_country_id'] = $input['country_id'];
-            $profile->user()->create($input);
-        }
-
         DB::commit();
 
         return $profile;
@@ -109,22 +100,6 @@ class ProfileService
         $profileInput['name'] = $input['company_name'];
         unset($profileInput['user_id']);
         $profile = $this->profileRepository->update($user, $profileModel, $profileInput);
-
-        $addressInput = $input;
-        $addressInput['id'] = $addressInput['address_id'];
-        if(isset($addressInput['id']) || $addressInput['id']) {
-            if($addressModel = $this->addressService->getOneById($addressInput['id'])) {
-                $this->addressRepository->update($user, $addressModel, $addressInput);
-            }
-        }
-
-        $userInput = $input;
-        $userInput['id'] = $userInput['user_id'];
-        if(isset($userInput['id']) || $userInput['id']) {
-            if($userModel = $this->userService->getOneById($userInput['id'])) {
-                $this->userRepository->update($userModel, $userInput);
-            }
-        }
 
         return $profile;
     }

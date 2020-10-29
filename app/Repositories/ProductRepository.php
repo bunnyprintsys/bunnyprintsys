@@ -40,4 +40,13 @@ class ProductRepository
 
         return $query->get();
     }
+
+    // create product entry
+    public function create($input)
+    {
+        $model = new Product();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

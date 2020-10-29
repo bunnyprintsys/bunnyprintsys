@@ -31,44 +31,6 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                            <label class="control-label required">
-                                Attn Name
-                            </label>
-                            <input type="text" name="name" class="form-control" v-model="form.name" :class="{ 'is-invalid' : formErrors['name'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
-                                <strong>@{{ formErrors['name'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                            <label class="control-label required">
-                                Email
-                            </label>
-                            <input type="text" name="email" class="form-control" v-model="form.email" :class="{ 'is-invalid' : formErrors['email'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['email']">
-                                <strong>@{{ formErrors['email'][0] }}</strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                            <label class="control-label required">
-                                Phone Number
-                            </label>
-                            <input type="text" name="phone_number" class="form-control" v-model="form.phone_number" :class="{ 'is-invalid' : formErrors['phone_number'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['phone_number']">
-                                <strong>@{{ formErrors['phone_number'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                            <label class="control-label">
-                                Alt Phone Number
-                            </label>
-                            <input type="text" name="alt_phone_number" class="form-control" v-model="form.alt_phone_number">
-                        </div>
-                    </div>
-                    <hr>
                     <div>
                         <div class="form-row pt-2">
                             <div class="form-group col-md-4 col-sm-4 col-xs-12">

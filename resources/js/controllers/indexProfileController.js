@@ -72,19 +72,13 @@ if (document.querySelector('#indexProfileController')) {
           this.formdata = {}
         },
         editSingleProfile(data) {
-          console.log(JSON.parse(JSON.stringify(data)))
+          // console.log(JSON.parse(JSON.stringify(data)))
           this.clearform = {}
           this.formdata = {}
           this.formdata = {
-              ...data,
-              'address_id': data.address.id,
-              'unit': data.address.unit,
-              'block': data.address.block,
-              'building_name': data.address.building_name,
-              'road_name': data.address.road_name,
-              'postcode': data.address.postcode,
-              'state_id': data.address.state_id,
+              ...data
           }
+          // console.log(JSON.parse(JSON.stringify(this.formdata)))
         },
         onFilterChanged() {
           this.filterchanged = true;
@@ -161,6 +155,7 @@ if (document.querySelector('#indexProfileController')) {
       },
       watch: {
         'data'(val) {
+          // this.form = _.clone(this.data);
           for (var key in this.form) {
             this.form[key] = this.data[key];
           }

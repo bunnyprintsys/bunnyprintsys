@@ -98,12 +98,6 @@
                             <span v-if="sortkey == 'country_name' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'country_name' && reverse" class="fa fa-caret-up"></span>
                         </th>
-                        <th class="text-center">
-                            Attn Name
-                        </th>
-                        <th class="text-center">
-                            Attn Phone
-                        </th>
                         <th></th>
                     </tr>
 
@@ -122,12 +116,6 @@
                         </td>
                         <td class="text-center">
                             @{{ data.country_name }}
-                        </td>
-                        <td class="text-center">
-                            @{{ data.name }}
-                        </td>
-                        <td class="text-center">
-                            @{{ data.phone_number }}
                         </td>
                         <td class="text-center">
                             <div class="btn-group">

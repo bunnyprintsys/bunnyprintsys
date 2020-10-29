@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\ProfileResource;
+use App\Services\AddressService;
 use App\Services\ProfileService;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -13,13 +14,15 @@ class ProfileController extends Controller
 {
     use Pagination;
 
+    private $addressService;
     private $profileService;
 
     // middleware auth
-    public function __construct(ProfileService $profileService)
+    public function __construct(AddressService $addressService, ProfileService $profileService)
     {
         $this->middleware('auth');
         $this->profileService = $profileService;
+        $this->addressService = $addressService;
     }
 
     // return index page
@@ -62,12 +65,27 @@ class ProfileController extends Controller
     public function storeUpdateProfileApi(ProfileRequest $request)
     {
         $input = $request->all();
+        // dd($input);
         /** @var User $user */
         $user = Auth::user();
         if ($request->id) { // update
             $data = $this->profileService->updateProfile($user, $input);
         } else { // create
             $data = $this->profileService->createNewProfile($user, $input);
+        }
+
+        unset($input['user_id']);
+        unset($input['company_name']);
+        unset($input['roc']);
+        unset($input['job_prefix']);
+        unset($input['invoice_prefix']);
+        if($request->unit or $request->road_name or $request->postcode) {
+            if($data->address) {
+                $data->address()->update($input);
+            }else {
+                $data->address()->create($input);
+            }
+
         }
         return $this->success(new ProfileResource($data));
     }

@@ -16,17 +16,20 @@ class ProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user' => $this->user,
             'user_id' => $this->user ? $this->user->id : null,
             'company_name' => $this->name,
             'roc' => $this->roc,
             'address' => $this->address ? new AddressResource($this->address) : null,
-            'name' => $this->user ? $this->user->name : null,
-            'email' => $this->user ? $this->user->email : null,
-            'phone_number' => $this->user ? $this->user->phone_number : null,
-            'alt_phone_number' => $this->user ? $this->user->alt_phone_number : null,
-            'country_id' => $this->country_id,
+            'full_address' => $this->address ? $this->address->getFullAdress() : null,
+            'unit' => $this->address ? $this->address->unit : null,
+            'block' => $this->address ? $this->address->block : null,
+            'building_name' => $this->address ? $this->address->building_name : null,
+            'road_name' => $this->address ? $this->address->road_name : null,
+            'postcode' => $this->address ? $this->address->postcode : null,
+            'state_id' => $this->address ? $this->address->state->id : null,
+            'country_id' => $this->address ? $this->address->country->id : null,
             'country_name' => $this->country ? $this->country->name : null,
-            'user_id' => $this->user ? $this->user->id : null,
             'job_prefix' => $this->job_prefix,
             'invoice_prefix' => $this->invoice_prefix
         ];

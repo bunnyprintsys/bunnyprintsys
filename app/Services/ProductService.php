@@ -43,11 +43,25 @@ class ProductService
      */
     public function getOneById($id)
     {
-
+/*
         if (!$user->hasRole('super-admin')) {
             $filter['profile_id'] = $user->profile_id;
-        }
+        } */
         $filter['id'] = $id;
         return $this->productRepository->getOne($filter);
+    }
+
+    // create product
+    public function create($input)
+    {
+        $model = $this->productRepository->create($input);
+        return $model;
+    }
+
+    // delete product
+    public function delete($input)
+    {
+        $model = $this->getOneById($input['id']);
+        $model->delete();
     }
 }

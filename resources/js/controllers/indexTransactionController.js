@@ -167,6 +167,8 @@ if (document.querySelector('#indexTransactionController')) {
       },
       methods: {
         onSubmit() {
+          this.transactionForm.order_date = moment(this.transactionForm.order_date).format('YYYY-MM-DD')
+          this.transactionForm.dispatch_date = moment(this.transactionForm.dispatch_date).format('YYYY-MM-DD')
           if(this.action === 'create') {
             axios.post('/api/transaction/create', {
               transaction_form: this.transactionForm,
@@ -265,12 +267,12 @@ if (document.querySelector('#indexTransactionController')) {
             this.delivery_methods = response.data.data
           })
         },
-/*
+
         getAddressesOptions(customer_id) {
           axios.post('/api/addresses/customer/' + customer_id).then((response) => {
             this.addresses = response.data.data
           })
-        }, */
+        },
         setBooleanOptions() {
           this.booleans = [
             {id: 1, name: 'Yes'},
@@ -400,7 +402,6 @@ if (document.querySelector('#indexTransactionController')) {
           }
         },
         onExistingCustomerChosen(customer) {
-          // console.log(JSON.parse(JSON.stringify(customer)))
           axios.post('/api/customer/address', customer).then((response) => {
             this.customerForm.addresses = response.data.data
             if(this.customerForm.addresses.length > 0) {
@@ -454,19 +455,26 @@ if (document.querySelector('#indexTransactionController')) {
           }
         }, */
         'data' (val) {
-/*
-          for (var key in this.form) {
-            this.form[key] = this.data[key];
-          } */
+          if(this.action === 'update') {
             this.form = _.clone(this.data);
             this.transactionForm = this.form
             this.customerForm = this.form
             this.addressForm = this.form
             this.itemForm = this.form
-            this.formErrors = [];
-            if(this.addressForm.address) {
-              this.radioOption.existingAddress = 'true'
-            }
+          }
+
+          if(this.action === 'create') {
+            this.form = this.getFormDefault()
+            this.itemForm = this.getItemFormDefault()
+            this.transactionForm = this.getTransactionFormDefault()
+            this.customerForm = this.getCustomerFormDefault()
+            this.addressForm = this.getAddressFormDefault()
+          }
+
+          this.formErrors = [];
+          if(this.addressForm.address) {
+            this.radioOption.existingAddress = 'true'
+          }
         },
         'clearform'(val) {
           if (val) {

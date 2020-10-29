@@ -24,14 +24,14 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'company_name' => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Please fill in Company Name'
+            'company_name.required' => 'Please fill in Company Name'
         ];
     }
 }

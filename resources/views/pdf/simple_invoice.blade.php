@@ -22,7 +22,7 @@
             text-decoration: none;
         }
         .container {
-            margin: 100px;
+            margin: 70px;
         }
         .container table tr td {
             margin: 12px;
@@ -54,6 +54,16 @@
         .footer {
             font-size: 12px;
         }
+        .items table {
+            border-collapse: collapse;
+        }
+        .section-item table tr th {
+            border: 1px solid black;
+        }
+        .section-item table tr td {
+            border: 1px solid black;
+        }
+
     </style>
 
 </head>
@@ -70,13 +80,10 @@
             </tr>
         @endif
         <tr>
-            <td style="padding-bottom: 0.5em;">
+            <td>
                 <span style="font-size: 20px">
                     <strong>{{ $data->profile->name }}</strong>
                 </span>
-                @if ($data->profile->roc)
-                    <span style="font-size: 12px">({{ $data->profile->roc }})</span>
-                @endif
             </td>
             <td style="padding-bottom: 0.5em; text-align: right">
                 <span style="font-size: 20px">
@@ -85,9 +92,14 @@
             </td>
         </tr>
         <tr>
-            <td class="text">
+            <td class="text" style="font-size: 11px">
+                @if ($data->profile->roc)
                 <div>
-                    {{ $data->profile->addresses ? $data->profile->addresses->getFullAdress() : null }}
+                    SSM: {{ $data->profile->roc }}
+                </div>
+                @endif
+                <div>
+                    {{ $data->profile->address ? $data->profile->address->getFullAdress() : null }}
                 </div>
                 <div>
                     {{-- {{ $data->profile->getPostCodeCityState() }} --}}
@@ -103,15 +115,20 @@
             <td class="text" valign="top" style="text-align: right">
                 <table align="right">
                     <tr>
-                        <td>Invoice Number</td>
-                        <td>:</td>
-                        <td style="text-align: right">#{{ $data->job_id }}</td>
-                    </tr>
-                    <tr>
                         <td>Date</td>
                         <td>:</td>
                         <td style="text-align: right">{{ \Carbon\Carbon::parse($data->order_date)->format('Y-m-d') }}</td>
                     </tr>
+                    <tr>
+                        <td>Invoice #</td>
+                        <td>:</td>
+                        <td style="text-align: right">
+                            <strong>
+                                {{ $data->job_id }}
+                            </strong>
+                        </td>
+                    </tr>
+
 {{--
                     @if ($data->isPaymentPaid())
                         <tr>
@@ -129,25 +146,38 @@
             </td>
         </tr>
     </table>
-    <table width="100%" style="margin-top: 20px">
+    <table width="100%">
         <tr>
-            <td style="padding-bottom: 0.5em;">
-                <span style="font-size: 20px">
-                    <strong>Bill To</strong>
-                </span>
+            <td>
+                <div class="items">
+                <table align="left">
+                    <tr style="font-size: 16px">
+                        <td>
+                            <strong>Bill To</strong>
+                        </td>
+                    </tr>
+                    <tr style="font-size: 11px">
+                        <td>
+                            {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
+                        </td>
+                    </tr>
+                    <tr style="font-size: 11px">
+                        <td>
+                            {{ $data->customer->user->phone_number }}
+                        </td>
+                    </tr>
+                    <tr style="font-size: 11px">
+                        <td>
+                            {{ $data->customer->user->email }}
+                        </td>
+                    </tr>
+                </table>
+                </div>
             </td>
-        </tr>
-        <tr>
-            <td class="text">
-                <div>
-                    {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
-                </div>
-                <div>
-                    {{ $data->customer->user->phone_number }}
-                </div>
-                <div>
-                    {{ $data->customer->user->email }}
-                </div>
+            <td >
+                <span style="font-size: 16px">
+                    <strong>Deliver To</strong>
+                </span>
             </td>
         </tr>
     </table>
@@ -155,7 +185,7 @@
 @php
     // dd($data->deals->toArray());
 @endphp
-    <div class="items">
+    <div class="items" style="padding-top: 50px;">
         <table width="100%" >
             <thead>
             <tr>

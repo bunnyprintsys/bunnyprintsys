@@ -78,6 +78,7 @@ require('./controllers/indexRegistrationController');
 require('./controllers/indexPasswordResetController');
 require('./controllers/indexTransactionController');
 require('./controllers/indexTransactionDataSettingController');
+require('./controllers/indexProductController');
 require('./controllers/indexProfileController');
 require('./controllers/indexVoucherController');
 

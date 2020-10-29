@@ -41,12 +41,41 @@ class ProductController extends Controller
                 'name' => 'asc'
             ];
         }
+        // dd($input, $sortBy, $this->getPerPage());
         $data = $this->productService->all($input, $sortBy, $this->getPerPage());
+// dd($data->toArray());
         if ($this->isWithoutPagination()) {
             return $this->success(ProductResource::collection($data));
         }
         ProductResource::collection($data);
         return $this->success($data);
+    }
 
+    // create product
+    public function createApi(Request $request)
+    {
+        $input = $request->all();
+
+        $product = $this->productService->create($input);
+
+        return $this->success(new ProductResource($product));
+    }
+
+    // edit product
+    public function editApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $product = $this->productService->update($input);
+        }
+        return $this->success(new ProductResource($product));
+    }
+
+    // delete single entry api
+    public function deleteApi($id)
+    {
+        $input['id'] = $id;
+        $this->productService->delete($input);
     }
 }

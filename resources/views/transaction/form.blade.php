@@ -36,7 +36,7 @@
                                     :format="dateFormatter"
                                     :bootstrap-styling="true"
                                     :highlighted="{dates: [new Date()]}"
-                                    @input="onDateChanged('order_date')"
+                                    {{-- @input="dateFormatter(transactionForm.order_date)" --}}
                                 >
                                 </datepicker>
                                 <span class="invalid-feedback" role="alert" v-if="formErrors['order_date']">
@@ -67,7 +67,7 @@
                                     :format="dateFormatter"
                                     :bootstrap-styling="true"
                                     :highlighted="{dates: [new Date()]}"
-                                    @input="onDateChanged('dispatch_date')"
+                                    {{-- @input="dateFormatter('dispatch_date')" --}}
                                 >
                                 </datepicker>
                                 <span class="invalid-feedback" role="alert" v-if="formErrors['dispatch_date']">
