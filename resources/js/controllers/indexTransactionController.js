@@ -135,6 +135,7 @@ if (document.querySelector('#indexTransactionController')) {
           sales_channels: [],
           statuses: [],
           delivery_methods: [],
+          materials: [],
           form: this.getFormDefault(),
           itemForm: this.getItemFormDefault(),
           transactionForm: this.getTransactionFormDefault(),
@@ -164,6 +165,7 @@ if (document.querySelector('#indexTransactionController')) {
         this.getStatusOptions()
         this.setBooleanOptions()
         this.getDeliveryMethodOptions()
+        this.getMaterialOptions()
       },
       methods: {
         onSubmit() {
@@ -190,7 +192,8 @@ if (document.querySelector('#indexTransactionController')) {
               this.itemForm.items = this.itemForm.items.map((item) => {
                   return {
                       ...item,
-                      item_id: _.get(item, 'item.id', null)
+                      item_id: _.get(item, 'item.id', null),
+                      material_id: _.get(item, 'material.id', null),
                   }
               });
 
@@ -267,7 +270,6 @@ if (document.querySelector('#indexTransactionController')) {
             this.delivery_methods = response.data.data
           })
         },
-
         getAddressesOptions(customer_id) {
           axios.post('/api/addresses/customer/' + customer_id).then((response) => {
             this.addresses = response.data.data
@@ -278,6 +280,12 @@ if (document.querySelector('#indexTransactionController')) {
             {id: 1, name: 'Yes'},
             {id: 0, name: 'No'}
           ]
+        },
+        getMaterialOptions() {
+          axios.get('/api/materials/all').then((response) => {
+            this.materials = response.data.data
+            // console.log(JSON.parse(JSON.stringify(this.materials)))
+          })
         },
         calculateAmount() {
           if(!isNaN(this.itemForm.qty) && !isNaN(this.itemForm.price)) {
@@ -294,17 +302,22 @@ if (document.querySelector('#indexTransactionController')) {
             if (_.isEmpty(this.itemForm.items)) {
                 this.itemForm.items = [];
             }
-            // console.log(JSON.parse(JSON.stringify(this.item)));
+            // console.log(JSON.parse(JSON.stringify(this.materials)));
             const itemObj = this.itemOptions.find(x => Number(x.id) === Number(this.itemForm.product.id));
-
+            const materialObj = this.materials.find(x => Number(x.id) === Number(this.itemForm.material.id));
+// console.log(JSON.parse(JSON.stringify(itemObj)));
+// console.log(JSON.parse(JSON.stringify(materialObj)));
             this.itemForm.items.push({
               item: itemObj,
               item_id: itemObj.id,
+              material: materialObj,
+              material_id: materialObj.id,
               description: this.itemForm.description,
               qty: this.itemForm.qty,
               price: parseFloat(this.itemForm.price).toFixed(2),
               amount: this.itemForm.amount
             });
+            // console.log(JSON.parse(JSON.stringify(this.itemForm.items)));
             this.item = this.getItemFormDefault();
             this.total = this.itemForm.items.reduce(function (total, item) {
                 return total + parseFloat(item.amount);
@@ -366,6 +379,7 @@ if (document.querySelector('#indexTransactionController')) {
         getItemFormDefault() {
           return {
             product: null,
+            material: null,
             description: '',
             qty: 1,
             price: '',
@@ -423,6 +437,9 @@ if (document.querySelector('#indexTransactionController')) {
         customLabelFullAddress(option) {
           return `${option.full_address}`
         },
+        customMaterialLabelName(option) {
+          return `${option.material.name}`
+        },
         addDays(date, days) {
           var result = new Date(date);
           result.setDate(result.getDate() + days);
@@ -461,6 +478,7 @@ if (document.querySelector('#indexTransactionController')) {
             this.customerForm = this.form
             this.addressForm = this.form
             this.itemForm = this.form
+            // console.log(JSON.parse(JSON.stringify(this.itemForm)))
           }
 
           if(this.action === 'create') {

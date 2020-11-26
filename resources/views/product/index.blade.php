@@ -23,6 +23,9 @@
               <li class="nav-item">
                   <a class="nav-link active" data-toggle="pill" href="#main-product">Main Products</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#main-material">Materials</a>
+            </li>
 {{--
               <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#status">Status</a>
@@ -37,6 +40,11 @@
                       <index-product></index-product>
                   </div>
               </div>
+              <div class="tab-pane container" id="main-material">
+                <div class="form-group pt-5">
+                    <index-material></index-material>
+                </div>
+            </div>
 {{--
               <div class="tab-pane container fade" id="status">
                 <div class="form-group pt-5">
@@ -56,4 +64,5 @@
   </div>
 
   @include('product.index-product')
+  @include('product.index-material')
 @endsection

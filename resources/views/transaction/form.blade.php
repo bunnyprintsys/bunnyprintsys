@@ -381,15 +381,6 @@
                     <div class="border border-info" v-if="show_add_item">
                         <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2">
                             <label class="control-label required">Item</label>
-{{--
-                            <select class="custom-select" v-model="item.item_id"
-                                    :class="{ 'is-invalid' : formErrors['items'] }"
-                            >
-                                <option value=""></option>
-                                <option v-for="item in itemOptions" :value="item.id">
-                                    @{{item.name}}
-                                </option>
-                            </select> --}}
                                 <multiselect
                                 v-model="itemForm.product"
                                 :options="itemOptions"
@@ -401,6 +392,21 @@
                             <span class="invalid-feedback" role="alert" v-if="formErrors['items']">
                                 <strong>@{{ formErrors['items'][0] }}</strong>
                             </span>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2">
+                            <label class="control-label required">Material</label>
+                                <multiselect
+                                v-model="itemForm.material"
+                                :options="materials"
+                                :close-on-select="true"
+                                placeholder="Select..."
+                                :custom-label="customLabelName"
+                                track-by="id"
+                                ></multiselect>
+{{--
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['materials']">
+                                <strong>@{{ formErrors['materials'][0] }}</strong>
+                            </span> --}}
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-row">
@@ -483,11 +489,16 @@
                                     @{{index + 1}}
                                 </td>
                                 <td class="text-left">
-                                    <span style="font-weight: bold;">
+                                    <span class="font-weight-bold text-uppercase">
                                         @{{data.item.name}}
                                     </span>
-                                    <div class="pre-formatted">
-                                        <small>@{{data.description}}</small>
+                                    <div class="pl-3">
+                                        <span style="font-weight: bold; font-size: 13px;">
+                                            @{{data.material ? '-' + data.material.name : ''}}
+                                        </span>
+                                        <div class="pre-formatted">
+                                            <small>@{{data.description}}</small>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="text-right">

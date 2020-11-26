@@ -23,11 +23,10 @@ class MaterialRepository
      * @param bool $pagination
      * @return mixed
      */
-/*
+
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-        $query = Material::with(['productMaterials', 'productShapes.product']);
-        $query->select('shapes.*');
+        $query = Material::query();
 
         if (!empty($filter)) {
             $query->filter($filter);
@@ -41,7 +40,7 @@ class MaterialRepository
         }
 
         return $query->get();
-    } */
+    }
 
     // create model entry
     public function create($input)

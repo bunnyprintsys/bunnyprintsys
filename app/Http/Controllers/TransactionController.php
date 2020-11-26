@@ -113,6 +113,7 @@ class TransactionController extends Controller
                 'qty' => $item['qty'],
                 'price' => $item['price'],
                 'description' => $item['description'],
+                'material_id' => $item['material']['id']
             ];
             $items[] = $data;
         }
@@ -164,6 +165,7 @@ class TransactionController extends Controller
                 'qty' => $item['qty'],
                 'price' => $item['price'],
                 'description' => $item['description'],
+                'material_id' => $item['material']['id']
             ];
             $items[] = $data;
         }

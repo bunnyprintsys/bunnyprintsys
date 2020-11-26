@@ -45,6 +45,11 @@ class Transaction extends Model
         return $this->belongsTo('App\Models\User', 'admin_id');
     }
 
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
+
     public function profile()
     {
         return $this->belongsTo(Profile::class);

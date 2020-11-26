@@ -81,7 +81,11 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/product-lamination/edit', 'ProductLaminationController@editApi');
     });
     Route::group(['prefix' => 'materials'], function() {
-        Route::get('/all', 'MaterialController@getAllMaterialsApi');
+        Route::get('/all', 'MaterialController@getAllApi');
+        Route::post('/update/{id}', 'MaterialController@updateApi');
+        Route::post('/', 'MaterialController@createApi');
+        Route::delete('/{id}', 'MaterialController@deleteApi');
+
         Route::get('/product/{id}', 'MaterialController@getAllMaterialsByProductIdApi');
         Route::post('/{id}', 'MaterialController@updateProductMaterialByIdApi');
         Route::post('/create/product/{product_id}', 'MaterialController@createProductMaterialByProductIdApi');
