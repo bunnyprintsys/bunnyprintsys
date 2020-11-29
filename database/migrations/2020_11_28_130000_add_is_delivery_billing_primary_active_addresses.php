@@ -14,7 +14,6 @@ class AddIsDeliveryBillingPrimaryActiveAddresses extends Migration
     public function up()
     {
         Schema::table('addresses', function (Blueprint $table) {
-            $table->boolean('is_primary')->default(false);
             $table->boolean('is_billing')->default(false);
             $table->boolean('is_delivery')->default(false);
             $table->boolean('is_active')->default(true);
