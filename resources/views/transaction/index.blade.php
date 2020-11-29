@@ -225,7 +225,7 @@
                             @{{ data.tracking_number }}
                         </td>
                         <td class="text-center">
-                            @{{ data.created_by }}
+                            @{{ data.creator }}
                         </td>
                         <td class="text-center">
                             <div class="btn-group">

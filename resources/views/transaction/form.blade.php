@@ -91,6 +91,20 @@
                                 </span>
                             </div>
                             <div class="form-group col-md-3 col-sm-3 col-xs-12">
+                                <label class="control-label">Designer</label>
+                                    <multiselect
+                                        v-model="transactionForm.designed_by"
+                                        :options="designers"
+                                        :close-on-select="true"
+                                        placeholder="Select..."
+                                        :custom-label="customLabelName"
+                                        track-by="id"
+                                        ></multiselect>
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['designed_by']">
+                                    <strong>@{{ formErrors['designed_by'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-3 col-sm-3 col-xs-12">
                                 <label class="control-label">
                                     Tracking Num
                                 </label>
@@ -227,6 +241,20 @@
                                             </span>
                                         </div>
                                     </div>
+                                    <div class="form-row">
+                                        <label class="control-label required">
+                                            Payment Term
+                                        </label>
+                                        <select2 class="form-group" name="country" v-model="form.payment_term_id">
+                                            <option value="">Nope</option>
+                                            <option v-for="option in paymentTermOptions" :value="option.id">
+                                                @{{option.name}}
+                                            </option>
+                                        </select2>
+                                        <span class="invalid-feedback" role="alert" v-if="formErrors['payment_term_id']">
+                                            <strong>@{{ formErrors['payment_term_id'][0] }}</strong>
+                                        </span>
+                                    </div>
                                 </div>
 
                             </div>
@@ -307,13 +335,22 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group col-md-8 col-sm-8 col-xs-12">
                                         <label class="control-label required">
                                             Street Name
                                         </label>
                                         <input type="text" name="road_name" class="form-control" v-model="addressForm.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
                                         <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
                                             <strong>@{{ formErrors['road_name'][0] }}</strong>
+                                        </span>
+                                    </div>
+                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                        <label class="control-label required">
+                                            Area
+                                        </label>
+                                        <input type="text" name="area" class="form-control" v-model="addressForm.area" :class="{ 'is-invalid' : formErrors['area'] }">
+                                        <span class="invalid-feedback" role="alert" v-if="formErrors['area']">
+                                            <strong>@{{ formErrors['area'][0] }}</strong>
                                         </span>
                                     </div>
                                 </div>
@@ -408,6 +445,12 @@
                                 <strong>@{{ formErrors['materials'][0] }}</strong>
                             </span> --}}
                         </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <label class="control-label">
+                                Description (Display on PDF)
+                            </label>
+                            <textarea class="form-control" name="description" rows="2" v-model="itemForm.description"></textarea>
+                        </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-row">
                                 <div class="form-group col-md-4 col-sm-6 col-xs-12">
@@ -436,12 +479,6 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                            <label class="control-label">
-                                Description (Display on PDF)
-                            </label>
-                            <textarea class="form-control" name="description" rows="2" v-model="itemForm.description"></textarea>
                         </div>
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <div class="btn-group">

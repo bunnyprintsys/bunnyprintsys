@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BankBinding;
 use App\Models\Profile;
 use App\Models\User;
 use App\Repositories\AddressRepository;
@@ -75,6 +76,17 @@ class ProfileService
 
         $profile = $this->profileRepository->create($user, $companyInput);
 
+        if (Arr::get($input, 'bank_id', false) || Arr::get($input, 'bank_account_holder', false) || Arr::get($input, 'bank_account_number', false)) {
+            $bank = $profile->bankBinding;
+            if (!$bank) {
+                $bank = new BankBinding();
+            }
+            $bank->bank_id = $input['bank_id'] ?? null;
+            $bank->bank_account_holder = $input['bank_account_holder'] ?? null;
+            $bank->bank_account_number = $input['bank_account_number'] ?? null;
+            $profile->bankBinding()->save($bank);
+        }
+
         DB::commit();
 
         return $profile;
@@ -100,6 +112,17 @@ class ProfileService
         $profileInput['name'] = $input['company_name'];
         unset($profileInput['user_id']);
         $profile = $this->profileRepository->update($user, $profileModel, $profileInput);
+
+        if (Arr::get($input, 'bank_id', false) || Arr::get($input, 'bank_account_holder', false) || Arr::get($input, 'bank_account_number', false)) {
+            $bank = $profile->bankBinding;
+            if (!$bank) {
+                $bank = new BankBinding();
+            }
+            $bank->bank_id = $input['bank_id'] ?? null;
+            $bank->bank_account_holder = $input['bank_account_holder'] ?? null;
+            $bank->bank_account_number = $input['bank_account_number'] ?? null;
+            $profile->bankBinding()->save($bank);
+        }
 
         return $profile;
     }

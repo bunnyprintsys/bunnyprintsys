@@ -154,6 +154,7 @@ class TransactionController extends Controller
         $transactionForm['is_artwork_provided'] = isset($transactionForm['is_artwork_provided']) ? $transactionForm['is_artwork_provided']['id'] : null;
         $transactionForm['is_design_required'] = isset($transactionForm['is_design_required']) ? $transactionForm['is_design_required']['id'] : null;
         $transactionForm['delivery_method_id'] = isset($transactionForm['delivery_method']) ? $transactionForm['delivery_method']['id'] : null;
+        $transactionForm['designed_by'] = isset($transactionForm['designed_by']) ? $transactionForm['designed_by']['id'] : null;
 
         // dd($transactionForm);
         $transaction = $this->transactionService->updateTransaction($user, $transactionForm);

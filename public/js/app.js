@@ -88716,23 +88716,27 @@ if (document.querySelector('#indexCustomerController')) {
     props: ['data', 'clearform'],
     data: function data() {
       return {
-        form: {
-          id: '',
-          name: '',
-          company_name: '',
-          roc: '',
-          phone_number: '',
-          email: '',
-          is_company: 'false'
-        },
-        formErrors: {}
+        form: this.getFormDefault(),
+        addressForm: this.getAddressFormDefault(),
+        formErrors: {},
+        paymentTermOptions: [],
+        states: [],
+        countries: []
       };
+    },
+    mounted: function mounted() {
+      this.getPaymentTermOptions();
+      this.getStateOptions();
+      this.getCountryOptions();
     },
     methods: {
       onSubmit: function onSubmit() {
         var _this3 = this;
 
-        axios.post('/api/customer/store-update', this.form).then(function (response) {
+        axios.post('/api/customer/store-update', {
+          form: this.form,
+          addressForm: this.addressForm
+        }).then(function (response) {
           $('.modal').modal('hide');
 
           for (var key in _this3.form) {
@@ -88745,6 +88749,56 @@ if (document.querySelector('#indexCustomerController')) {
         })["catch"](function (error) {
           _this3.formErrors = error.response.data.errors;
         });
+      },
+      getPaymentTermOptions: function getPaymentTermOptions() {
+        var _this4 = this;
+
+        axios.get('/api/payment-term/all').then(function (response) {
+          _this4.paymentTermOptions = response.data.data;
+        });
+      },
+      getStateOptions: function getStateOptions() {
+        var _this5 = this;
+
+        axios.get('/api/state/country/1').then(function (response) {
+          _this5.states = response.data.data;
+        });
+      },
+      getCountryOptions: function getCountryOptions() {
+        var _this6 = this;
+
+        axios.get('/api/country/all').then(function (response) {
+          _this6.countries = response.data.data; // console.log(JSON.parse(JSON.stringify(this.countries)))
+
+          _this6.form.phone_country_id = _this6.countries[0];
+        });
+      },
+      getFormDefault: function getFormDefault() {
+        return {
+          id: '',
+          name: '',
+          company_name: '',
+          roc: '',
+          phone_number: '',
+          email: '',
+          is_company: 'false'
+        };
+      },
+      getAddressFormDefault: function getAddressFormDefault() {
+        return {
+          unit: '',
+          block: '',
+          building_name: '',
+          road_name: '',
+          area: '',
+          postcode: '',
+          state: '',
+          country: '',
+          status: '',
+          items: [],
+          address: '',
+          addresses: ''
+        };
       }
     },
     watch: {
@@ -90144,7 +90198,9 @@ if (document.querySelector('#indexProfileController')) {
         // console.log(JSON.parse(JSON.stringify(data)))
         this.clearform = {};
         this.formdata = {};
-        this.formdata = _objectSpread({}, data); // console.log(JSON.parse(JSON.stringify(this.formdata)))
+        this.formdata = _objectSpread({}, data, {
+          bank_id: data.bank ? data.bank.id : ''
+        }); // console.log(JSON.parse(JSON.stringify(this.formdata)))
       },
       onFilterChanged: function onFilterChanged() {
         this.filterchanged = true;
@@ -90181,16 +90237,21 @@ if (document.querySelector('#indexProfileController')) {
           state_id: '',
           country_id: '',
           job_prefix: '',
-          invoice_prefix: ''
+          invoice_prefix: '',
+          bank_id: '',
+          bank_account_holder: '',
+          bank_account_number: ''
         },
         formErrors: {},
         states: [],
-        countries: []
+        countries: [],
+        bankOptions: []
       };
     },
     mounted: function mounted() {
       this.getStateOptions();
       this.getCountryOptions();
+      this.getBankOptions();
     },
     methods: {
       onSubmit: function onSubmit() {
@@ -90222,6 +90283,13 @@ if (document.querySelector('#indexProfileController')) {
 
         axios.get('/api/country/all').then(function (response) {
           _this4.countries = response.data.data;
+        });
+      },
+      getBankOptions: function getBankOptions() {
+        var _this5 = this;
+
+        axios.get('/api/bank/all').then(function (response) {
+          _this5.bankOptions = response.data.data;
         });
       }
     },
@@ -90556,6 +90624,8 @@ if (document.querySelector('#indexTransactionController')) {
         statuses: [],
         delivery_methods: [],
         materials: [],
+        designers: [],
+        paymentTermOptions: [],
         form: this.getFormDefault(),
         itemForm: this.getItemFormDefault(),
         transactionForm: this.getTransactionFormDefault(),
@@ -90586,6 +90656,8 @@ if (document.querySelector('#indexTransactionController')) {
       this.setBooleanOptions();
       this.getDeliveryMethodOptions();
       this.getMaterialOptions();
+      this.getDesignerOptions();
+      this.getPaymentTermOptions();
     },
     methods: {
       onSubmit: function onSubmit() {
@@ -90695,18 +90767,32 @@ if (document.querySelector('#indexTransactionController')) {
           _this10.statuses = response.data.data;
         });
       },
-      getDeliveryMethodOptions: function getDeliveryMethodOptions() {
+      getDesignerOptions: function getDesignerOptions() {
         var _this11 = this;
 
+        axios.get('/api/admin').then(function (response) {
+          _this11.designers = response.data.data; // console.log(JSON.parse(JSON.stringify(this.designers)))
+        });
+      },
+      getDeliveryMethodOptions: function getDeliveryMethodOptions() {
+        var _this12 = this;
+
         axios.get('/api/delivery-method/all').then(function (response) {
-          _this11.delivery_methods = response.data.data;
+          _this12.delivery_methods = response.data.data;
+        });
+      },
+      getPaymentTermOptions: function getPaymentTermOptions() {
+        var _this13 = this;
+
+        axios.get('/api/payment-term/all').then(function (response) {
+          _this13.paymentTermOptions = response.data.data;
         });
       },
       getAddressesOptions: function getAddressesOptions(customer_id) {
-        var _this12 = this;
+        var _this14 = this;
 
         axios.post('/api/addresses/customer/' + customer_id).then(function (response) {
-          _this12.addresses = response.data.data;
+          _this14.addresses = response.data.data;
         });
       },
       setBooleanOptions: function setBooleanOptions() {
@@ -90719,10 +90805,10 @@ if (document.querySelector('#indexTransactionController')) {
         }];
       },
       getMaterialOptions: function getMaterialOptions() {
-        var _this13 = this;
+        var _this15 = this;
 
         axios.get('/api/materials/all').then(function (response) {
-          _this13.materials = response.data.data; // console.log(JSON.parse(JSON.stringify(this.materials)))
+          _this15.materials = response.data.data; // console.log(JSON.parse(JSON.stringify(this.materials)))
         });
       },
       calculateAmount: function calculateAmount() {
@@ -90736,7 +90822,7 @@ if (document.querySelector('#indexTransactionController')) {
         }
       },
       addItem: function addItem() {
-        var _this14 = this;
+        var _this16 = this;
 
         this.formErrors = {};
 
@@ -90746,10 +90832,10 @@ if (document.querySelector('#indexTransactionController')) {
 
 
         var itemObj = this.itemOptions.find(function (x) {
-          return Number(x.id) === Number(_this14.itemForm.product.id);
+          return Number(x.id) === Number(_this16.itemForm.product.id);
         });
         var materialObj = this.materials.find(function (x) {
-          return Number(x.id) === Number(_this14.itemForm.material.id);
+          return Number(x.id) === Number(_this16.itemForm.material.id);
         }); // console.log(JSON.parse(JSON.stringify(itemObj)));
         // console.log(JSON.parse(JSON.stringify(materialObj)));
 
@@ -90770,15 +90856,15 @@ if (document.querySelector('#indexTransactionController')) {
         }, 0).toFixed(2);
       },
       onPhoneNumberEntered: _.debounce(function (e) {
-        var _this15 = this;
+        var _this17 = this;
 
         this.formErrors = []; // console.log(JSON.parse(JSON.stringify(this.form)))
 
         axios.post('/api/registration/validate/phonenumber', this.form).then(function (response) {
-          _this15.form.phone_number_format_valid = true;
+          _this17.form.phone_number_format_valid = true;
         })["catch"](function (error) {
-          _this15.formErrors = error.response.data.errors;
-          _this15.form.phone_number_format_valid = false;
+          _this17.formErrors = error.response.data.errors;
+          _this17.form.phone_number_format_valid = false;
         })["finally"](function () {});
       }, 800),
       getTransactionFormDefault: function getTransactionFormDefault() {
@@ -90790,6 +90876,7 @@ if (document.querySelector('#indexTransactionController')) {
           invoice_number: '',
           tracking_number: '',
           delivery_method: '',
+          designed_by: '',
           status: '',
           items: []
         };
@@ -90802,7 +90889,8 @@ if (document.querySelector('#indexTransactionController')) {
           phone_country: '',
           phone_number: '',
           email: '',
-          is_company: 'false'
+          is_company: 'false',
+          payment_term_id: ''
         };
       },
       getAddressFormDefault: function getAddressFormDefault() {
@@ -90811,6 +90899,7 @@ if (document.querySelector('#indexTransactionController')) {
           block: '',
           building_name: '',
           road_name: '',
+          area: '',
           postcode: '',
           state: '',
           country: '',
@@ -90860,15 +90949,15 @@ if (document.querySelector('#indexTransactionController')) {
         };
       },
       onExistingCustomerChosen: function onExistingCustomerChosen(customer) {
-        var _this16 = this;
+        var _this18 = this;
 
         axios.post('/api/customer/address', customer).then(function (response) {
-          _this16.customerForm.addresses = response.data.data;
+          _this18.customerForm.addresses = response.data.data;
 
-          if (_this16.customerForm.addresses.length > 0) {
-            _this16.radioOption.existingAddress = 'true';
+          if (_this18.customerForm.addresses.length > 0) {
+            _this18.radioOption.existingAddress = 'true';
           } else {
-            _this16.radioOption.existingAddress = 'false';
+            _this18.radioOption.existingAddress = 'false';
           }
         });
       },

@@ -154,6 +154,7 @@ class TransactionService
             $pdf = PDF::loadView('pdf.simple_invoice', [
                 'data' => $transaction
             ]);
+            $pdf = $pdf->setPaper('A4');
 
             $name = $transaction->job_id . '_' .time() . '.pdf';
 

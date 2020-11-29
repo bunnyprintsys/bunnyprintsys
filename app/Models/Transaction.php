@@ -16,7 +16,7 @@ class Transaction extends Model
         'tracking_number', 'subtotal', 'grandtotal', 'remarks',
         'customer_id', 'admin_id', 'profile_id', 'invoice_id', 'invoice_number',
         'address_id', 'sales_channel_id', 'delivery_method_id',
-        'created_by', 'updated_by'
+        'created_by', 'updated_by', 'designed_by'
     ];
 
     // relationships
@@ -78,6 +78,11 @@ class Transaction extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function designer()
+    {
+        return $this->belongsTo(User::class, 'designed_by');
     }
 
     // setter and getter

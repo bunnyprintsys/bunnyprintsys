@@ -76,7 +76,8 @@ if (document.querySelector('#indexProfileController')) {
           this.clearform = {}
           this.formdata = {}
           this.formdata = {
-              ...data
+              ...data,
+              bank_id: data.bank ? data.bank.id : ''
           }
           // console.log(JSON.parse(JSON.stringify(this.formdata)))
         },
@@ -116,16 +117,21 @@ if (document.querySelector('#indexProfileController')) {
             state_id: '',
             country_id: '',
             job_prefix: '',
-            invoice_prefix: ''
+            invoice_prefix: '',
+            bank_id: '',
+            bank_account_holder: '',
+            bank_account_number: ''
           },
           formErrors: {},
           states: [],
-          countries: []
+          countries: [],
+          bankOptions: []
         }
       },
       mounted() {
         this.getStateOptions()
         this.getCountryOptions()
+        this.getBankOptions()
       },
       methods: {
         onSubmit() {
@@ -150,6 +156,11 @@ if (document.querySelector('#indexProfileController')) {
         getCountryOptions() {
           axios.get('/api/country/all').then((response) => {
             this.countries = response.data.data
+          })
+        },
+        getBankOptions() {
+          axios.get('/api/bank/all').then((response) => {
+            this.bankOptions = response.data.data
           })
         },
       },

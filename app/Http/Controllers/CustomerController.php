@@ -62,6 +62,7 @@ class CustomerController extends Controller
      */
     public function storeUpdateCustomerApi(Request $request)
     {
+/*
         if($request->is_company == 'true') {
             $this->validate($request, [
                 'name' => 'required',
@@ -76,13 +77,15 @@ class CustomerController extends Controller
                 'phone_number' => 'required',
                 'email' => 'required',
             ]);
-        }
+        } */
 
         try {
             $input = $request->all();
             /** @var User $user */
             $user = Auth::user();
-            if ($request->id) { // update
+            // dd($input);
+            if ($request->form['id']) { // update
+                // dd($input);
                 $customer = $this->customerService->updateCustomer($user, $input);
             } else { // create
                 $customer = $this->customerService->createNewCustomer($user, $input);

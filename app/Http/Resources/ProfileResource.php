@@ -31,7 +31,10 @@ class ProfileResource extends JsonResource
             'country_id' => $this->address ? $this->address->country->id : null,
             'country_name' => $this->country ? $this->country->name : null,
             'job_prefix' => $this->job_prefix,
-            'invoice_prefix' => $this->invoice_prefix
+            'invoice_prefix' => $this->invoice_prefix,
+            'bank' => $this->bankBinding ? new IdNameResource($this->bankBinding->bank) : null,
+            'bank_account_holder' => $this->bankBinding ? $this->bankBinding->bank_account_holder : null,
+            'bank_account_number' => $this->bankBinding ? $this->bankBinding->bank_account_number : null,
         ];
     }
 }

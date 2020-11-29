@@ -47,6 +47,11 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/', 'AdminController@getAdminsApi');
         Route::post('/store-update', 'AdminController@storeUpdateAdminApi');
     });
+
+    Route::group(['prefix' => 'bank'], function() {
+        Route::get('/all', 'BankController@getAllApi');
+    });
+
     Route::group(['prefix' => 'country'], function() {
         Route::get('/all', 'CountryController@getAllCountriesApi');
     });
@@ -108,6 +113,9 @@ Route::group(['prefix' => 'api'], function() {
 
         Route::post('/{id}', 'OrderQuantityController@updateOrderquantityByIdApi');
         Route::post('/create/product/{product_id}', 'OrderQuantityController@createOrderquantityByProductIdApi');
+    });
+    Route::group(['prefix' => 'payment-term'], function() {
+        Route::get('/all', 'PaymentTermController@getAllApi');
     });
     Route::group(['prefix' => 'product'], function() {
         Route::get('/all', 'ProductController@getProductsApi');

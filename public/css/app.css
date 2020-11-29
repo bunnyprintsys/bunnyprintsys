@@ -19343,3 +19343,10 @@ readers do not read off random characters that represent icons */
   white-space: pre-line;
 }
 
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.35rem;
+  color: #797979;
+  font-weight: bold;
+}
+

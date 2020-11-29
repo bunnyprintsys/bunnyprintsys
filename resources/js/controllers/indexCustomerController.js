@@ -115,21 +115,22 @@ if (document.querySelector('#indexCustomerController')) {
       props: ['data', 'clearform'],
       data() {
         return {
-          form: {
-            id: '',
-            name: '',
-            company_name: '',
-            roc: '',
-            phone_number: '',
-            email: '',
-            is_company: 'false'
-          },
-          formErrors: {}
+          form: this.getFormDefault(),
+          addressForm: this.getAddressFormDefault(),
+          formErrors: {},
+          paymentTermOptions: [],
+          states: [],
+          countries: [],
         }
+      },
+      mounted() {
+        this.getPaymentTermOptions()
+        this.getStateOptions()
+        this.getCountryOptions()
       },
       methods: {
         onSubmit() {
-          axios.post('/api/customer/store-update', this.form)
+          axios.post('/api/customer/store-update', {form: this.form, addressForm: this.addressForm})
           .then((response) => {
             $('.modal').modal('hide');
             for (var key in this.form) {
@@ -141,6 +142,50 @@ if (document.querySelector('#indexCustomerController')) {
             .catch((error) => {
               this.formErrors = error.response.data.errors
           });
+        },
+        getPaymentTermOptions() {
+          axios.get('/api/payment-term/all').then((response) => {
+            this.paymentTermOptions = response.data.data
+          })
+        },
+        getStateOptions() {
+          axios.get('/api/state/country/1').then((response) => {
+            this.states = response.data.data
+          })
+        },
+        getCountryOptions() {
+          axios.get('/api/country/all').then((response) => {
+            this.countries = response.data.data
+            // console.log(JSON.parse(JSON.stringify(this.countries)))
+            this.form.phone_country_id = this.countries[0]
+          })
+        },
+        getFormDefault() {
+          return {
+            id: '',
+            name: '',
+            company_name: '',
+            roc: '',
+            phone_number: '',
+            email: '',
+            is_company: 'false'
+          }
+        },
+        getAddressFormDefault() {
+          return {
+            unit: '',
+            block: '',
+            building_name: '',
+            road_name: '',
+            area: '',
+            postcode: '',
+            state: '',
+            country: '',
+            status: '',
+            items: [],
+            address: '',
+            addresses: ''
+          }
         },
       },
       watch: {

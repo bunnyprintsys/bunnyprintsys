@@ -79,6 +79,9 @@ class ProfileController extends Controller
         unset($input['roc']);
         unset($input['job_prefix']);
         unset($input['invoice_prefix']);
+        unset($input['bank_account_holder']);
+        unset($input['bank_account_number']);
+        unset($input['bank_id']);
         if($request->unit or $request->road_name or $request->postcode) {
             if($data->address) {
                 $data->address()->update($input);

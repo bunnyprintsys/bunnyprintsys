@@ -9,7 +9,7 @@ class Customer extends Model
 {
     protected $fillable = [
         'is_company', 'company_name', 'roc', 'latest_otp',
-        'is_verified', 'profile_id'
+        'is_verified', 'profile_id', 'payment_term_id'
 
     ];
 
@@ -17,6 +17,11 @@ class Customer extends Model
     public function addresses()
     {
         return $this->morphMany(Address::class, 'typeable');
+    }
+
+    public function paymentTerm()
+    {
+        return $this->belongsTo(PaymentTerm::class);
     }
 
     public function profile()

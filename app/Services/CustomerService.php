@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Repositories\AddressRepository;
 use App\Repositories\CustomerRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Arr;
@@ -15,8 +16,9 @@ class CustomerService
     private $customerRepository;
     private $userRepository;
 
-    public function __construct(CustomerRepository $customerRepository, UserRepository $userRepository)
+    public function __construct(AddressRepository $addressRepository, CustomerRepository $customerRepository, UserRepository $userRepository)
     {
+        $this->addressRepository = $addressRepository;
         $this->customerRepository = $customerRepository;
         $this->userRepository = $userRepository;
     }
@@ -44,7 +46,7 @@ class CustomerService
      */
     public function createNewCustomer($input)
     {
-        $this->validateMandatoryFields($input);
+        // $this->validateMandatoryFields($input);
         // remove null value
         foreach ($input as $key => $value) {
             if (!$value) {
@@ -68,6 +70,9 @@ class CustomerService
      */
     public function updateCustomer(User $user, $input)
     {
+        $addressInput = $input['addressForm'];
+        $input = $input['form'];
+
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
         }
@@ -75,9 +80,23 @@ class CustomerService
         if (!$model) {
             throw new \Exception('Member not found', 404);
         }
-
+        // dd($model->toArray(), $input);
         $data = $this->customerRepository->update($user, $model, $input);
 
+/*
+        $address = $data->addresses;
+
+        if($address) {
+            $data->address->update($addressInput);
+        }else {
+            $data->addresses->create($addressInput);
+        } */
+
+        unset($input['company_name']);
+        unset($input['roc']);
+        unset($input['is_company']);
+        unset($input['payment_term_id']);
+        unset($input['id']);
         $data->user()->update($input);
 
         return $data;

@@ -132,6 +132,42 @@
                                 </span>
                             </div>
                         </div>
+                        <hr>
+                        <div class="section-title">Bank Information</div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label">
+                                    Bank
+                                </label>
+                                <select2 class="form-group" name="country" v-model="form.bank_id">
+                                    <option value="">Nope</option>
+                                    <option v-for="option in bankOptions" :value="option.id">
+                                        @{{option.name}}
+                                    </option>
+                                </select2>
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['bank_id']">
+                                    <strong>@{{ formErrors['bank_id'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label">
+                                    Bank Account Holder
+                                </label>
+                                <input type="text" name="bank_account_holder" class="form-control" v-model="form.bank_account_holder" :class="{ 'is-invalid' : formErrors['bank_account_holder'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['bank_account_holder']">
+                                  <strong>@{{ formErrors['bank_account_holder'][0] }}</strong>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                <label class="control-label">
+                                    Bank Account Number
+                                </label>
+                                <input type="text" name="bank_account_number" class="form-control" v-model="form.bank_account_number" :class="{ 'is-invalid' : formErrors['bank_account_number'] }">
+                                <span class="invalid-feedback" role="alert" v-if="formErrors['bank_account_number']">
+                                  <strong>@{{ formErrors['bank_account_number'][0] }}</strong>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

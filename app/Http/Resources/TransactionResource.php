@@ -29,6 +29,10 @@ class TransactionResource extends JsonResource
                 'id' => $this->is_design_required === 1 ? 1 : 0,
                 'name' => $this->is_design_required === 1 ? 'Yes' : 'No'
             ],
+            'designed_by' => [
+                'id' => $this->designer ? $this->designer->id : null,
+                'name' => $this->designer ? $this->designer->name : null,
+            ],
             'delivery_method' => [
                 'id' => $this->deliveryMethod ? $this->deliveryMethod->id : null,
                 'name' => $this->deliveryMethod ? $this->deliveryMethod->name : null
@@ -46,7 +50,7 @@ class TransactionResource extends JsonResource
             'phone_number' => $this->customer->user->phone_number,
             'alt_phone_number' => $this->customer->user->alt_phone_number,
             'grandtotal' => $this->grandtotal,
-            'created_by' => $this->creator ? $this->creator->name : null,
+            'creator' => $this->creator ? $this->creator->name : null,
             'sales_channel' => [
                 'id' => $this->salesChannel ? $this->salesChannel->id : null,
                 'name' => $this->salesChannel ? $this->salesChannel->name : null,

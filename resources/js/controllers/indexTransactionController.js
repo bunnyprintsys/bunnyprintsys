@@ -136,6 +136,8 @@ if (document.querySelector('#indexTransactionController')) {
           statuses: [],
           delivery_methods: [],
           materials: [],
+          designers: [],
+          paymentTermOptions: [],
           form: this.getFormDefault(),
           itemForm: this.getItemFormDefault(),
           transactionForm: this.getTransactionFormDefault(),
@@ -166,6 +168,8 @@ if (document.querySelector('#indexTransactionController')) {
         this.setBooleanOptions()
         this.getDeliveryMethodOptions()
         this.getMaterialOptions()
+        this.getDesignerOptions()
+        this.getPaymentTermOptions()
       },
       methods: {
         onSubmit() {
@@ -265,9 +269,20 @@ if (document.querySelector('#indexTransactionController')) {
             this.statuses = response.data.data
           })
         },
+        getDesignerOptions() {
+          axios.get('/api/admin').then((response) => {
+            this.designers = response.data.data
+            // console.log(JSON.parse(JSON.stringify(this.designers)))
+          })
+        },
         getDeliveryMethodOptions() {
           axios.get('/api/delivery-method/all').then((response) => {
             this.delivery_methods = response.data.data
+          })
+        },
+        getPaymentTermOptions() {
+          axios.get('/api/payment-term/all').then((response) => {
+            this.paymentTermOptions = response.data.data
           })
         },
         getAddressesOptions(customer_id) {
@@ -346,6 +361,7 @@ if (document.querySelector('#indexTransactionController')) {
             invoice_number: '',
             tracking_number: '',
             delivery_method: '',
+            designed_by: '',
             status: '',
             items: [],
           }
@@ -358,7 +374,8 @@ if (document.querySelector('#indexTransactionController')) {
             phone_country: '',
             phone_number: '',
             email: '',
-            is_company: 'false'
+            is_company: 'false',
+            payment_term_id: '',
           }
         },
         getAddressFormDefault() {
@@ -367,6 +384,7 @@ if (document.querySelector('#indexTransactionController')) {
             block: '',
             building_name: '',
             road_name: '',
+            area: '',
             postcode: '',
             state: '',
             country: '',

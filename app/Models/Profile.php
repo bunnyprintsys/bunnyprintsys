@@ -30,6 +30,11 @@ class Profile extends Model
         return $this->morphOne(Address::class, 'typeable');
     }
 
+    public function bankBinding()
+    {
+        return $this->morphOne(BankBinding::class, 'bankable');
+    }
+
     public function taxes()
     {
         return $this->hasMany('App\Models\Tax');

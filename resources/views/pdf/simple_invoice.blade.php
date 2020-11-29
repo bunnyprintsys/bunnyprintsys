@@ -3,73 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Invoice #{{ $data->job_id }}</title>
-
     <style type="text/css">
-        html {
-            height: 100%;
-        }
-        @page {
-            margin: 0px;
-        }
-        body {
-            margin: 0px;
+        @font-face {
+            font-family: 'Calibri';
+            src: {{url( storage_path('fonts/calibri-regular.ttf'))}};
+            font-weight: normal;
+            font-style: normal;
         }
         * {
-            font-family: Verdana, Arial, sans-serif;
+            font-family: 'Calibri', Verdana, Arial;
         }
-        a {
-            color: #fff;
-            text-decoration: none;
+        table tr th {
+            font-size: 16px;
         }
-        .container {
-            margin: 70px;
+        table tr td {
+            font-size: 15px;
         }
-        .container table tr td {
-            margin: 12px;
+        .border {
+            border: 1px black solid;
         }
-        .container .text {
-            font-size: 12px;
+        .underline {
+            border-bottom: 1px lightgray solid;
         }
-        .container .text div {
-            padding-bottom: 5px;
+        .background-lightblue {
+            background-color: lightblue;
         }
-        .items {
-            margin-top: 40px;
-        }
-        .items table {
-            border-collapse: collapse;
-        }
-        .items table tr th {
-            padding: 10px;
-            border: 1px solid black;
-        }
-        .items table tr td {
-            font-size: 12px;
-            padding: 10px;
-            border: 1px solid black;
-        }
-        .items tfoot tr td {
-            font-size: 12px;
-        }
-        .footer {
-            font-size: 12px;
-        }
-        .items table {
-            border-collapse: collapse;
-        }
-        .section-item table tr th {
-            border: 1px solid black;
-        }
-        .section-item table tr td {
-            border: 1px solid black;
-        }
-
     </style>
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 </head>
 <body>
 
-<div class="container">
+<div class="container d-flex">
     <table width="100%">
         @if ($data->profile->logo_url)
             <tr>
@@ -81,18 +46,18 @@
         @endif
         <tr>
             <td>
-                <span style="font-size: 20px">
+                <span style="font-size: 30px">
                     <strong>{{ $data->profile->name }}</strong>
                 </span>
             </td>
             <td style="padding-bottom: 0.5em; text-align: right">
-                <span style="font-size: 20px">
+                <span style="font-size: 35px">
                     <strong>Invoice</strong>
                 </span>
             </td>
         </tr>
         <tr>
-            <td class="text" style="font-size: 11px">
+            <td class="text">
                 @if ($data->profile->roc)
                 <div>
                     SSM: {{ $data->profile->roc }}
@@ -112,133 +77,222 @@
                   {{ $data->profile->user ? $data->profile->user->email : null }}
                 </div>
             </td>
-            <td class="text" valign="top" style="text-align: right">
+            <td class="text" valign="top">
                 <table align="right">
                     <tr>
                         <td>Date</td>
                         <td>:</td>
-                        <td style="text-align: right">{{ \Carbon\Carbon::parse($data->order_date)->format('Y-m-d') }}</td>
+                        <th class="text-right">
+                            {{ \Carbon\Carbon::parse($data->order_date)->format('Y-m-d') }}
+                        </th>
                     </tr>
                     <tr>
-                        <td>Invoice #</td>
+                        <td>Inv#</td>
                         <td>:</td>
-                        <td style="text-align: right">
-                            <strong>
-                                {{ $data->job_id }}
-                            </strong>
-                        </td>
+                        <th class="text-right">
+                            {{ $data->job_id }}
+                        </th>
                     </tr>
 
-{{--
-                    @if ($data->isPaymentPaid())
-                        <tr>
-                            <td>Status</td>
-                            <td>:</td>
-                            <td style="text-align: right">Paid</td>
-                        </tr>
-                        <tr>
-                            <td>Payment Datetime</td>
-                            <td>:</td>
-                            <td style="text-align: right">{{ $data->paymentLog->payment_datetime }}</td>
-                        </tr>
-                    @endif --}}
                 </table>
             </td>
         </tr>
     </table>
-    <table width="100%">
-        <tr>
-            <td>
-                <div class="items">
-                <table align="left">
-                    <tr style="font-size: 16px">
-                        <td>
-                            <strong>Bill To</strong>
-                        </td>
-                    </tr>
-                    <tr style="font-size: 11px">
-                        <td>
-                            {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
-                        </td>
-                    </tr>
-                    <tr style="font-size: 11px">
-                        <td>
-                            {{ $data->customer->user->phone_number }}
-                        </td>
-                    </tr>
-                    <tr style="font-size: 11px">
-                        <td>
-                            {{ $data->customer->user->email }}
-                        </td>
-                    </tr>
-                </table>
-                </div>
-            </td>
-            <td >
-                <span style="font-size: 16px">
-                    <strong>Deliver To</strong>
-                </span>
-            </td>
-        </tr>
-    </table>
 
-@php
-    // dd($data->deals->toArray());
-@endphp
-    <div class="items" style="padding-top: 50px;">
-        <table width="100%" >
-            <thead>
-            <tr>
-                <th align="left">#</th>
-                <th align="left">Description</th>
-                <th align="right">Price</th>
-                <th align="right">Quantity</th>
-                <th align="right">Total</th>
-            </tr>
-            </thead>
-            <tbody>
-                @foreach($data->deals as $index => $item)
-                    <tr>
-                        <td width="20px">{{ $index + 1 }}.</td>
-                        <td>
-                            {{ $item->product->name }}
-                            @if($item->description)
-                                <br>
-                                <span style="font-size: 10px">{{ $item->description }}</span>
-                            @endif
-                        </td>
-                        <td align="right">{{ $item->price }}</td>
-                        <td align="right">{{ $item->qty }}</td>
-                        <td align="right">{{ $item->amount }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td align="right" colspan="4">Total: </td>
-                    <td align="right">{{ $data->grand_total }}</td>
+    <div class="row row-cols-2 pt-3">
+        <div class="col-6 float-left">
+            <table class="table table-sm table-borderless border">
+                <tr class="underline background-lightblue">
+                    <th>
+                        Bill To
+                    </th>
                 </tr>
-            </tfoot>
-        </table>
-    </div>
-    <div class="footer" style="width: 100%; text-align: center;">
-        <div style="position: absolute; width: 100%; bottom: 0;">
-            <table width="100%">
                 <tr>
-                    <td style="padding-bottom: 10px; text-align: center">
-                        This is computer generated invoice, no signature is required.
+                    <td>
+                        {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
                     </td>
                 </tr>
-{{--
                 <tr>
-                    <td style="text-align: center">
-                        <p>
-                            Powered by <img align="middle" width="100px" src="{{ public_path('/img/icon.png') }}">
-                        </p>
+                    <td>
+                        {{ $data->customer->user->phone_number }}
                     </td>
-                </tr> --}}
+                </tr>
+                <tr>
+                    <td>
+                        {{ $data->customer->user->email }}
+                    </td>
+                </tr>
             </table>
         </div>
+        <div class="col-6 float-right">
+            <table class="table table-sm table-borderless border">
+                <tr class="underline background-lightblue">
+                    <th>
+                        Deliver To
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ $data->customer->user->phone_number }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ $data->customer->user->email }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row pt-2">
+        <div class="col">
+            <table class="table table-sm table-bordered">
+                <tr class="underline background-lightblue">
+                    <th class="text-center col-xs-3">
+                        Payment Term
+                    </th>
+                    <th class="text-center col-xs-3">
+                        Handle By
+                    </th>
+                    <th class="text-center col-xs-3">
+                        Job Num
+                    </th>
+                    <th class="text-center col-xs-3">
+                        Prepare By
+                    </th>
+                </tr>
+                <tr>
+                    <td class="text-center">
+                        {{ $data->customer->payment_term_id ?  $data->customer->paymentTerm->name : null}}
+                    </td>
+                    <td class="text-center">
+                        {{ $data->designer ? $data->designer->name : null }}
+                    </td>
+                    <td class="text-center">
+                        {{ $data->job_id }}
+                    </td>
+                    <td class="text-center">
+                        {{ $data->creator->name }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row pt-2">
+        <div class="col">
+            <table class="table table-sm table-bordered" style="height: 600px;">
+                <thead>
+                    <tr class="underline background-lightblue">
+                        <th class="text-center">
+                            #
+                        </th>
+                        <th class="text-center">
+                            Description
+                        </th>
+                        <th class="text-center">
+                            Price
+                        </th>
+                        <th class="text-center">
+                            Quantity
+                        </th>
+                        <th class="text-center">
+                            Total
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data->deals as $index => $item)
+                    <tr>
+                        <td class="text-center col-xs-1">{{ $index + 1 }}.</td>
+                        <td class="text-left col-xs-5">
+                            {{ $item->product->name }}
+                            <span>
+                                @if($item->material)
+                                    <br>
+                                    <span style="font-size: 14px; padding-left: 12px;">
+                                        {{ $item->material->name }}
+                                    </span>
+                                @endif
+                                @if($item->description)
+                                    <br>
+                                    <span style="font-size: 12px; padding-left: 12px;">
+                                        {{ $item->description }}
+                                    </span>
+                                @endif
+                            </span>
+                        </td>
+                        <td class="text-right col-xs-2">
+                            {{ $item->price }}
+                        </td>
+                        <td class="text-right col-xs-2">
+                            {{ $item->qty }}
+                        </td>
+                        <td class="text-right col-xs-2">
+                            {{ $item->amount }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-right" colspan="4">
+                            Total:
+                        </th>
+                        <th class="text-right">
+                            {{ $data->grandtotal }}
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    @if($data->profile->bankBinding)
+    <div>
+        Bank Transfer to:
+        <br>
+        <strong>
+            {{$data->profile->bankBinding->bank->name}} (Acc Num: {{$data->profile->bankBinding->bank_account_number}}) <br>
+            {{$data->profile->bankBinding->bank_account_holder}}
+        </strong>
+    </div>
+    @endif
+
+    <div class="pt-3">
+        <table class="table table-sm table-borderless border" style="height: 130px;">
+            <thead>
+                <tr class="underline background-lightblue">
+                    <th>
+                        Remarks
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ $data->remarks}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer row">
+        <table width="100%">
+            <tr>
+                <td style="padding-bottom: 10px; text-align: center">
+                    This is computer generated invoice, no signature is required.
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 

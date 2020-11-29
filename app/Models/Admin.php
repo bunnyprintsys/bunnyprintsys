@@ -20,9 +20,9 @@ class Admin extends Model
         return $this->belongsTo(Profile::class);
     }
 
-    public function users()
+    public function user()
     {
-        return $this->morphMany(User::class, 'typeable');
+        return $this->morphOne(User::class, 'typeable');
     }
 
     // getter
