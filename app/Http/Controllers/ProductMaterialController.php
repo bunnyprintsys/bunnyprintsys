@@ -74,5 +74,19 @@ class ProductMaterialController extends Controller
         $model->save();
     }
 
+    // get not binded options
+    public function getExcludedMaterialByProductId($productId)
+    {
+        $productMaterialIds = ProductMaterial::where('product_id', $productId)->get('id');
+
+        $input['excluded_id'] = $productMaterialIds;
+        $sortBy = [
+            'material_name' => 'asc'
+        ];
+        $data = $this->productMaterialService->all($input, $sortBy, $this->getPerPage());
+
+        return $this->success(ProductMaterialResource::collection($data));
+    }
+
 
 }

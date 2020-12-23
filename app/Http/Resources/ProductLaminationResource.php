@@ -17,7 +17,6 @@ class ProductLaminationResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
-            'lamination' => new LaminationResource($this->lamination),
             'multiplier' => $this->multiplier
         ];
     }

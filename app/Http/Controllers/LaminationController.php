@@ -3,17 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\LaminationResource;
+use App\Http\Resources\ProductLaminationResource;
 use App\Models\Lamination;
 use App\Models\ProductLamination;
+use App\Services\LaminationService;
+use App\Services\ProductService;
+use App\Services\ProductLaminationService;
+use App\Traits\Pagination;
 
 class LaminationController extends Controller
 {
-    // retrieve all laminations list
-    public function getAllLaminationsApi()
-    {
-        $laminations = Lamination::orderBy('name')->get();
+    use Pagination;
+    private $laminationService;
+    private $productService;
+    private $shapeService;
 
-        return $laminations;
+    public function __construct(LaminationService $laminationService, ProductLaminationService $productLaminationService, ProductService $productService)
+    {
+        $this->middleware('auth');
+        $this->laminationService = $laminationService;
+        $this->productLaminationService = $productLaminationService;
+        $this->productService = $productService;
+    }
+
+    public function getAllApi(Request $request)
+    {
+        $input = $request->all();
+        $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
+        if (isset($input['sortkey']) && !empty($input['sortkey'])) {
+            $sortBy = [
+                $request->get('sortkey') => $order
+            ];
+        } else {
+            $sortBy = [
+                'name' => 'asc'
+            ];
+        }
+        $data = $this->laminationService->all($input, $sortBy, $this->getPerPage());
+        if ($this->isWithoutPagination()) {
+            return $this->success(LaminationResource::collection($data));
+        }
+        LaminationResource::collection($data);
+        return $this->success($data);
     }
 
     // retrieve all laminations by product id list
@@ -30,6 +62,34 @@ class LaminationController extends Controller
         return $laminations;
     }
 
+    // create model
+    public function createApi(Request $request)
+    {
+        $input = $request->all();
+
+        $model = $this->laminationService->create($input);
+
+        return $this->success(new LaminationResource($model));
+    }
+
+    // edit model
+    public function updateApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $model = $this->laminationService->update($input);
+        }
+        return $this->success(new LaminationResource($model));
+    }
+
+    // delete single entry api
+    public function deleteApi($id)
+    {
+        $input['id'] = $id;
+        $this->laminationService->delete($input);
+    }
+
     // update product lamination by given id
     public function updateProductLaminationByIdApi($id)
     {
@@ -38,5 +98,48 @@ class LaminationController extends Controller
 
         $model->multiplier = $multiplier;
         $model->save();
+    }
+
+    // create lamination and product binding
+    public function createProductLaminationByProductIdApi($product_id)
+    {
+        $input['product_id'] = $product_id;
+        $input['lamination_id'] = request('lamination_id');
+
+        $model = $this->productLaminationService->create($input);
+
+        return $this->success(new ProductLaminationResource($model));
+    }
+
+    // delete lamination and product binding
+    public function deleteProductLaminationByProductIdApi($product_id, Request $request)
+    {
+        $input['lamination_id'] = $request->lamination_id;
+        $input['product_id'] = $product_id;
+
+        $model = $this->productLaminationService->getOneByFilter($input);
+
+        $input['id'] = $model->id;
+        $this->productLaminationService->delete($input);
+    }
+
+    // get binded laminations by product id
+    public function getBindedLaminationByProductId($productId)
+    {
+        $bindedLaminationId = ProductLamination::where('product_id', $productId)->get('lamination_id')->toArray();
+
+        $collections = Lamination::bindedProduct($bindedLaminationId)->get();
+
+        return $this->success(LaminationResource::collection($collections));
+    }
+
+    // get non binded laminations by product id
+    public function getNonBindedLaminationByProductId($productId)
+    {
+        $bindedLaminationId = ProductLamination::where('product_id', $productId)->get('lamination_id')->toArray();
+
+        $collections = Lamination::excludeBindedProduct($bindedLaminationId)->get();
+
+        return $this->success(LaminationResource::collection($collections));
     }
 }

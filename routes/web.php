@@ -1,6 +1,6 @@
 <?php
 
-// auth()->loginUsingId(1, true);
+auth()->loginUsingId(1, true);
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home.index');
@@ -75,18 +75,51 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/', 'DeliveryMethodController@storeDeliveryMethodApi');
         Route::delete('/{id}', 'DeliveryMethodController@deleteSingleDeliveryMethod');
     });
+    Route::group(['prefix' => 'finishings'], function() {
+        Route::post('/all', 'FinishingController@getAllApi');
+        Route::post('/update/{id}', 'FinishingController@updateApi');
+        Route::post('/', 'FinishingController@createApi');
+        Route::delete('/{id}', 'FinishingController@deleteApi');
+
+        Route::post('/create/product/{product_id}', 'FinishingController@createProductFinishingByProductIdApi');
+        Route::post('/delete/product/{product_id}', 'FinishingController@deleteProductFinishingByProductIdApi');
+        Route::post('/binded/product/{productId}', 'FinishingController@getBindedFinishingByProductId');
+        Route::post('/exclude-binded/product/{productId}', 'FinishingController@getNonBindedFinishingByProductId');
+        Route::post('/product-finishing/all', 'ProductFinishingController@getAllApi');
+    });
+    Route::group(['prefix' => 'frames'], function() {
+        Route::post('/all', 'FrameController@getAllApi');
+        Route::post('/update/{id}', 'FrameController@updateApi');
+        Route::post('/', 'FrameController@createApi');
+        Route::delete('/{id}', 'FrameController@deleteApi');
+
+        Route::post('/create/product/{product_id}', 'FrameController@createProductFrameByProductIdApi');
+        Route::post('/delete/product/{product_id}', 'FrameController@deleteProductFrameByProductIdApi');
+        Route::post('/binded/product/{productId}', 'FrameController@getBindedFrameByProductId');
+        Route::post('/exclude-binded/product/{productId}', 'FrameController@getNonBindedFrameByProductId');
+        Route::post('/product-frame/all', 'ProductFrameController@getAllApi');
+
+    });
     Route::group(['prefix' => 'laminations'], function() {
-        Route::get('/all', 'LaminationController@getAllLaminationsApi');
+        Route::post('/all', 'LaminationController@getAllApi');
         Route::get('/product/{product_id}', 'LaminationController@getAllLaminationsByProductIdApi');
         Route::post('/{id}', 'LaminationController@updateProductLaminationByIdApi');
+
+        Route::post('/update/{id}', 'LaminationController@updateApi');
+        Route::post('/', 'LaminationController@createApi');
+        Route::delete('/{id}', 'LaminationController@deleteApi');
+
         Route::post('/create/product/{product_id}', 'LaminationController@createProductLaminationByProductIdApi');
+        Route::post('/delete/product/{product_id}', 'LaminationController@deleteProductLaminationByProductIdApi');
+        Route::post('/binded/product/{productId}', 'LaminationController@getBindedLaminationByProductId');
+        Route::post('/exclude-binded/product/{productId}', 'LaminationController@getNonBindedLaminationByProductId');
 
         Route::post('/product-lamination/all', 'ProductLaminationController@getAllApi');
         Route::post('/product-lamination/create', 'ProductLaminationController@createApi');
         Route::post('/product-lamination/edit', 'ProductLaminationController@editApi');
     });
     Route::group(['prefix' => 'materials'], function() {
-        Route::get('/all', 'MaterialController@getAllApi');
+        Route::post('/all', 'MaterialController@getAllApi');
         Route::post('/update/{id}', 'MaterialController@updateApi');
         Route::post('/', 'MaterialController@createApi');
         Route::delete('/{id}', 'MaterialController@deleteApi');
@@ -94,10 +127,14 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/product/{id}', 'MaterialController@getAllMaterialsByProductIdApi');
         Route::post('/{id}', 'MaterialController@updateProductMaterialByIdApi');
         Route::post('/create/product/{product_id}', 'MaterialController@createProductMaterialByProductIdApi');
+        Route::post('/delete/product/{product_id}', 'MaterialController@deleteProductMaterialByProductIdApi');
+        Route::post('/binded/product/{productId}', 'MaterialController@getBindedMaterialByProductId');
+        Route::post('/exclude-binded/product/{productId}', 'MaterialController@getNonBindedMaterialByProductId');
 
         Route::post('/product-material/all', 'ProductMaterialController@getAllApi');
         Route::post('/product-material/create', 'ProductMaterialController@createApi');
         Route::post('/product-material/edit', 'ProductMaterialController@editApi');
+        Route::post('/product-material/excluded/{productId}', 'ProductMaterialController@getExcludedMaterialByProductId');
     });
     Route::group(['prefix' => 'member'], function() {
         Route::get('/', 'MemberController@getMembersApi');
@@ -153,14 +190,17 @@ Route::group(['prefix' => 'api'], function() {
     });
     Route::group(['prefix' => 'shapes'], function() {
         Route::post('/all', 'ShapeController@getAllShapesApi');
-        Route::post('/{id}', 'ShapeController@updateProductShapeByIdApi');
-        Route::post('/', 'ShapeController@storeProductShapeApi');
-        Route::delete('/{id}', 'ShapeController@deleteSingleProductShape');
+        Route::post('/update/{id}', 'ShapeController@updateApi');
+        Route::post('/', 'ShapeController@createApi');
+        Route::delete('/{id}', 'ShapeController@deleteApi');
 
         Route::post('/product-shape/all', 'ProductShapeController@getAllApi');
         Route::post('/product-shape/create', 'ProductShapeController@createApi');
         Route::post('/product-shape/edit', 'ProductShapeController@editApi');
         Route::post('/create/product/{product_id}', 'ShapeController@createProductShapeByProductIdApi');
+        Route::post('/delete/product/{product_id}', 'ShapeController@deleteProductShapeByProductIdApi');
+        Route::post('/binded/product/{productId}', 'ShapeController@getBindedShapeByProductId');
+        Route::post('/exclude-binded/product/{productId}', 'ShapeController@getNonBindedShapeByProductId');
     });
     Route::group(['prefix' => 'state'], function() {
         Route::get('/all', 'StateController@getAllStatesApi');

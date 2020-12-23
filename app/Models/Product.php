@@ -8,7 +8,8 @@ use Illuminate\Support\Arr;
 class Product extends Model
 {
     protected $fillable = [
-        'name', 'product_code'
+        'name', 'product_code',
+        'is_material', 'is_shape', 'is_lamination', 'is_frame', 'is_finishing', 'is_delivery', 'is_quantity_multiplier', 'is_order_quantity'
     ];
 
     /**

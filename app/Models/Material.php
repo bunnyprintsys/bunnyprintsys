@@ -11,6 +11,12 @@ class Material extends Model
         'name'
     ];
 
+    // relationships
+    public function productMaterials()
+    {
+        return $this->hasMany(ProductMaterial::class);
+    }
+
     // scopes
     public function scopeId($query, $value)
     {
@@ -30,6 +36,20 @@ class Material extends Model
             return $query->where($columnName, 'LIKE', '%'.$value.'%');
         }
         return $query->where($columnName, $value);
+    }
+
+    public function scopeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('productMaterials', function($query) use ($value) {
+            $query->whereIn('material_id', $value);
+        });
+    }
+
+    public function scopeExcludeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('productMaterials', function($query) use ($value) {
+            $query->whereNotIn('material_id', $value);
+        });
     }
 
     /**

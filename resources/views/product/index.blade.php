@@ -25,7 +25,19 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#main-material">Materials</a>
-            </li>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#main-shape">Shapes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#main-lamination">Laminations</a>
+              </li>             
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#main-frame">Frames</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#main-finishing">Finishings</a>
+              </li>                                           
 {{--
               <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#status">Status</a>
@@ -44,7 +56,27 @@
                 <div class="form-group pt-5">
                     <index-material></index-material>
                 </div>
-            </div>
+              </div>
+              <div class="tab-pane container" id="main-shape">
+                <div class="form-group pt-5">
+                    <index-shape></index-shape>
+                </div>
+              </div>
+              <div class="tab-pane container" id="main-lamination">
+                <div class="form-group pt-5">
+                    <index-lamination></index-lamination>
+                </div>
+              </div>
+              <div class="tab-pane container" id="main-frame">
+                <div class="form-group pt-5">
+                    <index-frame></index-frame>
+                </div>
+              </div>
+              <div class="tab-pane container" id="main-finishing">
+                <div class="form-group pt-5">
+                    <index-finishing></index-finishing>
+                </div>
+              </div>                                                        
 {{--
               <div class="tab-pane container fade" id="status">
                 <div class="form-group pt-5">
@@ -65,4 +97,8 @@
 
   @include('product.index-product')
   @include('product.index-material')
+  @include('product.index-shape')
+  @include('product.index-lamination')
+  @include('product.index-frame')
+  @include('product.index-finishing')
 @endsection

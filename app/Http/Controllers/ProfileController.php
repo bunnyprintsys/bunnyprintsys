@@ -68,6 +68,7 @@ class ProfileController extends Controller
         // dd($input);
         /** @var User $user */
         $user = Auth::user();
+        // dd($input);
         if ($request->id) { // update
             $data = $this->profileService->updateProfile($user, $input);
         } else { // create
@@ -82,6 +83,7 @@ class ProfileController extends Controller
         unset($input['bank_account_holder']);
         unset($input['bank_account_number']);
         unset($input['bank_id']);
+
         if($request->unit or $request->road_name or $request->postcode) {
             if($data->address) {
                 $data->address()->update($input);

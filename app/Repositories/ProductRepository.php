@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Product;
+use App\Models\ProductDelivery;
 use App\Models\User;
 use DB;
 
@@ -45,6 +46,14 @@ class ProductRepository
     public function create($input)
     {
         $model = new Product();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
+
+    // create product entry
+    public function update(Product $model, $input)
+    {
         $model->fill($input);
         $model->save();
         return $model;

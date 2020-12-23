@@ -62,8 +62,9 @@ class ProductController extends Controller
     }
 
     // edit product
-    public function editApi(Request $request)
+    public function updateApi(Request $request)
     {
+        // dd($request->all())
         $input = $request->all();
 
         if($request->has('id')) {

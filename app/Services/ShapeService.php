@@ -60,6 +60,16 @@ class ShapeService
         return $model;
     }
 
+    // update  model
+    public function update($input)
+    {
+        if($input['id']){
+            $model = $this->getOneById($input['id']);
+            $model = $this->shapeRepository->update($model, $input);
+            return $model;
+        }
+    }
+
     // delete product shape
     public function delete($input)
     {

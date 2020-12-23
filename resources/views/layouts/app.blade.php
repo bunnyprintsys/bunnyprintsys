@@ -17,7 +17,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         @include('layouts.topnav')
         @auth
         <div class="page-wrapper chiller-theme toggled">

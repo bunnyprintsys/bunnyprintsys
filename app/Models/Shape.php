@@ -36,6 +36,20 @@ class Shape extends Model
         return $query->where($columnName, $value);
     }
 
+    public function scopeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('productShapes', function($query) use ($value) {
+            $query->whereIn('shape_id', $value);
+        });
+    }
+
+    public function scopeExcludeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('productShapes', function($query) use ($value) {
+            $query->whereNotIn('shape_id', $value);
+        });
+    }    
+
     // filter
     public function scopeFilter($query, $input, $alias = null, $like = true)
     {

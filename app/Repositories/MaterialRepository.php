@@ -50,4 +50,12 @@ class MaterialRepository
         $model->save();
         return $model;
     }
+
+    // create model entry
+    public function update(Material $model, $input)
+    {
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

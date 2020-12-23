@@ -6,7 +6,7 @@
             <tr class="table-primary">
                 <th class="text-center" colspan="12">
                   Main Product
-                  <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#product_modal" @click="createSingleEntry()">
+                  <button class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#form_product_modal" @click="createSingleEntry()">
                     <i class="fas fa-plus"></i>
                   </button>
                 </th>
@@ -29,6 +29,9 @@
                     @{{ data.name }}
                 </td>
                 <td class="text-center">
+                  <button type="button" class="btn btn-light btn-outline-secondary btn-sm" data-toggle="modal" data-target="#form_product_modal" @click="editSingleEntry(data)">
+                      <i class="fas fa-edit"></i>
+                  </button>
                   <button type="button" class="btn btn-sm btn-danger" @click.prevent="removeSingleEntry(data)">
                     <i class="fas fa-times"></i>
                 </button>

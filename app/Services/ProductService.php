@@ -58,6 +58,14 @@ class ProductService
         return $model;
     }
 
+    // update product
+    public function update($input)
+    {
+        $model = $this->getOneById($input['id']);
+        $this->productRepository->update($model, $input);
+        return $model;
+    }
+
     // delete product
     public function delete($input)
     {

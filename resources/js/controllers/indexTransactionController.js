@@ -297,7 +297,7 @@ if (document.querySelector('#indexTransactionController')) {
           ]
         },
         getMaterialOptions() {
-          axios.get('/api/materials/all').then((response) => {
+          axios.post('/api/materials/all').then((response) => {
             this.materials = response.data.data
             // console.log(JSON.parse(JSON.stringify(this.materials)))
           })

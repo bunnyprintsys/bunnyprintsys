@@ -17,10 +17,36 @@ class LaminationRepository
         return Lamination::filter($input)->first();
     }
 
+    public function all($filter = [], $sortBy = [], $pagination = false)
+    {
+        $query = Lamination::query();
+
+        if (!empty($filter)) {
+            $query->filter($filter);
+        }
+        if (!empty($sortBy)) {
+            $query->sortBy($sortBy);
+        }
+
+        if ($pagination) {
+            return $query->paginate($pagination);
+        }
+
+        return $query->get();
+    }
+
     // create model entry
     public function create($input)
     {
         $model = new Lamination();
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
+
+    // create model entry
+    public function update(Lamination $model, $input)
+    {
         $model->fill($input);
         $model->save();
         return $model;

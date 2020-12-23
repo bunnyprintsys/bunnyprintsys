@@ -89894,7 +89894,8 @@ if (document.querySelector('#indexProductController')) {
       },
       editSingleEntry: function editSingleEntry(data) {
         this.clearform = {};
-        this.formdata = {};
+        this.formdata = {}; // console.log(JSON.parse(JSON.stringify(this.form)))
+
         this.formdata = _objectSpread({}, data, {
           'name': data.name
         });
@@ -89902,7 +89903,7 @@ if (document.querySelector('#indexProductController')) {
       removeSingleEntry: function removeSingleEntry(data) {
         var _this2 = this;
 
-        console.log(data);
+        // console.log(data);
         axios["delete"]('/api/product/' + data.id).then(function (repsonse) {
           _this2.fetchTable();
         });
@@ -89926,9 +89927,25 @@ if (document.querySelector('#indexProductController')) {
       return {
         form: {
           id: '',
-          name: ''
+          name: '',
+          is_material: '',
+          is_shape: '',
+          is_lamination: '',
+          is_frame: '',
+          is_finishing: '',
+          material_id: ''
         },
-        formErrors: {}
+        formErrors: {},
+        bindedMaterials: [],
+        nonBindedMaterials: [],
+        bindedShapes: [],
+        nonBindedShapes: [],
+        bindedLaminations: [],
+        nonBindedLaminations: [],
+        bindedFrames: [],
+        nonBindedFrames: [],
+        bindedFinishings: [],
+        nonBindedFinishings: []
       };
     },
     mounted: function mounted() {},
@@ -89936,25 +89953,291 @@ if (document.querySelector('#indexProductController')) {
       onSubmit: function onSubmit() {
         var _this3 = this;
 
-        axios.post('/api/product', this.form).then(function (response) {
-          $('.modal').modal('hide');
+        if (this.form.id) {
+          axios.post('/api/product/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
 
-          for (var key in _this3.form) {
-            _this3.form[key] = null;
-          }
+            for (var key in _this3.form) {
+              _this3.form[key] = null;
+            }
 
-          _this3.$emit('updatetable');
+            _this3.$emit('updatetable');
 
-          flash('Entry has successfully created or updated', 'success');
-        })["catch"](function (error) {
-          _this3.formErrors = error.response.data.errors;
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this3.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/product', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this3.form) {
+              _this3.form[key] = null;
+            }
+
+            _this3.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this3.formErrors = error.response.data.errors;
+          });
+        }
+      },
+      getBindedMaterials: function getBindedMaterials() {
+        var _this4 = this;
+
+        axios.post('/api/materials/binded/product/' + this.form.id).then(function (response) {
+          _this4.bindedMaterials = response.data.data;
         });
+      },
+      getNonBindedMaterials: function getNonBindedMaterials() {
+        var _this5 = this;
+
+        axios.post('/api/materials/exclude-binded/product/' + this.form.id).then(function (response) {
+          _this5.nonBindedMaterials = response.data.data;
+        });
+      },
+      getBindedShapes: function getBindedShapes() {
+        var _this6 = this;
+
+        axios.post('/api/shapes/binded/product/' + this.form.id).then(function (response) {
+          _this6.bindedShapes = response.data.data;
+        });
+      },
+      getNonBindedShapes: function getNonBindedShapes() {
+        var _this7 = this;
+
+        axios.post('/api/shapes/exclude-binded/product/' + this.form.id).then(function (response) {
+          _this7.nonBindedShapes = response.data.data;
+        });
+      },
+      getBindedLaminations: function getBindedLaminations() {
+        var _this8 = this;
+
+        axios.post('/api/laminations/binded/product/' + this.form.id).then(function (response) {
+          _this8.bindedLaminations = response.data.data;
+        });
+      },
+      getNonBindedLaminations: function getNonBindedLaminations() {
+        var _this9 = this;
+
+        axios.post('/api/laminations/exclude-binded/product/' + this.form.id).then(function (response) {
+          _this9.nonBindedLaminations = response.data.data;
+        });
+      },
+      getBindedFrames: function getBindedFrames() {
+        var _this10 = this;
+
+        axios.post('/api/frames/binded/product/' + this.form.id).then(function (response) {
+          _this10.bindedFrames = response.data.data;
+        });
+      },
+      getNonBindedFrames: function getNonBindedFrames() {
+        var _this11 = this;
+
+        axios.post('/api/frames/exclude-binded/product/' + this.form.id).then(function (response) {
+          _this11.nonBindedFrames = response.data.data;
+        });
+      },
+      getBindedFinishings: function getBindedFinishings() {
+        var _this12 = this;
+
+        axios.post('/api/finishings/binded/product/' + this.form.id).then(function (response) {
+          _this12.bindedFinishings = response.data.data;
+        });
+      },
+      getNonBindedFinishings: function getNonBindedFinishings() {
+        var _this13 = this;
+
+        axios.post('/api/finishings/exclude-binded/product/' + this.form.id).then(function (response) {
+          _this13.nonBindedFinishings = response.data.data;
+        });
+      },
+      getAllFinishings: function getAllFinishings() {
+        var _this14 = this;
+
+        axios.post('/api/finishings/all').then(function (response) {
+          _this14.finishings = response.data.data;
+        });
+      },
+      addProductBindingEntry: function addProductBindingEntry(type) {
+        var _this15 = this;
+
+        switch (type) {
+          case 'material':
+            axios.post('/api/materials/create/product/' + this.form.id, {
+              material_id: this.form.material_id
+            }).then(function (response) {
+              _this15.getBindedMaterials();
+
+              _this15.getNonBindedMaterials();
+
+              _this15.form.material_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'shape':
+            axios.post('/api/shapes/create/product/' + this.form.id, {
+              shape_id: this.form.shape_id
+            }).then(function (response) {
+              _this15.getBindedShapes();
+
+              _this15.getNonBindedShapes();
+
+              _this15.form.shape_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'lamination':
+            axios.post('/api/laminations/create/product/' + this.form.id, {
+              lamination_id: this.form.lamination_id
+            }).then(function (response) {
+              _this15.getBindedLaminations();
+
+              _this15.getNonBindedLaminations();
+
+              _this15.form.lamination_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'frame':
+            axios.post('/api/frames/create/product/' + this.form.id, {
+              frame_id: this.form.frame_id
+            }).then(function (response) {
+              _this15.getBindedFrames();
+
+              _this15.getNonBindedFrames();
+
+              _this15.form.frame_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'finishing':
+            axios.post('/api/finishings/create/product/' + this.form.id, {
+              finishing_id: this.form.finishing_id
+            }).then(function (response) {
+              _this15.getBindedFinishings();
+
+              _this15.getNonBindedFinishings();
+
+              _this15.form.finishing_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+        }
+      },
+      removeProductBinding: function removeProductBinding(type, data) {
+        var _this16 = this;
+
+        switch (type) {
+          case 'material':
+            axios.post('/api/materials/delete/product/' + this.form.id, {
+              material_id: data.id
+            }).then(function (response) {
+              _this16.getBindedMaterials();
+
+              _this16.getNonBindedMaterials();
+
+              _this16.form.material_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'shape':
+            axios.post('/api/shapes/delete/product/' + this.form.id, {
+              shape_id: data.id
+            }).then(function (response) {
+              _this16.getBindedShapes();
+
+              _this16.getNonBindedShapes();
+
+              _this16.form.shape_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'lamination':
+            axios.post('/api/laminations/delete/product/' + this.form.id, {
+              lamination_id: data.id
+            }).then(function (response) {
+              _this16.getBindedLaminations();
+
+              _this16.getNonBindedLaminations();
+
+              _this16.form.lamination_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'frame':
+            axios.post('/api/frames/delete/product/' + this.form.id, {
+              frame_id: data.id
+            }).then(function (response) {
+              _this16.getBindedFrames();
+
+              _this16.getNonBindedFrames();
+
+              _this16.form.frame_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+
+          case 'finishing':
+            axios.post('/api/finishings/delete/product/' + this.form.id, {
+              finishing_id: data.id
+            }).then(function (response) {
+              _this16.getBindedFinishings();
+
+              _this16.getNonBindedFinishings();
+
+              _this16.form.finishing_id = {
+                id: '',
+                name: ''
+              };
+            });
+            break;
+        }
       }
     },
     watch: {
       'data': function data(val) {
         for (var key in this.form) {
           this.form[key] = this.data[key];
+        }
+
+        if (this.data.id) {
+          this.getBindedMaterials();
+          this.getNonBindedMaterials();
+          this.getBindedShapes();
+          this.getNonBindedShapes();
+          this.getBindedLaminations();
+          this.getNonBindedLaminations();
+          this.getBindedFrames();
+          this.getNonBindedFrames();
+          this.getBindedFinishings();
+          this.getNonBindedFinishings();
         }
       },
       'clearform': function clearform(val) {
@@ -89994,7 +90277,7 @@ if (document.querySelector('#indexProductController')) {
     },
     methods: {
       fetchTable: function fetchTable() {
-        var _this4 = this;
+        var _this17 = this;
 
         this.searching = true;
         var data = {
@@ -90006,13 +90289,13 @@ if (document.querySelector('#indexProductController')) {
           per_page: this.selected_page,
           name: this.search.name
         };
-        axios.get( // subject to change (search list and pagination)
+        axios.post( // subject to change (search list and pagination)
         '/api/materials/all?page=' + data.page + '&per_page=' + data.per_page + '&sortkey=' + data.sortkey + '&reverse=' + data.reverse + '&name=' + data.name).then(function (response) {
           var result = response.data;
 
           if (result) {
-            _this4.list = result.data;
-            _this4.pagination = result.pagination;
+            _this17.list = result.data;
+            _this17.pagination = result.pagination;
           }
         });
         this.searching = false;
@@ -90040,11 +90323,11 @@ if (document.querySelector('#indexProductController')) {
         });
       },
       removeSingleEntry: function removeSingleEntry(data) {
-        var _this5 = this;
+        var _this18 = this;
 
-        console.log(data);
+        // console.log(data);
         axios["delete"]('/api/materials/' + data.id).then(function (repsonse) {
-          _this5.fetchTable();
+          _this18.fetchTable();
         });
       },
       onFilterChanged: function onFilterChanged() {
@@ -90074,21 +90357,663 @@ if (document.querySelector('#indexProductController')) {
     mounted: function mounted() {},
     methods: {
       onSubmit: function onSubmit() {
-        var _this6 = this;
+        var _this19 = this;
 
-        axios.post('/api/materials', this.form).then(function (response) {
-          $('.modal').modal('hide');
+        if (this.form.id) {
+          axios.post('/api/materials/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
 
-          for (var key in _this6.form) {
-            _this6.form[key] = null;
+            for (var key in _this19.form) {
+              _this19.form[key] = null;
+            }
+
+            _this19.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this19.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/materials', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this19.form) {
+              _this19.form[key] = null;
+            }
+
+            _this19.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this19.formErrors = error.response.data.errors;
+          });
+        }
+      }
+    },
+    watch: {
+      'data': function data(val) {
+        for (var key in this.form) {
+          this.form[key] = this.data[key];
+        }
+      },
+      'clearform': function clearform(val) {
+        if (val) {
+          this.formErrors = val;
+        }
+      }
+    }
+  });
+  Vue.component('index-shape', {
+    template: '#index-shape-template',
+    data: function data() {
+      return {
+        list: [],
+        search: {
+          name: ''
+        },
+        searching: false,
+        sortkey: '',
+        reverse: false,
+        selected_page: '100',
+        pagination: {
+          total: 0,
+          from: 1,
+          per_page: 1,
+          current_page: 1,
+          last_page: 0,
+          to: 5
+        },
+        formdata: {},
+        filterchanged: false,
+        clearform: {}
+      };
+    },
+    mounted: function mounted() {
+      this.fetchTable();
+    },
+    methods: {
+      fetchTable: function fetchTable() {
+        var _this20 = this;
+
+        this.searching = true;
+        var data = {
+          // subject to change (search list and pagination)
+          paginate: this.pagination.per_page,
+          page: this.pagination.current_page,
+          sortkey: this.sortkey,
+          reverse: this.reverse,
+          per_page: this.selected_page,
+          name: this.search.name
+        };
+        axios.post( // subject to change (search list and pagination)
+        '/api/shapes/all?page=' + data.page + '&per_page=' + data.per_page + '&sortkey=' + data.sortkey + '&reverse=' + data.reverse + '&name=' + data.name).then(function (response) {
+          var result = response.data;
+
+          if (result) {
+            _this20.list = result.data;
+            _this20.pagination = result.pagination;
+          }
+        });
+        this.searching = false;
+      },
+      searchData: function searchData() {
+        this.pagination.current_page = 1;
+        this.fetchTable();
+        this.filterchanged = false;
+      },
+      sortBy: function sortBy(sortkey) {
+        this.pagination.current_page = 1;
+        this.reverse = this.sortkey == sortkey ? !this.reverse : false;
+        this.sortkey = sortkey;
+        this.fetchTable();
+      },
+      createSingleEntry: function createSingleEntry() {
+        this.clearform = {};
+        this.formdata = {};
+      },
+      editSingleEntry: function editSingleEntry(data) {
+        this.clearform = {};
+        this.formdata = {};
+        this.formdata = _objectSpread({}, data, {
+          'name': data.name
+        });
+      },
+      removeSingleEntry: function removeSingleEntry(data) {
+        var _this21 = this;
+
+        // console.log(data);
+        axios["delete"]('/api/shapes/' + data.id).then(function (repsonse) {
+          _this21.fetchTable();
+        });
+      },
+      onFilterChanged: function onFilterChanged() {
+        this.filterchanged = true;
+      }
+    },
+    watch: {
+      'selected_page': function selected_page(val) {
+        this.selected_page = val;
+        this.pagination.current_page = 1;
+        this.fetchTable();
+      }
+    }
+  });
+  Vue.component('form-shape', {
+    template: '#form-shape-template',
+    props: ['data', 'clearform'],
+    data: function data() {
+      return {
+        form: {
+          id: '',
+          name: ''
+        },
+        formErrors: {}
+      };
+    },
+    mounted: function mounted() {},
+    methods: {
+      onSubmit: function onSubmit() {
+        var _this22 = this;
+
+        if (this.form.id) {
+          axios.post('/api/shapes/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this22.form) {
+              _this22.form[key] = null;
+            }
+
+            _this22.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this22.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/shapes', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this22.form) {
+              _this22.form[key] = null;
+            }
+
+            _this22.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this22.formErrors = error.response.data.errors;
+          });
+        }
+      }
+    },
+    watch: {
+      'data': function data(val) {
+        for (var key in this.form) {
+          this.form[key] = this.data[key];
+        }
+      },
+      'clearform': function clearform(val) {
+        if (val) {
+          this.formErrors = val;
+        }
+      }
+    }
+  });
+  Vue.component('index-lamination', {
+    template: '#index-lamination-template',
+    data: function data() {
+      return {
+        list: [],
+        search: {
+          name: ''
+        },
+        searching: false,
+        sortkey: '',
+        reverse: false,
+        selected_page: '100',
+        pagination: {
+          total: 0,
+          from: 1,
+          per_page: 1,
+          current_page: 1,
+          last_page: 0,
+          to: 5
+        },
+        formdata: {},
+        filterchanged: false,
+        clearform: {}
+      };
+    },
+    mounted: function mounted() {
+      this.fetchTable();
+    },
+    methods: {
+      fetchTable: function fetchTable() {
+        var _this23 = this;
+
+        this.searching = true;
+        var data = {
+          // subject to change (search list and pagination)
+          paginate: this.pagination.per_page,
+          page: this.pagination.current_page,
+          sortkey: this.sortkey,
+          reverse: this.reverse,
+          per_page: this.selected_page,
+          name: this.search.name
+        };
+        axios.post( // subject to change (search list and pagination)
+        '/api/laminations/all?page=' + data.page + '&per_page=' + data.per_page + '&sortkey=' + data.sortkey + '&reverse=' + data.reverse + '&name=' + data.name).then(function (response) {
+          var result = response.data;
+
+          if (result) {
+            _this23.list = result.data;
+            _this23.pagination = result.pagination;
           }
 
-          _this6.$emit('updatetable');
-
-          flash('Entry has successfully created or updated', 'success');
-        })["catch"](function (error) {
-          _this6.formErrors = error.response.data.errors;
+          console.log(JSON.parse(JSON.stringify(_this23.list)));
         });
+        this.searching = false;
+      },
+      searchData: function searchData() {
+        this.pagination.current_page = 1;
+        this.fetchTable();
+        this.filterchanged = false;
+      },
+      sortBy: function sortBy(sortkey) {
+        this.pagination.current_page = 1;
+        this.reverse = this.sortkey == sortkey ? !this.reverse : false;
+        this.sortkey = sortkey;
+        this.fetchTable();
+      },
+      createSingleEntry: function createSingleEntry() {
+        this.clearform = {};
+        this.formdata = {};
+      },
+      editSingleEntry: function editSingleEntry(data) {
+        this.clearform = {};
+        this.formdata = {};
+        this.formdata = _objectSpread({}, data, {
+          'name': data.name
+        });
+      },
+      removeSingleEntry: function removeSingleEntry(data) {
+        var _this24 = this;
+
+        // console.log(data);
+        axios["delete"]('/api/laminations/' + data.id).then(function (repsonse) {
+          _this24.fetchTable();
+        });
+      },
+      onFilterChanged: function onFilterChanged() {
+        this.filterchanged = true;
+      }
+    },
+    watch: {
+      'selected_page': function selected_page(val) {
+        this.selected_page = val;
+        this.pagination.current_page = 1;
+        this.fetchTable();
+      }
+    }
+  });
+  Vue.component('form-lamination', {
+    template: '#form-lamination-template',
+    props: ['data', 'clearform'],
+    data: function data() {
+      return {
+        form: {
+          id: '',
+          name: ''
+        },
+        formErrors: {}
+      };
+    },
+    mounted: function mounted() {},
+    methods: {
+      onSubmit: function onSubmit() {
+        var _this25 = this;
+
+        if (this.form.id) {
+          axios.post('/api/laminations/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this25.form) {
+              _this25.form[key] = null;
+            }
+
+            _this25.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this25.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/laminations', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this25.form) {
+              _this25.form[key] = null;
+            }
+
+            _this25.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this25.formErrors = error.response.data.errors;
+          });
+        }
+      }
+    },
+    watch: {
+      'data': function data(val) {
+        for (var key in this.form) {
+          this.form[key] = this.data[key];
+        }
+      },
+      'clearform': function clearform(val) {
+        if (val) {
+          this.formErrors = val;
+        }
+      }
+    }
+  });
+  Vue.component('index-frame', {
+    template: '#index-frame-template',
+    data: function data() {
+      return {
+        list: [],
+        search: {
+          name: ''
+        },
+        searching: false,
+        sortkey: '',
+        reverse: false,
+        selected_page: '100',
+        pagination: {
+          total: 0,
+          from: 1,
+          per_page: 1,
+          current_page: 1,
+          last_page: 0,
+          to: 5
+        },
+        formdata: {},
+        filterchanged: false,
+        clearform: {}
+      };
+    },
+    mounted: function mounted() {
+      this.fetchTable();
+    },
+    methods: {
+      fetchTable: function fetchTable() {
+        var _this26 = this;
+
+        this.searching = true;
+        var data = {
+          // subject to change (search list and pagination)
+          paginate: this.pagination.per_page,
+          page: this.pagination.current_page,
+          sortkey: this.sortkey,
+          reverse: this.reverse,
+          per_page: this.selected_page,
+          name: this.search.name
+        };
+        axios.post( // subject to change (search list and pagination)
+        '/api/frames/all?page=' + data.page + '&per_page=' + data.per_page + '&sortkey=' + data.sortkey + '&reverse=' + data.reverse + '&name=' + data.name).then(function (response) {
+          var result = response.data;
+
+          if (result) {
+            _this26.list = result.data;
+            _this26.pagination = result.pagination;
+          }
+        });
+        this.searching = false;
+      },
+      searchData: function searchData() {
+        this.pagination.current_page = 1;
+        this.fetchTable();
+        this.filterchanged = false;
+      },
+      sortBy: function sortBy(sortkey) {
+        this.pagination.current_page = 1;
+        this.reverse = this.sortkey == sortkey ? !this.reverse : false;
+        this.sortkey = sortkey;
+        this.fetchTable();
+      },
+      createSingleEntry: function createSingleEntry() {
+        this.clearform = {};
+        this.formdata = {};
+      },
+      editSingleEntry: function editSingleEntry(data) {
+        this.clearform = {};
+        this.formdata = {};
+        this.formdata = _objectSpread({}, data, {
+          'name': data.name
+        });
+      },
+      removeSingleEntry: function removeSingleEntry(data) {
+        var _this27 = this;
+
+        // console.log(data);
+        axios["delete"]('/api/frames/' + data.id).then(function (repsonse) {
+          _this27.fetchTable();
+        });
+      },
+      onFilterChanged: function onFilterChanged() {
+        this.filterchanged = true;
+      }
+    },
+    watch: {
+      'selected_page': function selected_page(val) {
+        this.selected_page = val;
+        this.pagination.current_page = 1;
+        this.fetchTable();
+      }
+    }
+  });
+  Vue.component('form-frame', {
+    template: '#form-frame-template',
+    props: ['data', 'clearform'],
+    data: function data() {
+      return {
+        form: {
+          id: '',
+          name: ''
+        },
+        formErrors: {}
+      };
+    },
+    mounted: function mounted() {},
+    methods: {
+      onSubmit: function onSubmit() {
+        var _this28 = this;
+
+        if (this.form.id) {
+          axios.post('/api/frames/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this28.form) {
+              _this28.form[key] = null;
+            }
+
+            _this28.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this28.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/frames', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this28.form) {
+              _this28.form[key] = null;
+            }
+
+            _this28.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this28.formErrors = error.response.data.errors;
+          });
+        }
+      }
+    },
+    watch: {
+      'data': function data(val) {
+        for (var key in this.form) {
+          this.form[key] = this.data[key];
+        }
+      },
+      'clearform': function clearform(val) {
+        if (val) {
+          this.formErrors = val;
+        }
+      }
+    }
+  });
+  Vue.component('index-finishing', {
+    template: '#index-finishing-template',
+    data: function data() {
+      return {
+        list: [],
+        search: {
+          name: ''
+        },
+        searching: false,
+        sortkey: '',
+        reverse: false,
+        selected_page: '100',
+        pagination: {
+          total: 0,
+          from: 1,
+          per_page: 1,
+          current_page: 1,
+          last_page: 0,
+          to: 5
+        },
+        formdata: {},
+        filterchanged: false,
+        clearform: {}
+      };
+    },
+    mounted: function mounted() {
+      this.fetchTable();
+    },
+    methods: {
+      fetchTable: function fetchTable() {
+        var _this29 = this;
+
+        this.searching = true;
+        var data = {
+          // subject to change (search list and pagination)
+          paginate: this.pagination.per_page,
+          page: this.pagination.current_page,
+          sortkey: this.sortkey,
+          reverse: this.reverse,
+          per_page: this.selected_page,
+          name: this.search.name
+        };
+        axios.post( // subject to change (search list and pagination)
+        '/api/finishings/all?page=' + data.page + '&per_page=' + data.per_page + '&sortkey=' + data.sortkey + '&reverse=' + data.reverse + '&name=' + data.name).then(function (response) {
+          var result = response.data;
+
+          if (result) {
+            _this29.list = result.data;
+            _this29.pagination = result.pagination;
+          }
+        });
+        this.searching = false;
+      },
+      searchData: function searchData() {
+        this.pagination.current_page = 1;
+        this.fetchTable();
+        this.filterchanged = false;
+      },
+      sortBy: function sortBy(sortkey) {
+        this.pagination.current_page = 1;
+        this.reverse = this.sortkey == sortkey ? !this.reverse : false;
+        this.sortkey = sortkey;
+        this.fetchTable();
+      },
+      createSingleEntry: function createSingleEntry() {
+        this.clearform = {};
+        this.formdata = {};
+      },
+      editSingleEntry: function editSingleEntry(data) {
+        this.clearform = {};
+        this.formdata = {};
+        this.formdata = _objectSpread({}, data, {
+          'name': data.name
+        });
+      },
+      removeSingleEntry: function removeSingleEntry(data) {
+        var _this30 = this;
+
+        // console.log(data);
+        axios["delete"]('/api/finishings/' + data.id).then(function (repsonse) {
+          _this30.fetchTable();
+        });
+      },
+      onFilterChanged: function onFilterChanged() {
+        this.filterchanged = true;
+      }
+    },
+    watch: {
+      'selected_page': function selected_page(val) {
+        this.selected_page = val;
+        this.pagination.current_page = 1;
+        this.fetchTable();
+      }
+    }
+  });
+  Vue.component('form-finishing', {
+    template: '#form-finishing-template',
+    props: ['data', 'clearform'],
+    data: function data() {
+      return {
+        form: {
+          id: '',
+          name: ''
+        },
+        formErrors: {}
+      };
+    },
+    mounted: function mounted() {},
+    methods: {
+      onSubmit: function onSubmit() {
+        var _this31 = this;
+
+        if (this.form.id) {
+          axios.post('/api/finishings/update/' + this.form.id, this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this31.form) {
+              _this31.form[key] = null;
+            }
+
+            _this31.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this31.formErrors = error.response.data.errors;
+          });
+        } else {
+          axios.post('/api/finishings', this.form).then(function (response) {
+            $('.modal').modal('hide');
+
+            for (var key in _this31.form) {
+              _this31.form[key] = null;
+            }
+
+            _this31.$emit('updatetable');
+
+            flash('Entry has successfully created or updated', 'success');
+          })["catch"](function (error) {
+            _this31.formErrors = error.response.data.errors;
+          });
+        }
       }
     },
     watch: {
@@ -90807,7 +91732,7 @@ if (document.querySelector('#indexTransactionController')) {
       getMaterialOptions: function getMaterialOptions() {
         var _this15 = this;
 
-        axios.get('/api/materials/all').then(function (response) {
+        axios.post('/api/materials/all').then(function (response) {
           _this15.materials = response.data.data; // console.log(JSON.parse(JSON.stringify(this.materials)))
         });
       },

@@ -16,6 +16,7 @@ class ProductMaterialService
 
     private $productRepository;
     private $productMaterialRepository;
+    private $materialRepository;
     private $userRepository;
 
     public function __construct(ProductRepository $productRepository, ProductMaterialRepository $productMaterialRepository, MaterialRepository $materialRepository, UserRepository $userRepository)
@@ -56,6 +57,14 @@ class ProductMaterialService
         return $this->productMaterialRepository->getOne($filter);
     }
 
+    // get one by filter
+    public function getOneByFilter($input)
+    {
+        $filter = $input;
+
+        return $this->productMaterialRepository->getOne($filter);
+    }    
+
     // create product material
     public function create($input)
     {
@@ -65,7 +74,7 @@ class ProductMaterialService
             }
         }
 
-        if($input['name']) {
+        if(isset($input['name']) && $input['name']) {
             $material = $this->materialRepository->create($input);
             $input['material_id'] = $material->id;
         }

@@ -56,6 +56,14 @@ class ProductLaminationService
         return $this->productLaminationRepository->getOne($filter);
     }
 
+    // get one by filter
+    public function getOneByFilter($input)
+    {
+        $filter = $input;
+
+        return $this->productLaminationRepository->getOne($filter);
+    }      
+
     // create product lamination
     public function create($input)
     {
@@ -65,7 +73,7 @@ class ProductLaminationService
             }
         }
 
-        if($input['name']) {
+        if(isset($input['name']) && $input['name']) {
             $lamination = $this->laminationRepository->create($input);
             $input['lamination_id'] = $lamination->id;
         }

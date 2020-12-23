@@ -50,4 +50,12 @@ class ShapeRepository
         $model->save();
         return $model;
     }
+
+    // create model entry
+    public function update(Shape $model, $input)
+    {
+        $model->fill($input);
+        $model->save();
+        return $model;
+    }
 }

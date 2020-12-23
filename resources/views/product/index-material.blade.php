@@ -19,6 +19,9 @@
                   Name
                 </th>
                 <th class="text-center">
+                  Binded Product(s)
+                </th>
+                <th class="text-center">
                 </th>
             </tr>
             <tr v-for="(data, index) in list" class="row_edit">
@@ -28,10 +31,20 @@
                 <td class="text-left">
                     @{{ data.name }}
                 </td>
+                <td class="text-left">  
+                  <ul v-if="data.productMaterials">
+                    <li v-for="product in data.productMaterials">
+                      @{{product.product ? product.product.name : ''}}
+                    </li>
+                  </ul>
+                </td>
                 <td class="text-center">
+                  <button type="button" class="btn btn-light btn-outline-secondary btn-sm" data-toggle="modal" data-target="#material_modal" @click="editSingleEntry(data)">
+                      <i class="fas fa-edit"></i>
+                  </button>
                   <button type="button" class="btn btn-sm btn-danger" @click.prevent="removeSingleEntry(data)">
                     <i class="fas fa-times"></i>
-                </button>
+                  </button>
                 </td>
             </tr>
             <tr v-if="list.length === 0">

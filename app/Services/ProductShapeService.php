@@ -56,6 +56,14 @@ class ProductShapeService
         return $this->productShapeRepository->getOne($filter);
     }
 
+    // get one by filter
+    public function getOneByFilter($input)
+    {
+        $filter = $input;
+
+        return $this->productShapeRepository->getOne($filter);
+    }       
+
     // create product shape
     public function create($input)
     {
@@ -65,13 +73,13 @@ class ProductShapeService
             }
         }
 
-        if($input['name']) {
+        if(isset($input['name']) && $input['name']) {
             $shape = $this->shapeRepository->create($input);
             $input['shape_id'] = $shape->id;
         }
 
         $model = $this->productShapeRepository->create($input);
-        return $model;
+        return $model;        
     }
 
     // update product shape

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ProductShape;
 use App\Models\Shape;
+use App\Http\Resources\ProductShapeResource;
 use App\Http\Resources\ShapeResource;
+use App\Services\ProductShapeService;
 use App\Services\ProductService;
 use App\Services\ShapeService;
 use App\Traits\Pagination;
@@ -19,9 +21,10 @@ class ShapeController extends Controller
     private $productService;
     private $shapeService;
 
-    public function __construct(ProductService $productService, ShapeService $shapeService)
+    public function __construct(ProductShapeService $productShapeService, ProductService $productService, ShapeService $shapeService)
     {
         $this->middleware('auth');
+        $this->productShapeService = $productShapeService;
         $this->productService = $productService;
         $this->shapeService = $shapeService;
     }
@@ -84,6 +87,34 @@ class ShapeController extends Controller
         return $shapes;
     }
 
+    // create model
+    public function createApi(Request $request)
+    {
+        $input = $request->all();
+
+        $model = $this->shapeService->create($input);
+
+        return $this->success(new ShapeResource($model));
+    }
+
+    // edit model
+    public function updateApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $model = $this->shapeService->update($input);
+        }
+        return $this->success(new ShapeResource($model));
+    }
+
+    // delete single entry api
+    public function deleteApi($id)
+    {
+        $input['id'] = $id;
+        $this->shapeService->delete($input);
+    }
+
     // update product shape by given id
     public function updateProductShapeByIdApi($id)
     {
@@ -93,24 +124,49 @@ class ShapeController extends Controller
         $model->multiplier = $multiplier;
         $model->save();
     }
-/*
-    // store single shape api
-    public function storeSalesChannelsApi(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required'
-        ]);
 
-        $input = $request->all();
-        $model = $this->salesChannelService->create($input);
-        return $this->success(new SalesChannelResource($model));
+    // create shape and product binding
+    public function createProductShapeByProductIdApi($product_id)
+    {
+        $input['product_id'] = $product_id;
+        $input['shape_id'] = request('shape_id');
+
+        $model = $this->productShapeService->create($input);
+
+        return $this->success(new ProductShapeResource($model));
     }
 
-    // delete single entry api
-    public function deleteSingleSalesChannel($id)
+    // delete shape and product binding
+    public function deleteProductShapeByProductIdApi($product_id, Request $request)
     {
-        $input['id'] = $id;
-        $this->salesChannelService->delete($input);
-    } */
+        $input['shape_id'] = $request->shape_id;
+        $input['product_id'] = $product_id;
+
+        $model = $this->productShapeService->getOneByFilter($input);
+
+        $input['id'] = $model->id;
+        $this->productShapeService->delete($input);
+    }
+
+    // get binded shapes by product id
+    public function getBindedShapeByProductId($productId)
+    {
+        $bindedShapeId = ProductShape::where('product_id', $productId)->get('shape_id')->toArray();
+        // dd($bindedMaterialId);
+
+        $collections = Shape::bindedProduct($bindedShapeId)->get();
+
+        return $this->success(ShapeResource::collection($collections));
+    }
+
+    // get non binded shapes by product id
+    public function getNonBindedShapeByProductId($productId)
+    {
+        $bindedShapeId = ProductShape::where('product_id', $productId)->get('shape_id')->toArray();
+
+        $collections = Shape::excludeBindedProduct($bindedShapeId)->get();
+
+        return $this->success(ShapeResource::collection($collections));
+    }
 
 }

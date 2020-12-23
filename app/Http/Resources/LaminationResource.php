@@ -17,6 +17,7 @@ class LaminationResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'productLaminations' => ProductBindingResource::collection($this->productLaminations)
         ];
     }
 }
