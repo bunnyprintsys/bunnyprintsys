@@ -113,7 +113,12 @@ class TransactionController extends Controller
                 'qty' => $item['qty'],
                 'price' => $item['price'],
                 'description' => $item['description'],
-                'material_id' => $item['material']['id']
+                'material_id' => isset($item['material']) ? $item['material']['id'] : null,
+                'shape_id' => isset($item['shape']) ? $item['shape']['id'] : null,
+                'lamination_id' => isset($item['lamination']) ? $item['lamination']['id'] : null,
+                'frame_id' => isset($item['frame']) ? $item['frame']['id'] : null,
+                'finishing_id' => isset($item['finishing']) ? $item['finishing']['id'] : null,
+
             ];
             $items[] = $data;
         }
@@ -161,12 +166,17 @@ class TransactionController extends Controller
 
         $items = [];
         foreach ($itemForm['items'] as $item) {
+            // dd($item, $itemForm);
             $data = [
-                'item_id' => $item['item']['id'],
+                'item_id' => $item['item_id'],
                 'qty' => $item['qty'],
                 'price' => $item['price'],
                 'description' => $item['description'],
-                'material_id' => $item['material']['id']
+                'material_id' => $item['material_id'],
+                'shape_id' => $item['shape_id'],
+                'lamination_id' => $item['lamination_id'],
+                'frame_id' => $item['frame_id'],
+                'finishing_id' => $item['finishing_id']
             ];
             $items[] = $data;
         }

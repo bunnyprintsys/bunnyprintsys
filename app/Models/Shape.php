@@ -45,10 +45,12 @@ class Shape extends Model
 
     public function scopeExcludeBindedProduct($query, $value = [])
     {
-        return $query->whereHas('productShapes', function($query) use ($value) {
-            $query->whereNotIn('shape_id', $value);
-        });
-    }    
+        $query->whereNotIn('id', $value);
+
+        // return $query->whereHas('productShapes', function($query) use ($value) {
+        //     $query->whereNotIn('shape_id', $value);
+        // });
+    }
 
     // filter
     public function scopeFilter($query, $input, $alias = null, $like = true)

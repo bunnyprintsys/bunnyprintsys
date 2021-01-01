@@ -417,7 +417,7 @@
                     </div>
                     <div class="border border-info" v-if="show_add_item">
                         <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2">
-                            <label class="control-label required">Item</label>
+                            <label class="control-label required">Product</label>
                                 <multiselect
                                 v-model="itemForm.product"
                                 :options="itemOptions"
@@ -425,25 +425,66 @@
                                 placeholder="Select..."
                                 :custom-label="customLabelName"
                                 track-by="id"
+                                @input="onProductSelected()"
                                 ></multiselect>
                             <span class="invalid-feedback" role="alert" v-if="formErrors['items']">
                                 <strong>@{{ formErrors['items'][0] }}</strong>
                             </span>
                         </div>
-                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2">
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="itemForm.product && itemForm.product.is_material">
                             <label class="control-label required">Material</label>
                                 <multiselect
                                 v-model="itemForm.material"
-                                :options="materials"
+                                :options="bindedMaterials"
                                 :close-on-select="true"
                                 placeholder="Select..."
                                 :custom-label="customLabelName"
                                 track-by="id"
                                 ></multiselect>
-{{--
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['materials']">
-                                <strong>@{{ formErrors['materials'][0] }}</strong>
-                            </span> --}}
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="itemForm.product && itemForm.product.is_shape">
+                            <label class="control-label required">Shape</label>
+                                <multiselect
+                                v-model="itemForm.shape"
+                                :options="bindedShapes"
+                                :close-on-select="true"
+                                placeholder="Select..."
+                                :custom-label="customLabelName"
+                                track-by="id"
+                                ></multiselect>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="itemForm.product && itemForm.product.is_lamination">
+                            <label class="control-label required">Lamination</label>
+                                <multiselect
+                                v-model="itemForm.lamination"
+                                :options="bindedLaminations"
+                                :close-on-select="true"
+                                placeholder="Select..."
+                                :custom-label="customLabelName"
+                                track-by="id"
+                                ></multiselect>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="itemForm.product && itemForm.product.is_frame">
+                            <label class="control-label required">Frame</label>
+                                <multiselect
+                                v-model="itemForm.frame"
+                                :options="bindedFrames"
+                                :close-on-select="true"
+                                placeholder="Select..."
+                                :custom-label="customLabelName"
+                                track-by="id"
+                                ></multiselect>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="itemForm.product && itemForm.product.is_finishing">
+                            <label class="control-label required">Finishing</label>
+                                <multiselect
+                                v-model="itemForm.finishing"
+                                :options="bindedFinishings"
+                                :close-on-select="true"
+                                placeholder="Select..."
+                                :custom-label="customLabelName"
+                                track-by="id"
+                                ></multiselect>
                         </div>
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <label class="control-label">
@@ -529,9 +570,21 @@
                                     <span class="font-weight-bold text-uppercase">
                                         @{{data.item.name}}
                                     </span>
-                                    <div class="pl-3">
-                                        <span style="font-weight: bold; font-size: 13px;">
-                                            @{{data.material ? '-' + data.material.name : ''}}
+                                    <div class="pl-2 pt-0">
+                                        <span style="font-weight: bold; font-size: 12px;" v-if="data.material">
+                                            <br><strong>Material:</strong> @{{ data.material.name }}
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 12px;" v-if="data.shape">
+                                            <br><strong>Shape:</strong> @{{ data.shape.name }}
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 12px;" v-if="data.lamination">
+                                            <br><strong>Lamination:</strong> @{{ data.lamination.name }}
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 12px;" v-if="data.frame">
+                                            <br><strong>Frame:</strong> @{{ data.frame.name }}
+                                        </span>
+                                        <span style="font-weight: bold; font-size: 12px;" v-if="data.finishing">
+                                            <br><strong>Finishing:</strong> @{{ data.finishing.name }}
                                         </span>
                                         <div class="pre-formatted">
                                             <small>@{{data.description}}</small>

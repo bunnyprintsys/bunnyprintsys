@@ -33,7 +33,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 </head>
 <body>
-
+@php
+    // dd($data->deals->toArray(), $data->toArray());
+@endphp
 <div class="container d-flex">
     <table width="100%">
         @if ($data->profile->logo_url)
@@ -211,14 +213,41 @@
                 <tbody>
                     @foreach($data->deals as $index => $item)
                     <tr>
+                        @php
+                            // dd($item->material->name, $item->toArray());
+                        @endphp
                         <td class="text-center col-xs-1">{{ $index + 1 }}.</td>
                         <td class="text-left col-xs-5">
                             {{ $item->product->name }}
                             <span>
                                 @if($item->material)
                                     <br>
-                                    <span style="font-size: 14px; padding-left: 12px;">
+                                    <span style="font-size: 12px; padding-left: 12px;">
                                         {{ $item->material->name }}
+                                    </span>
+                                @endif
+                                @if($item->shape)
+                                    <br>
+                                    <span style="font-size: 12px; padding-left: 12px;">
+                                        {{ $item->shape->name }}
+                                    </span>
+                                @endif
+                                @if($item->lamination)
+                                    <br>
+                                    <span style="font-size: 12px; padding-left: 12px;">
+                                        {{ $item->lamination->name }}
+                                    </span>
+                                @endif
+                                @if($item->frame)
+                                    <br>
+                                    <span style="font-size: 12px; padding-left: 12px;">
+                                        {{ $item->frame->name }}
+                                    </span>
+                                @endif
+                                @if($item->finishing)
+                                    <br>
+                                    <span style="font-size: 12px; padding-left: 12px;">
+                                        {{ $item->finishing->name }}
                                     </span>
                                 @endif
                                 @if($item->description)
@@ -295,9 +324,6 @@
         </table>
     </div>
 </div>
-
-
-
 
 </body>
 </html>

@@ -47,9 +47,11 @@ class Lamination extends Model
 
     public function scopeExcludeBindedProduct($query, $value = [])
     {
-        return $query->whereHas('productLaminations', function($query) use ($value) {
-            $query->whereNotIn('lamination_id', $value);
-        });
+        $query->whereNotIn('id', $value);
+
+        // return $query->whereHas('productLaminations', function($query) use ($value) {
+        //     $query->whereNotIn('lamination_id', $value);
+        // });
     }
 
     /**

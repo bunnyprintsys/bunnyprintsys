@@ -15,7 +15,7 @@ class Frame extends Model
     public function productFrames()
     {
         return $this->hasMany(ProductFrame::class);
-    }    
+    }
 
     // scopes
     public function scopeId($query, $value)
@@ -47,9 +47,11 @@ class Frame extends Model
 
     public function scopeExcludeBindedProduct($query, $value = [])
     {
-        return $query->whereHas('productFrames', function($query) use ($value) {
-            $query->whereNotIn('frame_id', $value);
-        });
+        $query->whereNotIn('id', $value);
+
+        // return $query->whereHas('productFrames', function($query) use ($value) {
+        //     $query->whereNotIn('frame_id', $value);
+        // });
     }
 
     /**
@@ -124,5 +126,5 @@ class Frame extends Model
             $columnName = $this->alias . '.' . $columnName;
         }
         return $columnName;
-    }  
+    }
 }

@@ -47,9 +47,11 @@ class Material extends Model
 
     public function scopeExcludeBindedProduct($query, $value = [])
     {
-        return $query->whereHas('productMaterials', function($query) use ($value) {
-            $query->whereNotIn('material_id', $value);
-        });
+        $query->whereNotIn('id', $value);
+
+        // return $query->whereHas('productMaterials', function($query) use ($value) {
+        //     $query->whereNotIn('material_id', $value);
+        // });
     }
 
     /**

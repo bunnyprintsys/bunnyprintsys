@@ -15,7 +15,7 @@ class Finishing extends Model
     public function productFinishings()
     {
         return $this->hasMany(ProductFinishing::class);
-    }    
+    }
 
     // scopes
     public function scopeId($query, $value)
@@ -47,9 +47,11 @@ class Finishing extends Model
 
     public function scopeExcludeBindedProduct($query, $value = [])
     {
-        return $query->whereHas('productFinishings', function($query) use ($value) {
-            $query->whereNotIn('finishing_id', $value);
-        });
+        $query->whereNotIn('id', $value);
+
+        // return $query->whereHas('productFinishings', function($query) use ($value) {
+        //     $query->whereNotIn('finishing_id', $value);
+        // });
     }
 
     /**
@@ -124,5 +126,5 @@ class Finishing extends Model
             $columnName = $this->alias . '.' . $columnName;
         }
         return $columnName;
-    }  
+    }
 }

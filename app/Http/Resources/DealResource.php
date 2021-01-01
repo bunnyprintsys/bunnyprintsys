@@ -21,7 +21,11 @@ class DealResource extends JsonResource
             'amount' => $this->amount,
             'description' => $this->description,
             'item' => new ProductResource($this->product),
-            'material' => $this->material ? new MaterialResource($this->material) : null
+            'material' => $this->material ? new MaterialResource($this->material) : null,
+            'shape' => $this->shape ? new ShapeResource($this->shape) : null,
+            'lamination' => $this->lamination ? new LaminationResource($this->lamination) : null,
+            'frame' => $this->frame ? new FrameResource($this->frame) : null,
+            'finishing' => $this->finishing ? new FinishingResource($this->finishing) : null
         ];
     }
 }

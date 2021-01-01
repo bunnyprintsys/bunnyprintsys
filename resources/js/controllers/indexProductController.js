@@ -717,7 +717,7 @@ if (document.querySelector('#indexProductController')) {
             this.list = result.data;
             this.pagination = result.pagination;
           }
-          console.log(JSON.parse(JSON.stringify(this.list)))
+          // console.log(JSON.parse(JSON.stringify(this.list)))
         });
         this.searching = false;
       },

@@ -152,6 +152,11 @@ if (document.querySelector('#indexTransactionController')) {
           },
           formErrors: {},
           itemOptions: [],
+          bindedMaterials: [],
+          bindedShapes: [],
+          bindedLaminations: [],
+          bindedFrames: [],
+          bindedFinishings: [],
           addresses: [],
           loading: false,
           show_add_item: true,
@@ -198,6 +203,10 @@ if (document.querySelector('#indexTransactionController')) {
                       ...item,
                       item_id: _.get(item, 'item.id', null),
                       material_id: _.get(item, 'material.id', null),
+                      shape_id: _.get(item, 'shape.id', null),
+                      lamination_id: _.get(item, 'lamination.id', null),
+                      frame_id: _.get(item, 'frame.id', null),
+                      finishing_id: _.get(item, 'finishing.id', null),
                   }
               });
 
@@ -319,14 +328,25 @@ if (document.querySelector('#indexTransactionController')) {
             }
             // console.log(JSON.parse(JSON.stringify(this.materials)));
             const itemObj = this.itemOptions.find(x => Number(x.id) === Number(this.itemForm.product.id));
-            const materialObj = this.materials.find(x => Number(x.id) === Number(this.itemForm.material.id));
-// console.log(JSON.parse(JSON.stringify(itemObj)));
-// console.log(JSON.parse(JSON.stringify(materialObj)));
+            const materialObj = this.bindedMaterials.find(x => Number(x.id) === Number(this.itemForm.material.id));
+            const shapeObj = this.bindedShapes.find(x => Number(x.id) === Number(this.itemForm.shape.id));
+            const laminationObj = this.bindedLaminations.find(x => Number(x.id) === Number(this.itemForm.lamination.id));
+            const frameObj = this.bindedFrames.find(x => Number(x.id) === Number(this.itemForm.frame.id));
+            const finishingObj = this.bindedFinishings.find(x => Number(x.id) === Number(this.itemForm.finishing.id));
+
             this.itemForm.items.push({
               item: itemObj,
               item_id: itemObj.id,
               material: materialObj,
-              material_id: materialObj.id,
+              material_id: materialObj ? materialObj.id : null,
+              shape: shapeObj,
+              shape_id: shapeObj ? shapeObj.id : null,
+              lamination: laminationObj,
+              lamination_id: laminationObj ? laminationObj.id : null,
+              frame: frameObj,
+              frame_id: frameObj ? frameObj.id : null,
+              finishing: finishingObj,
+              finishing_id: finishingObj ? finishingObj.id : null,
               description: this.itemForm.description,
               qty: this.itemForm.qty,
               price: parseFloat(this.itemForm.price).toFixed(2),
@@ -398,6 +418,16 @@ if (document.querySelector('#indexTransactionController')) {
           return {
             product: null,
             material: null,
+            shape: null,
+            lamination: null,
+            frame: null,
+            finishing: null,
+            product_id: '',
+            material_id: '',
+            shape_id: '',
+            lamination_id: '',
+            frame_id: '',
+            finishing_id: '',
             description: '',
             qty: 1,
             price: '',
@@ -441,6 +471,41 @@ if (document.querySelector('#indexTransactionController')) {
             }else {
               this.radioOption.existingAddress = 'false'
             }
+          })
+        },
+        onProductSelected() {
+          if(this.itemForm.product) {
+            // console.log(JSON.parse(JSON.stringify(this.itemForm.product)))
+            this.getBindedMaterials(this.itemForm.product.id)
+            this.getBindedShapes(this.itemForm.product.id)
+            this.getBindedLaminations(this.itemForm.product.id)
+            this.getBindedFrames(this.itemForm.product.id)
+            this.getBindedFinishings(this.itemForm.product.id)
+          }
+        },
+        getBindedMaterials(product_id) {
+          axios.post('/api/materials/binded/product/' + product_id).then((response) => {
+            this.bindedMaterials = response.data.data
+          })
+        },
+        getBindedShapes(product_id) {
+          axios.post('/api/shapes/binded/product/' + product_id).then((response) => {
+            this.bindedShapes = response.data.data
+          })
+        },
+        getBindedLaminations(product_id) {
+          axios.post('/api/laminations/binded/product/' + product_id).then((response) => {
+            this.bindedLaminations = response.data.data
+          })
+        },
+        getBindedFrames(product_id) {
+          axios.post('/api/frames/binded/product/' + product_id).then((response) => {
+            this.bindedFrames = response.data.data
+          })
+        },
+        getBindedFinishings(product_id) {
+          axios.post('/api/finishings/binded/product/' + product_id).then((response) => {
+            this.bindedFinishings = response.data.data
           })
         },
         customLabelCustomer(option) {

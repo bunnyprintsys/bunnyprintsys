@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Repositories\DealRepository;
+use App\Repositories\ProductRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
 use DB;
@@ -15,12 +16,15 @@ use PDF;
 class TransactionService
 {
 
+    private $dealRepository;
+    private $productRepository;
     private $transactionRepository;
     private $userRepository;
 
-    public function __construct(DealRepository $dealRepository, TransactionRepository $transactionRepository, UserRepository $userRepository)
+    public function __construct(DealRepository $dealRepository, ProductRepository $productRepository, TransactionRepository $transactionRepository, UserRepository $userRepository)
     {
         $this->dealRepository = $dealRepository;
+        $this->productRepository = $productRepository;
         $this->transactionRepository = $transactionRepository;
         $this->userRepository = $userRepository;
     }
@@ -110,9 +114,9 @@ class TransactionService
         try {
             DB::beginTransaction();
 
-            if (empty($inputs)) {
-                throw new \Exception('Items is empty');
-            }
+            // if (empty($inputs)) {
+            //     throw new \Exception('Items is empty');
+            // }
 
             $total = 0;
             $items = [];
@@ -133,6 +137,26 @@ class TransactionService
 
                 $input['transaction_id'] = $transaction->id;
                 $input['product_id'] = $input['item_id'];
+                $productInput['id'] = $input['item_id'];
+
+                $product = $this->productRepository->getOne($productInput);
+                // dd($input, $product, $input);
+                if(!$product->is_material) {
+                    $input['material_id'] = null;
+                }
+                if(!$product->is_shape) {
+                    $input['shape_id'] = null;
+                }
+                if(!$product->is_lamination) {
+                    $input['lamination_id'] = null;
+                }
+                if(!$product->is_frame) {
+                    $input['frame_id'] = null;
+                }
+                if(!$product->is_finishing) {
+                    $input['finishing_id'] = null;
+                }
+
                 $input['amount'] = $input['qty'] * $input['price'];
                 $total += round($input['amount'], 2);
                 $items[] = $this->dealRepository->create($user, $input);

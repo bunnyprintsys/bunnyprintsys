@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\FinishingResource;
+use App\Http\Resources\ProductFinishingResource;
 use App\Models\Finishing;
 use App\Models\ProductFinishing;
 use App\Services\FinishingService;
