@@ -28,8 +28,12 @@
           </li>
 
           <li class="{{ $name == 'order.index' ? 'active' : '' }}">
-              <a href="{{ route('order.index') }}"><i class="fas fa-cart-plus"></i>Orders</a>
+              <a href="{{ route('order.index', ['type' => 'customer']) }}"><i class="fas fa-cart-plus"></i>Orders</a>
           </li>
+
+          <li class="{{ $name == 'order.index' ? 'active' : '' }}">
+            <a href="{{ route('order.index', ['type' => 'agent']) }}"><i class="fas fa-cart-plus"></i>Orders (Agent)</a>
+        </li>
 
           <li class="{{ $name == 'transaction.index' ? 'active' : '' }}">
               <a href="{{ route('transaction.index') }}"><i class="far fa-credit-card"></i>Transactions</a>
@@ -79,7 +83,11 @@
           </li>
 
           <li class="{{ $name == 'price.index' ? 'active' : '' }}">
-            <a href="{{ route('price.index') }}"><i class="fas fa-tags"></i>Pricing</a>
+            <a href="{{ route('price.index', ['type' => 'customer']) }}"><i class="fas fa-tags"></i>Pricing</a>
+          </li>
+
+          <li class="{{ $name == 'price.index' ? 'active' : '' }}">
+            <a href="{{ route('price.index', ['type' => 'agent']) }}"><i class="fas fa-tags"></i>Pricing (Agent)</a>
           </li>
 
           <li class="{{ $name == 'product.index' ? 'active' : '' }}">

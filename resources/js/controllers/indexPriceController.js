@@ -73,6 +73,9 @@ if(document.querySelector('#indexPriceController')) {
 
   Vue.component('price-labelsticker', {
     template: '#price-labelsticker-template',
+    props: [
+      'type'
+    ],
     data() {
       return {
           laminations: [],
@@ -98,12 +101,12 @@ if(document.querySelector('#indexPriceController')) {
     },
     methods: {
       getAllLaminations() {
-        axios.post('/api/laminations/product-lamination/all').then((response) => {
+        axios.post('/api/laminations/product-lamination/all', {product_id: 1, type: this.type}).then((response) => {
           this.laminations = response.data.data
         })
       },
       getAllMaterials() {
-        axios.post('/api/materials/product-material/all', {product_id: 1}).then((response) => {
+        axios.post('/api/materials/product-material/all', {product_id: 1, type: this.type}).then((response) => {
           this.materials = response.data.data
         })
       },
@@ -113,34 +116,34 @@ if(document.querySelector('#indexPriceController')) {
         })
       },
       getAllShapes() {
-        axios.post('/api/shapes/product-shape/all', {product_id: 1}).then((response) => {
+        axios.post('/api/shapes/product-shape/all', {product_id: 1, type: this.type}).then((response) => {
           this.shapes = response.data.data
         })
       },
       getAllDeliveries() {
-        axios.post('/api/deliveries/product-delivery/all', {product_id: 1}).then((response) => {
+        axios.post('/api/deliveries/product-delivery/all', {product_id: 1, type: this.type}).then((response) => {
           this.deliveries = response.data.data
         })
       },
       getQuantitymultipliers() {
-        axios.post('/api/quantitymultipliers/all', {product_id: 1}).then((response) => {
+        axios.post('/api/quantitymultipliers/all', {product_id: 1, type: this.type}).then((response) => {
           this.quantitymultipliers = response.data.data
         })
       },
       onProductLaminationMultiplierChanged(id, value) {
-          axios.post('/api/laminations/product-lamination/edit', {id: id, multiplier: value}).then((response) => {
+          axios.post('/api/laminations/product-lamination/edit', {id: id, value: value, type: this.type}).then((response) => {
           })
       },
       onProductShapeMultiplierChanged(id, value) {
-          axios.post('/api/shapes/product-shape/edit', {id: id, multiplier: value}).then((response) => {
+          axios.post('/api/shapes/product-shape/edit', {id: id, value: value, type: this.type}).then((response) => {
           })
       },
       onProductMaterialMultiplierChanged(id, value) {
-          axios.post('/api/materials/product-material/edit', {id: id, multiplier: value}).then((response) => {
+          axios.post('/api/materials/product-material/edit', {id: id, value: value, type: this.type}).then((response) => {
           })
       },
       onDeliveryMultiplierChanged(id, value) {
-          axios.post('/api/deliveries/product-delivery/edit', {id: id, multiplier: value}).then((response) => {
+          axios.post('/api/deliveries/product-delivery/edit', {id: id, value: value, type: this.type}).then((response) => {
           })
       },
       onQtyNameChanged(id, name) {
@@ -152,7 +155,7 @@ if(document.querySelector('#indexPriceController')) {
           })
       },
       onQtyMultiplierChanged(data) {
-        axios.post('/api/quantitymultipliers/edit', {data: data}).then((response) => {
+        axios.post('/api/quantitymultipliers/edit', {data: {...data, value: data.multiplier, type: this.type}}).then((response) => {
         })
       },
       getFormOptionsDefault() {
@@ -215,7 +218,7 @@ if(document.querySelector('#indexPriceController')) {
         this.action = 'create'
       },
       onSubmit() {
-        axios.post(this.formUrl, this.form).then((response) => {
+        axios.post(this.formUrl, {...this.form, value: this.form.multiplier, type: this.type}).then((response) => {
           this.getAllLaminations()
           this.getAllMaterials()
           this.getAllOrderquantities()

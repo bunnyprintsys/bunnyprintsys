@@ -18,7 +18,6 @@ class ProductFinishingResource extends JsonResource
             'id' => $this->id,
             'product' => new ProductResource($this->product),
             'finishing' => new FinishingResource($this->material),
-            'multiplier' => $this->multiplier
         ];
     }
 }

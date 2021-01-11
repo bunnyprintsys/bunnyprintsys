@@ -11,14 +11,14 @@
       <div class="form-row">
       <span class="mr-auto">
           <i class="fas fa-cart-plus"></i>
-          Label Sticker
+          Label Sticker ({{$type}})
       </span>
       </div>
   </div>
   <div class="card-body">
     <div id="indexOrderController">
       <div>
-        <label-sticker></label-sticker>
+        <label-sticker type="{{$type}}"></label-sticker>
       </div>
     </div>
   </div>

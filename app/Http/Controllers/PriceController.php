@@ -14,8 +14,8 @@ class PriceController extends Controller
     }
 
     // return index page
-    public function index()
+    public function index($type = 'customer')
     {
-        return view('price.index');
+        return view('price.index', compact('type'));
     }
 }

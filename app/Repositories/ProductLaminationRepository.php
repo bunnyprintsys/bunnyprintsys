@@ -26,6 +26,19 @@ class ProductLaminationRepository
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
         $query = ProductLamination::with(['product', 'lamination']);
+        if($type = $filter['type']) {
+            switch($type) {
+                case 'customer':
+                    $type = 1;
+                    break;
+                case 'agent':
+                    $type = 2;
+                    break;
+            }
+            $query->whereHas('multipliers.multiplierType', function($query) use($type){
+                $query->where('id', $type);
+            });
+        }
         $query->select('product_laminations.*');
 
         $sortBy = array_unique($sortBy);

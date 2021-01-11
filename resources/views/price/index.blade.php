@@ -12,7 +12,7 @@
           <div class="form-row">
           <span class="mr-auto">
             <i class="fas fa-tags"></i>
-              Pricing
+              Pricing ({{$type}})
           </span>
           </div>
       </div>
@@ -31,7 +31,7 @@
             <div class="tab-content">
             <div class="tab-pane container active" id="label_sticker">
                 <div class="form-group pt-5">
-                    <price-labelsticker></price-labelsticker>
+                    <price-labelsticker type="{{$type}}"></price-labelsticker>
                 </div>
             </div>
 {{--

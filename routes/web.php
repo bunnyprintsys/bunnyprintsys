@@ -17,15 +17,16 @@ Route::group(['prefix' => 'admin'], function() {
     Route::get('/', 'AdminController@index')->name('admin.index');
 });
 Route::group(['prefix' => 'order'], function() {
-    Route::get('/', 'OrderController@index')->name('order.index');
+    Route::get('/{type}', 'OrderController@index')->name('order.index');
 });
+
 Route::group(['prefix' => 'transaction'], function() {
     Route::get('/', 'TransactionController@index')->name('transaction.index');
     Route::get('/data', 'TransactionController@getDataSettingIndex')->name('transaction.data');
     Route::get('/invoice/{transactionId}', 'TransactionController@getInvoice');
 });
 Route::group(['prefix' => 'price'], function() {
-    Route::get('/', 'PriceController@index')->name('price.index');
+    Route::get('/{type}', 'PriceController@index')->name('price.index');
 });
 Route::group(['prefix' => 'product'], function() {
     Route::get('/', 'ProductController@index')->name('product.index');

@@ -21,9 +21,9 @@ class OrderController extends Controller
     }
 
     // return order quotation index
-    public function index()
+    public function index($type = 'customer')
     {
-        return view('order.index');
+        return view('order.index', compact('type'));
     }
 
     // return label sticker api()
@@ -112,7 +112,15 @@ class OrderController extends Controller
             ->first();
         // dd($formula, $product_id, $quantitymultiplier);
 
-        $total = ($formula * $quantitymultiplier->multiplier * $material->multiplier * $shape->multiplier * ($lamination ? $lamination->multiplier : 1)) + $delivery->multiplier;
+        // dd(
+        //     $material->customerMultipliers->first()->value,
+        //     $shape->customerMultipliers->first()->value,
+        //     $lamination->customerMultipliers->first()->value,
+        //     $delivery->customerMultipliers->first()->value,
+        //     $quantitymultiplier->customerMultipliers->first()->value
+        // );
+
+        $total = ($formula * $quantitymultiplier->customerMultipliers->first()->value * $material->customerMultipliers->first()->value * $shape->customerMultipliers->first()->value * ($lamination ? $lamination->customerMultipliers->first()->value : 1)) + $delivery->customerMultipliers->first()->value;
 
         return $total;
     }

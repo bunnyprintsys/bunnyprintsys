@@ -17,8 +17,7 @@ class ProductFrameResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
-            'frame' => new FrameResource($this->material),
-            'multiplier' => $this->multiplier
+            'frame' => new FrameResource($this->material)
         ];
     }
 }

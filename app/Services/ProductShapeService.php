@@ -62,11 +62,12 @@ class ProductShapeService
         $filter = $input;
 
         return $this->productShapeRepository->getOne($filter);
-    }       
+    }
 
     // create product shape
     public function create($input)
     {
+        // dd($input);
         foreach ($input as $key => $value) {
             if (!$value) {
                 unset($input[$key]);
@@ -79,15 +80,34 @@ class ProductShapeService
         }
 
         $model = $this->productShapeRepository->create($input);
-        return $model;        
+
+        $type = isset($input['type']) ? $input['type'] : 'customer';
+
+        if($type === 'customer') {
+            $input['multiplier_type_id'] = 1;
+        }
+        if($type === 'agent') {
+            $input['multiplier_type_id'] = 2;
+        }
+        $model->multipliers()->create($input);
+
+        return $model;
     }
 
     // update product shape
     public function update($input)
     {
+        $type = isset($input['type']) ? $input['type'] : 'customer';
+
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->productShapeRepository->update($model, $input);
+            if($type === 'customer') {
+                $model->customerMultipliers->first()->update($input);
+            }
+            if($type === 'agent') {
+                $model->agentMultipliers->first()->update($input);
+            }
             return $model;
         }
     }

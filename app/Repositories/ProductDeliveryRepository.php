@@ -26,6 +26,19 @@ class ProductDeliveryRepository
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
         $query = ProductDelivery::with(['product', 'delivery']);
+        if($type = $filter['type']) {
+            switch($type) {
+                case 'customer':
+                    $type = 1;
+                    break;
+                case 'agent':
+                    $type = 2;
+                    break;
+            }
+            $query->whereHas('multipliers.multiplierType', function($query) use($type){
+                $query->where('id', $type);
+            });
+        }
         $query->select('product_deliveries.*');
 
         $sortBy = array_unique($sortBy);

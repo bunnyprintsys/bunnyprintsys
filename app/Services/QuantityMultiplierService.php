@@ -61,15 +61,33 @@ class QuantityMultiplierService
         }
 
         $model = $this->quantityMultiplierRepository->create($input);
+
+        $type = isset($input['type']) ? $input['type'] : 'customer';
+
+        if($type === 'customer') {
+            $input['multiplier_type_id'] = 1;
+        }
+        if($type === 'agent') {
+            $input['multiplier_type_id'] = 2;
+        }
+        $model->multipliers()->create($input);
+
         return $model;
     }
 
     // update QuantityMultiplier
     public function update($input)
     {
+        $type = isset($input['type']) ? $input['type'] : 'customer';
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->quantityMultiplierRepository->update($model, $input);
+            if($type === 'customer') {
+                $model->customerMultipliers->first()->update($input);
+            }
+            if($type === 'agent') {
+                $model->agentMultipliers->first()->update($input);
+            }
             return $model;
         }
     }

@@ -1,6 +1,9 @@
 if(document.querySelector('#indexOrderController')) {
   Vue.component('label-sticker', {
     template: '#label-sticker-template',
+    props: [
+      'type'
+    ],
     data() {
       return {
         panel: {
@@ -64,7 +67,8 @@ if(document.querySelector('#indexOrderController')) {
         this.getQuotation()
       },
       getAllMaterials() {
-        axios.post('/api/materials/product-material/all', {product_id: 1}).then((response) => {
+        axios.post('/api/materials/product-material/all', {product_id: 1, type: this.type}).then((response) => {
+
           this.materials = response.data.data
         })
       },
@@ -74,12 +78,12 @@ if(document.querySelector('#indexOrderController')) {
         })
       },
       getAllShapes() {
-        axios.post('/api/shapes/product-shape/all', {product_id: 1}).then((response) => {
+        axios.post('/api/shapes/product-shape/all', {product_id: 1, type: this.type}).then((response) => {
           this.shapes = response.data.data
         })
       },
       getAllLaminations() {
-        axios.post('/api/laminations/product-lamination/all', {product_id: 1}).then((response) => {
+        axios.post('/api/laminations/product-lamination/all', {product_id: 1, type: this.type}).then((response) => {
           const laminationOptions = response.data.data
           // console.log(laminationOptions)
           laminationOptions.unshift(this.getNoneLaminationOption())
@@ -89,7 +93,7 @@ if(document.querySelector('#indexOrderController')) {
         })
       },
       getAllDeliveries() {
-        axios.post('/api/deliveries/product-delivery/all', {product_id: 1}).then((response) => {
+        axios.post('/api/deliveries/product-delivery/all', {product_id: 1, type: this.type}).then((response) => {
           this.deliveries = response.data.data
         })
       },

@@ -26,6 +26,20 @@ class ProductMaterialRepository
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
         $query = ProductMaterial::with(['product', 'material']);
+        if($type = $filter['type']) {
+            switch($type) {
+                case 'customer':
+                    $type = 1;
+                    break;
+                case 'agent':
+                    $type = 2;
+                    break;
+            }
+            $query->whereHas('multipliers.multiplierType', function($query) use($type){
+                $query->where('id', $type);
+            });
+        }
+
         $query->select('product_materials.*');
 
         $sortBy = array_unique($sortBy);

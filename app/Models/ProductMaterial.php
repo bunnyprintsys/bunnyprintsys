@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use App\Traits\HasMultiplierType;
 
 class ProductMaterial extends Model
 {
+    use HasMultiplierType;
+
     protected $fillable = [
-        'product_id', 'material_id', 'multiplier'
+        'product_id', 'material_id'
     ];
 
     // relationships

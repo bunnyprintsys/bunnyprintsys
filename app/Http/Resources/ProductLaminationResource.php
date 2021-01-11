@@ -14,11 +14,22 @@ class ProductLaminationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $type = $request->type ? $request->type : 'customer';
+        $multiplier = '';
+        switch($type) {
+            case 'customer':
+                $multiplier = $this->customerMultipliers ? $this->customerMultipliers->first()->value : null;
+                break;
+            case 'agent':
+                $multiplier = $this->agentMultipliers ? $this->agentMultipliers->first()->value : null;
+                break;
+        }
+
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
             'lamination' => new LaminationResource($this->lamination),
-            'multiplier' => $this->multiplier
+            'multiplier' => $multiplier
         ];
     }
 }

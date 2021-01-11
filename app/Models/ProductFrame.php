@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use App\Traits\HasMultiplierType;
 
 class ProductFrame extends Model
 {
+    use HasMultiplierType;
+
     protected $fillable = [
         'product_id', 'frame_id', 'multiplier'
     ];

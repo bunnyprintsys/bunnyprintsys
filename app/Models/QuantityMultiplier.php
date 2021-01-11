@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use App\Traits\HasMultiplierType;
 
 class QuantityMultiplier extends Model
 {
+    use HasMultiplierType;
+
     protected $fillable = [
-        'multiplier', 'min', 'max', 'product_id'
+        'min', 'max', 'product_id'
     ];
 
     // relationships

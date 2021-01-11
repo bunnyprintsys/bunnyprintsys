@@ -34,6 +34,9 @@
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductShapeMultiplierChanged(data.id, data.multiplier)">
                     </td>
                 </tr>
+                <tr v-if="shapes.length === 0">
+                    <td colspan="18" class="text-center"> No Results Found </td>
+                </tr>
             </table>
         </div>
 
@@ -69,10 +72,9 @@
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductMaterialMultiplierChanged(data.id, data.multiplier)">
                     </td>
                 </tr>
-{{--
-                <tr v-if="! pagination.total">
+                <tr v-if="materials.length === 0">
                     <td colspan="18" class="text-center"> No Results Found </td>
-                </tr> --}}
+                </tr>
             </table>
         </div>
 
@@ -108,10 +110,9 @@
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onProductLaminationMultiplierChanged(data.id, data.multiplier)">
                     </td>
                 </tr>
-{{--
-                <tr v-if="! pagination.total">
+                <tr v-if="laminations.length === 0">
                     <td colspan="18" class="text-center"> No Results Found </td>
-                </tr> --}}
+                </tr>
             </table>
         </div>
 
@@ -147,10 +148,9 @@
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onDeliveryMultiplierChanged(data.id, data.multiplier)">
                     </td>
                 </tr>
-{{--
-                <tr v-if="! pagination.total">
+                <tr v-if="deliveries.length === 0">
                     <td colspan="18" class="text-center"> No Results Found </td>
-                </tr> --}}
+                </tr>
             </table>
         </div>
 
@@ -191,6 +191,9 @@
                     <td class="text-right">
                         <input type="text" name="multiplier" class="form-control text-right" v-model="data.multiplier" @keyup="onQtyMultiplierChanged(data)">
                     </td>
+                </tr>
+                <tr v-if="quantitymultipliers.length === 0">
+                    <td colspan="18" class="text-center"> No Results Found </td>
                 </tr>
             </table>
         </div>

@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Multiplier extends Model
 {
     protected $fillable = [
-        'value',
+        'value', 'multiplier_type_id'
     ];
 
     // relationships
@@ -17,10 +17,25 @@ class Multiplier extends Model
         return $this->morphTo();
     }
 
+    public function multiplierType()
+    {
+        return $this->belongsTo(MultiplierType::class);
+    }
+
+    public function customerMultiplierType()
+    {
+        return $this->multiplierType()->where('id', 1);
+    }
+
+    public function agentMultiplierType()
+    {
+        return $this->multiplierType()->where('id', 2);
+    }
+
     // getter
     public function getValueAttribute($value)
     {
-        $this->attributes['value'] = $value ? number_format($value/ 100, 2) : 0.00;
+        return $value ? number_format($value/ 100, 2) : 0.00;
     }
 
     // setter
