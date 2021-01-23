@@ -27,7 +27,7 @@ class OrderController extends Controller
     }
 
     // return label sticker api()
-    public function getLabelstickerQuotationApi()
+    public function getLabelstickerQuotationApi(Request $request)
     {
         $product_id = 1;
 
@@ -120,7 +120,30 @@ class OrderController extends Controller
         //     $quantitymultiplier->customerMultipliers->first()->value
         // );
 
-        $total = ($formula * $quantitymultiplier->customerMultipliers->first()->value * $material->customerMultipliers->first()->value * $shape->customerMultipliers->first()->value * ($lamination ? $lamination->customerMultipliers->first()->value : 1)) + $delivery->customerMultipliers->first()->value;
+        $type = $request->type ? $request->type : 'customer';
+        $materialMultiplier = 0;
+        $shapeMultiplier = 0;
+        $laminationMultiplier = 0;
+        $deliveryMultiplier = 0;
+        $quantityMultiplier = 0;
+
+        switch($type) {
+            case 'customer':
+                $materialMultiplier = $material ? $material->customerMultipliers->first()->value : 1;
+                $shapeMultiplier = $shape ? $shape->customerMultipliers->first()->value : 1;
+                $laminationMultiplier = $lamination ? $lamination->customerMultipliers->first()->value : 1;
+                $deliveryMultiplier = $delivery ? $delivery->customerMultipliers->first()->value : 1;
+                break;
+            case 'agent':
+                $materialMultiplier = $material ? $material->agentMultipliers->first()->value : 1;
+                $shapeMultiplier = $shape ? $shape->agentMultipliers->first()->value : 1;
+                $laminationMultiplier = $lamination ? $lamination->agentMultipliers->first()->value : 1;
+                $deliveryMultiplier = $delivery ? $delivery->agentMultipliers->first()->value : 1;
+                break;
+        }
+        // dd($formula, $materialMultiplier, $shapeMultiplier, $laminationMultiplier, $deliveryMultiplier);
+
+        $total = ($formula * $quantityMultiplier * (float)$materialMultiplier * (float)$shapeMultiplier * (float)$laminationMultiplier) + (float)$deliveryMultiplier;
 
         return $total;
     }

@@ -82,16 +82,16 @@
             <a href="{{ route('profile.index') }}"><i class="far fa-user-circle"></i>Profile</a>
           </li>
 
+          <li class="{{ $name == 'product.index' ? 'active' : '' }}">
+            <a href="{{ route('product.index') }}"><i class="fas fa-layer-group"></i>Product Binding</a>
+          </li>
+
           <li class="{{ $name == 'price.index' ? 'active' : '' }}">
             <a href="{{ route('price.index', ['type' => 'customer']) }}"><i class="fas fa-tags"></i>Pricing</a>
           </li>
 
           <li class="{{ $name == 'price.index' ? 'active' : '' }}">
             <a href="{{ route('price.index', ['type' => 'agent']) }}"><i class="fas fa-tags"></i>Pricing (Agent)</a>
-          </li>
-
-          <li class="{{ $name == 'product.index' ? 'active' : '' }}">
-            <a href="{{ route('product.index') }}"><i class="fas fa-layer-group"></i>Product</a>
           </li>
 
           <li class="{{ $name == 'transaction.data' ? 'active' : '' }}">

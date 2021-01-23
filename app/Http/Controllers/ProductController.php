@@ -54,6 +54,10 @@ class ProductController extends Controller
     // create product
     public function createApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:products'
+        ]);
+
         $input = $request->all();
 
         $product = $this->productService->create($input);
@@ -64,6 +68,9 @@ class ProductController extends Controller
     // edit product
     public function updateApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:products,name,'.$request->id
+        ]);
         // dd($request->all())
         $input = $request->all();
 

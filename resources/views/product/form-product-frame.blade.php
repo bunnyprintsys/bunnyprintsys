@@ -4,7 +4,7 @@
       <div class="col-md-11 col-sm-11 col-xs-12">
         <select2-must class="form-group" name="frame" v-model="form.frame_id">
             <option value="">Nope</option>
-            <option v-for="frame in nonBindedFrames" :value="frame.id">
+            <option v-for="frame in nonBindedFrames" v-bind:key="frame.id" :value="frame.id">
                 @{{frame.name}}
             </option>
         </select2-must>
@@ -33,7 +33,7 @@
               <th class="text-center">
               </th>
           </tr>
-          <tr v-for="(data, index) in bindedFrames" class="row_edit">
+          <tr v-for="(data, index) in bindedFrames" v-bind:key="data.id" class="row_edit">
               <td class="text-center">
                   @{{ index + 1}}
               </td>

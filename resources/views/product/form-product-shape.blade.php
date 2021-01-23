@@ -4,7 +4,7 @@
       <div class="col-md-11 col-sm-11 col-xs-12">
         <select2-must class="form-group" name="shape" v-model="form.shape_id">
             <option value="">Nope</option>
-            <option v-for="shape in nonBindedShapes" :value="shape.id">
+            <option v-for="shape in nonBindedShapes" v-bind:key="shape.id" :value="shape.id">
                 @{{shape.name}}
             </option>
         </select2-must>
@@ -33,7 +33,7 @@
               <th class="text-center">
               </th>
           </tr>
-          <tr v-for="(data, index) in bindedShapes" class="row_edit">
+          <tr v-for="(data, index) in bindedShapes" v-bind:key="data.id" class="row_edit">
               <td class="text-center">
                   @{{ index + 1}}
               </td>

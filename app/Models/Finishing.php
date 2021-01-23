@@ -2,16 +2,24 @@
 
 namespace App\Models;
 
+use App\Traits\HasMultiplierType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 class Finishing extends Model
 {
+    use HasMultiplierType;
+
     protected $fillable = [
         'name'
     ];
 
     // relationships
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_finishings', 'finishing_id', 'product_id');
+    }
+
     public function productFinishings()
     {
         return $this->hasMany(ProductFinishing::class);
@@ -38,9 +46,34 @@ class Finishing extends Model
         return $query->where($columnName, $value);
     }
 
-    public function scopeBindedProduct($query, $value = [])
+    public function scopeProductId($query, $value)
+    {
+        $query = $query->whereHas('products', function($query) use ($value) {
+            $query->where('products.id', $value);
+        });
+
+        return $query;
+    }
+
+    public function scopeMultiplierType($query, $value)
     {
         return $query->whereHas('productFinishings', function($query) use ($value) {
+            $query->type($value);
+        });
+    }
+
+    public function scopeMultiplierUnbindType($query, $value)
+    {
+        $query = $query->whereHas('productFinishings', function($query) use ($value) {
+            $query->unbindType($value);
+        });
+
+        return $query;
+    }
+
+    public function scopeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('products', function($query) use ($value) {
             $query->whereIn('finishing_id', $value);
         });
     }
@@ -48,10 +81,11 @@ class Finishing extends Model
     public function scopeExcludeBindedProduct($query, $value = [])
     {
         $query->whereNotIn('id', $value);
+    }
 
-        // return $query->whereHas('productFinishings', function($query) use ($value) {
-        //     $query->whereNotIn('finishing_id', $value);
-        // });
+    public function scopeBindProduct($query, $value)
+    {
+        return $query->products()->create(['product_id', $value]);
     }
 
     /**
@@ -77,6 +111,18 @@ class Finishing extends Model
 
         if (Arr::get($input, 'name', false)) {
             $query->name($input['name'], $like);
+        }
+
+        if (Arr::get($input, 'type', false)) {
+            $query->multiplierType($input['type']);
+        }
+
+        if (Arr::get($input, 'unbind_type', false)) {
+            $query->multiplierUnbindType($input['unbind_type']);
+        }
+
+        if(Arr::get($input, 'product_id', false)) {
+            $query->productId($input['product_id']);
         }
 
         return $query;

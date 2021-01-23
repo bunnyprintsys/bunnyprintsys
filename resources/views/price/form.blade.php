@@ -11,8 +11,40 @@
           <div class="modal-body">
               {{-- @{{formOptions.name}} --}}
               <div class="col-md-12 col-sm-12 col-xs-12">
-                  {{-- <div class="form-row"> --}}
-                      <div class="form-group" v-if="formOptions.name">
+                  {{--
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value=1 v-model="radioOptions.existing" @change="resetExisting()">
+                            <label class="form-check-label">Existing</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value=2 v-model="radioOptions.existing" @change="resetExisting()">
+                            <label class="form-check-label">Create New</label>
+                        </div>
+                    </div>--}}
+                    <div class="form-group" v-show="formOptions.name && formOptions.is_select_name">
+                        <label for="name" class="control-label">Name</label>
+                        <label for="art" style="color: red;">*</label>
+                        {{-- <select2-must v-model="form.model">
+                            <option value=""></option>
+                            <option v-for="model in modelOptions" v-bind:key="model.id" :value="model">
+                                @{{model.name}}
+                            </option>
+                        </select2-must> --}}
+                        <multiselect
+                            v-model="form.model"
+                            :options="modelOptions"
+                            :close-on-select="true"
+                            placeholder="Select..."
+                            :custom-label="customLabelName"
+                            track-by="id"
+                        ></multiselect>
+
+                        <hr>
+                    </div>
+
+                      <div class="form-group" v-show="formOptions.name && !formOptions.is_select_name">
                           <label class="control-label">
                             Name
                           </label>
@@ -21,6 +53,7 @@
                           <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
                               <strong>@{{ formErrors['name'][0] }}</strong>
                           </span>
+                          <hr>
                       </div>
                       <div class="form-group" v-if="formOptions.min">
                           <label class="control-label">

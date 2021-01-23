@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Resources\FrameResource;
 use App\Http\Resources\ProductFrameResource;
 use App\Models\Frame;
+use App\Models\Product;
 use App\Models\ProductFrame;
 use App\Services\FrameService;
 use App\Services\ProductFrameService;
 use App\Services\ProductService;
+use App\Traits\HasProductBinding;
 use App\Traits\Pagination;
 
 class FrameController extends Controller
 {
     use Pagination;
+    use HasProductBinding;
     private $frameService;
     private $productFrameService;
     private $productService;
@@ -51,6 +54,10 @@ class FrameController extends Controller
     // create model
     public function createApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:frames'
+        ]);
+
         $input = $request->all();
 
         $model = $this->frameService->create($input);
@@ -61,6 +68,10 @@ class FrameController extends Controller
     // edit model
     public function updateApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:frames,name,'.$request->id
+        ]);
+
         $input = $request->all();
 
         if($request->has('id')) {
@@ -118,5 +129,38 @@ class FrameController extends Controller
         $collections = Frame::excludeBindedProduct($bindedFrameId)->get();
 
         return $this->success(FrameResource::collection($collections));
+    }
+
+    public function bindingProduct(Request $request)
+    {
+        $frame = Frame::findOrFail($request->frame_id);
+        $product = Product::findOrFail($request->product_id);
+
+        $frame->products()->attach($product);
+    }
+
+    public function getProductBindings(Request $request)
+    {
+        $input = $request->all();
+        $className = 'frames';
+        $model = new Frame();
+        $data = $this->hasProductBindings($input, $model, $className);
+        return [
+            'binded' => FrameResource::collection($data['binded']),
+            'unbinded' => FrameResource::collection($data['unbinded']),
+        ];
+    }
+
+    public function getMultiplierBindings(Request $request)
+    {
+        $input = $request->all();
+        $frame = new Frame();
+        $data = $this->hasMultiplierBindings($frame, $input);
+        return [
+            'binded' => FrameResource::collection($data['binded']),
+            'unbinded' => FrameResource::collection($data['unbinded']),
+            'bindedMultiplier' => FrameResource::collection($data['bindedMultiplier']),
+            'unbindedMultiplier' => FrameResource::collection($data['unbindedMultiplier']),
+        ];
     }
 }

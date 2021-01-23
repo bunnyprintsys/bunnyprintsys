@@ -17,6 +17,24 @@ class DeliveryRepository
         return Delivery::filter($input)->first();
     }
 
+    public function all($filter = [], $sortBy = [], $pagination = false)
+    {
+        $query = Delivery::query();
+
+        if (!empty($filter)) {
+            $query->filter($filter);
+        }
+        if (!empty($sortBy)) {
+            $query->sortBy($sortBy);
+        }
+
+        if ($pagination) {
+            return $query->paginate($pagination);
+        }
+
+        return $query->get();
+    }
+
     // create model entry
     public function create($input)
     {

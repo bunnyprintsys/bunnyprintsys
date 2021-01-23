@@ -48,6 +48,10 @@ class ProductMaterialController extends Controller
     {
         $input = $request->all();
 
+        if($request->model) {
+            $input['material_id'] = $request->model['id'];
+        }
+
         $model = $this->productMaterialService->create($input);
 
         return $this->success(new ProductMaterialResource($model));
@@ -87,6 +91,5 @@ class ProductMaterialController extends Controller
 
         return $this->success(ProductMaterialResource::collection($data));
     }
-
 
 }

@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Resources\LaminationResource;
 use App\Http\Resources\ProductLaminationResource;
 use App\Models\Lamination;
+use App\Models\Product;
 use App\Models\ProductLamination;
 use App\Services\LaminationService;
 use App\Services\ProductService;
 use App\Services\ProductLaminationService;
 use App\Traits\Pagination;
+use App\Traits\HasProductBinding;
 
 class LaminationController extends Controller
 {
     use Pagination;
+    use HasProductBinding;
     private $laminationService;
     private $productService;
     private $shapeService;
@@ -65,6 +68,10 @@ class LaminationController extends Controller
     // create model
     public function createApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:laminations'
+        ]);
+
         $input = $request->all();
 
         $model = $this->laminationService->create($input);
@@ -75,6 +82,10 @@ class LaminationController extends Controller
     // edit model
     public function updateApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:laminations,name,'.$request->id
+        ]);
+
         $input = $request->all();
 
         if($request->has('id')) {
@@ -141,5 +152,39 @@ class LaminationController extends Controller
         $collections = Lamination::excludeBindedProduct($bindedLaminationId)->get();
 
         return $this->success(LaminationResource::collection($collections));
+    }
+
+
+    public function bindingProduct(Request $request)
+    {
+        $lamination = Lamination::findOrFail($request->lamination_id);
+        $product = Product::findOrFail($request->product_id);
+
+        $lamination->products()->attach($product);
+    }
+
+    public function getProductBindings(Request $request)
+    {
+        $input = $request->all();
+        $className = 'laminations';
+        $model = new Lamination();
+        $data = $this->hasProductBindings($input, $model, 'laminations');
+        return [
+            'binded' => LaminationResource::collection($data['binded']),
+            'unbinded' => LaminationResource::collection($data['unbinded']),
+        ];
+    }
+
+    public function getMultiplierBindings(Request $request)
+    {
+        $input = $request->all();
+        $lamination = new Lamination();
+        $data = $this->hasMultiplierBindings($lamination, $input);
+        return [
+            'binded' => LaminationResource::collection($data['binded']),
+            'unbinded' => LaminationResource::collection($data['unbinded']),
+            'bindedMultiplier' => LaminationResource::collection($data['bindedMultiplier']),
+            'unbindedMultiplier' => LaminationResource::collection($data['unbindedMultiplier']),
+        ];
     }
 }

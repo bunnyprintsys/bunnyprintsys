@@ -25,8 +25,7 @@ class FrameRepository
      */
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-        $query = Frame::with(['productFrames', 'productFrames.product']);
-        $query->select('frames.*');
+        $query = Frame::query();
 
         if (!empty($filter)) {
             $query->filter($filter);

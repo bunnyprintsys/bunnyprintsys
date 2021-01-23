@@ -106,6 +106,7 @@ class ProductDeliveryService
     public function delete($input)
     {
         $model = $this->getOneById($input['id']);
+        $model->multipliers()->delete();
         $model->delete();
     }
 }

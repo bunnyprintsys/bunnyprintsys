@@ -4,7 +4,7 @@
       <div class="col-md-11 col-sm-11 col-xs-12">
         <select2-must class="form-group" name="lamination" v-model="form.lamination_id">
             <option value="">Nope</option>
-            <option v-for="lamination in nonBindedLaminations" :value="lamination.id">
+            <option v-for="lamination in nonBindedLaminations" v-bind:key="lamination.id" :value="lamination.id">
                 @{{lamination.name}}
             </option>
         </select2-must>
@@ -33,7 +33,7 @@
               <th class="text-center">
               </th>
           </tr>
-          <tr v-for="(data, index) in bindedLaminations" class="row_edit">
+          <tr v-for="(data, index) in bindedLaminations" v-bind:key="data.id" class="row_edit">
               <td class="text-center">
                   @{{ index + 1}}
               </td>

@@ -158,54 +158,34 @@ if (document.querySelector('#indexProductController')) {
           });
         }
       },
-      getBindedMaterials() {
-        axios.post('/api/materials/binded/product/' + this.form.id).then((response) => {
-          this.bindedMaterials = response.data.data
+      getMaterialsBinding() {
+        axios.post('/api/materials/product-material/product-binding', {product_id: this.form.id}).then((response) => {
+          this.bindedMaterials = response.data.binded
+          this.nonBindedMaterials = response.data.unbinded
         })
       },
-      getNonBindedMaterials() {
-        axios.post('/api/materials/exclude-binded/product/' + this.form.id).then((response) => {
-          this.nonBindedMaterials = response.data.data
+      getShapesBinding() {
+        axios.post('/api/shapes/product-shape/product-binding', {product_id: this.form.id}).then((response) => {
+          this.bindedShapes = response.data.binded
+          this.nonBindedShapes = response.data.unbinded
         })
       },
-      getBindedShapes() {
-        axios.post('/api/shapes/binded/product/' + this.form.id).then((response) => {
-          this.bindedShapes = response.data.data
+      getLaminationsBinding() {
+        axios.post('/api/laminations/product-lamination/product-binding', {product_id: this.form.id}).then((response) => {
+          this.bindedLaminations = response.data.binded
+          this.nonBindedLaminations = response.data.unbinded
         })
       },
-      getNonBindedShapes() {
-        axios.post('/api/shapes/exclude-binded/product/' + this.form.id).then((response) => {
-          this.nonBindedShapes = response.data.data
+      getFramesBinding() {
+        axios.post('/api/frames/product-frame/product-binding', {product_id: this.form.id}).then((response) => {
+          this.bindedFrames = response.data.binded
+          this.nonBindedFrames = response.data.unbinded
         })
       },
-      getBindedLaminations() {
-        axios.post('/api/laminations/binded/product/' + this.form.id).then((response) => {
-          this.bindedLaminations = response.data.data
-        })
-      },
-      getNonBindedLaminations() {
-        axios.post('/api/laminations/exclude-binded/product/' + this.form.id).then((response) => {
-          this.nonBindedLaminations = response.data.data
-        })
-      },
-      getBindedFrames() {
-        axios.post('/api/frames/binded/product/' + this.form.id).then((response) => {
-          this.bindedFrames = response.data.data
-        })
-      },
-      getNonBindedFrames() {
-        axios.post('/api/frames/exclude-binded/product/' + this.form.id).then((response) => {
-          this.nonBindedFrames = response.data.data
-        })
-      },
-      getBindedFinishings() {
-        axios.post('/api/finishings/binded/product/' + this.form.id).then((response) => {
-          this.bindedFinishings = response.data.data
-        })
-      },
-      getNonBindedFinishings() {
-        axios.post('/api/finishings/exclude-binded/product/' + this.form.id).then((response) => {
-          this.nonBindedFinishings = response.data.data
+      getFinishingsBinding() {
+        axios.post('/api/finishings/product-finishing/product-binding', {product_id: this.form.id}).then((response) => {
+          this.bindedFinishings = response.data.binded
+          this.nonBindedFinishings = response.data.unbinded
         })
       },
 
@@ -217,9 +197,8 @@ if (document.querySelector('#indexProductController')) {
       addProductBindingEntry(type) {
         switch(type) {
           case 'material':
-            axios.post('/api/materials/create/product/' + this.form.id, {material_id: this.form.material_id}).then((response) => {
-              this.getBindedMaterials()
-              this.getNonBindedMaterials()
+            axios.post('/api/materials/product-material/bind', {product_id: this.form.id, material_id: this.form.material_id}).then((response) => {
+              this.getMaterialsBinding()
               this.form.material_id = {
                 id: '',
                 name: ''
@@ -227,9 +206,8 @@ if (document.querySelector('#indexProductController')) {
             })
             break;
           case 'shape':
-            axios.post('/api/shapes/create/product/' + this.form.id, {shape_id: this.form.shape_id}).then((response) => {
-              this.getBindedShapes()
-              this.getNonBindedShapes()
+            axios.post('/api/shapes/product-shape/bind', {product_id: this.form.id, shape_id: this.form.shape_id}).then((response) => {
+              this.getShapesBinding()
               this.form.shape_id = {
                 id: '',
                 name: ''
@@ -237,9 +215,8 @@ if (document.querySelector('#indexProductController')) {
             })
             break;
           case 'lamination':
-            axios.post('/api/laminations/create/product/' + this.form.id, {lamination_id: this.form.lamination_id}).then((response) => {
-              this.getBindedLaminations()
-              this.getNonBindedLaminations()
+            axios.post('/api/laminations/product-lamination/bind', {product_id: this.form.id, lamination_id: this.form.lamination_id}).then((response) => {
+              this.getLaminationsBinding()
               this.form.lamination_id = {
                 id: '',
                 name: ''
@@ -247,9 +224,8 @@ if (document.querySelector('#indexProductController')) {
             })
             break;
           case 'frame':
-            axios.post('/api/frames/create/product/' + this.form.id, {frame_id: this.form.frame_id}).then((response) => {
-              this.getBindedFrames()
-              this.getNonBindedFrames()
+            axios.post('/api/frames/product-frame/bind', {product_id: this.form.id, frame_id: this.form.frame_id}).then((response) => {
+              this.getFramesBinding()
               this.form.frame_id = {
                 id: '',
                 name: ''
@@ -257,9 +233,8 @@ if (document.querySelector('#indexProductController')) {
             })
             break;
           case 'finishing':
-            axios.post('/api/finishings/create/product/' + this.form.id, {finishing_id: this.form.finishing_id}).then((response) => {
-              this.getBindedFinishings()
-              this.getNonBindedFinishings()
+            axios.post('/api/finishings/product-finishing/bind', {product_id: this.form.id, finishing_id: this.form.finishing_id}).then((response) => {
+              this.getFinishingsBinding()
               this.form.finishing_id = {
                 id: '',
                 name: ''
@@ -272,8 +247,7 @@ if (document.querySelector('#indexProductController')) {
         switch(type) {
           case 'material':
             axios.post('/api/materials/delete/product/' + this.form.id, {material_id: data.id}).then((response) => {
-              this.getBindedMaterials()
-              this.getNonBindedMaterials()
+              this.getMaterialsBinding()
               this.form.material_id = {
                 id: '',
                 name: ''
@@ -282,8 +256,7 @@ if (document.querySelector('#indexProductController')) {
             break;
           case 'shape':
             axios.post('/api/shapes/delete/product/' + this.form.id, {shape_id: data.id}).then((response) => {
-              this.getBindedShapes()
-              this.getNonBindedShapes()
+              this.getShapesBinding()
               this.form.shape_id = {
                 id: '',
                 name: ''
@@ -292,8 +265,7 @@ if (document.querySelector('#indexProductController')) {
             break;
           case 'lamination':
             axios.post('/api/laminations/delete/product/' + this.form.id, {lamination_id: data.id}).then((response) => {
-              this.getBindedLaminations()
-              this.getNonBindedLaminations()
+              this.getLaminationsBinding()
               this.form.lamination_id = {
                 id: '',
                 name: ''
@@ -302,8 +274,7 @@ if (document.querySelector('#indexProductController')) {
             break;
           case 'frame':
             axios.post('/api/frames/delete/product/' + this.form.id, {frame_id: data.id}).then((response) => {
-              this.getBindedFrames()
-              this.getNonBindedFrames()
+              this.getFramesBinding()
               this.form.frame_id = {
                 id: '',
                 name: ''
@@ -312,8 +283,7 @@ if (document.querySelector('#indexProductController')) {
             break;
           case 'finishing':
             axios.post('/api/finishings/delete/product/' + this.form.id, {finishing_id: data.id}).then((response) => {
-              this.getBindedFinishings()
-              this.getNonBindedFinishings()
+              this.getFinishingsBinding()
               this.form.finishing_id = {
                 id: '',
                 name: ''
@@ -329,16 +299,11 @@ if (document.querySelector('#indexProductController')) {
           this.form[key] = this.data[key];
         }
         if(this.data.id) {
-          this.getBindedMaterials()
-          this.getNonBindedMaterials()
-          this.getBindedShapes()
-          this.getNonBindedShapes()
-          this.getBindedLaminations()
-          this.getNonBindedLaminations()
-          this.getBindedFrames()
-          this.getNonBindedFrames()
-          this.getBindedFinishings()
-          this.getNonBindedFinishings()
+          this.getMaterialsBinding()
+          this.getShapesBinding()
+          this.getLaminationsBinding()
+          this.getFramesBinding()
+          this.getFinishingsBinding()
         }
       },
       'clearform'(val) {

@@ -40,7 +40,8 @@ if(document.querySelector('#indexOrderController')) {
           lamination_id: '',
           delivery_fee: '',
           delivery_id: '',
-          total: 0.00
+          total: 0.00,
+          type: ''
         }
       },
       getOrderFormSetupConstructor() {
@@ -99,6 +100,7 @@ if(document.querySelector('#indexOrderController')) {
       },
       getQuotation: _.debounce(function(e) {
         this.formErrors = {}
+        this.orderForm.type = this.type
         axios.post('/api/order/label-sticker/quotation', this.orderForm).then((response) => {
           this.orderForm.total = response.data
         })

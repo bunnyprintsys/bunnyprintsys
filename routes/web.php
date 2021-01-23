@@ -70,6 +70,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/product-delivery/all', 'ProductDeliveryController@getAllApi');
         Route::post('/product-delivery/create', 'ProductDeliveryController@createApi');
         Route::post('/product-delivery/edit', 'ProductDeliveryController@editApi');
+
+        Route::post('/product-delivery/multiplier-binding', 'DeliveryController@getMultiplierBindings');
+        Route::post('/product-delivery/product-binding', 'DeliveryController@getProductBindings');
+        Route::post('/product-delivery/bind', 'DeliveryController@bindingProduct');
     });
     Route::group(['prefix' => 'delivery-method'], function() {
         Route::get('/all', 'DeliveryMethodController@getAllDeliveryMethodsApi');
@@ -87,6 +91,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/binded/product/{productId}', 'FinishingController@getBindedFinishingByProductId');
         Route::post('/exclude-binded/product/{productId}', 'FinishingController@getNonBindedFinishingByProductId');
         Route::post('/product-finishing/all', 'ProductFinishingController@getAllApi');
+
+        Route::post('/product-finishing/multiplier-binding', 'FinishingController@getMultiplierBindings');
+        Route::post('/product-finishing/product-binding', 'FinishingController@getProductBindings');
+        Route::post('/product-finishing/bind', 'FinishingController@bindingProduct');
     });
     Route::group(['prefix' => 'frames'], function() {
         Route::post('/all', 'FrameController@getAllApi');
@@ -100,6 +108,9 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/exclude-binded/product/{productId}', 'FrameController@getNonBindedFrameByProductId');
         Route::post('/product-frame/all', 'ProductFrameController@getAllApi');
 
+        Route::post('/product-frame/multiplier-binding', 'FrameController@getMultiplierBindings');
+        Route::post('/product-frame/product-binding', 'FrameController@getProductBindings');
+        Route::post('/product-frame/bind', 'FrameController@bindingProduct');
     });
     Route::group(['prefix' => 'laminations'], function() {
         Route::post('/all', 'LaminationController@getAllApi');
@@ -118,6 +129,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/product-lamination/all', 'ProductLaminationController@getAllApi');
         Route::post('/product-lamination/create', 'ProductLaminationController@createApi');
         Route::post('/product-lamination/edit', 'ProductLaminationController@editApi');
+
+        Route::post('/product-lamination/multiplier-binding', 'LaminationController@getMultiplierBindings');
+        Route::post('/product-lamination/product-binding', 'LaminationController@getProductBindings');
+        Route::post('/product-lamination/bind', 'LaminationController@bindingProduct');
     });
     Route::group(['prefix' => 'materials'], function() {
         Route::post('/all', 'MaterialController@getAllApi');
@@ -136,6 +151,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/product-material/create', 'ProductMaterialController@createApi');
         Route::post('/product-material/edit', 'ProductMaterialController@editApi');
         Route::post('/product-material/excluded/{productId}', 'ProductMaterialController@getExcludedMaterialByProductId');
+
+        Route::post('/product-material/multiplier-binding', 'MaterialController@getMultiplierBindings');
+        Route::post('/product-material/product-binding', 'MaterialController@getProductBindings');
+        Route::post('/product-material/bind', 'MaterialController@bindingProduct');
     });
     Route::group(['prefix' => 'member'], function() {
         Route::get('/', 'MemberController@getMembersApi');
@@ -202,6 +221,10 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/delete/product/{product_id}', 'ShapeController@deleteProductShapeByProductIdApi');
         Route::post('/binded/product/{productId}', 'ShapeController@getBindedShapeByProductId');
         Route::post('/exclude-binded/product/{productId}', 'ShapeController@getNonBindedShapeByProductId');
+
+        Route::post('/product-shape/multiplier-binding', 'ShapeController@getMultiplierBindings');
+        Route::post('/product-shape/product-binding', 'ShapeController@getProductBindings');
+        Route::post('/product-shape/bind', 'ShapeController@bindingProduct');
     });
     Route::group(['prefix' => 'state'], function() {
         Route::get('/all', 'StateController@getAllStatesApi');

@@ -81,6 +81,7 @@ class MaterialService
     {
         // dd($input, $input['id']);
         $model = $this->getOneById($input['id']);
+        $model->multipliers()->delete();
         $model->delete();
     }
 }

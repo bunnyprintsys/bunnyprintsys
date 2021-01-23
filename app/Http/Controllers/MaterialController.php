@@ -6,14 +6,17 @@ use Illuminate\Http\Request;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\ProductMaterialResource;
 use App\Models\Material;
+use App\Models\Product;
 use App\Models\ProductMaterial;
 use App\Services\MaterialService;
 use App\Services\ProductMaterialService;
 use App\Traits\Pagination;
+use App\Traits\HasProductBinding;
 
 class MaterialController extends Controller
 {
     use Pagination;
+    use HasProductBinding;
     private $materialService;
 
     public function __construct(MaterialService $materialService, ProductMaterialService $productMaterialService)
@@ -48,6 +51,10 @@ class MaterialController extends Controller
     // create material
     public function createApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:materials'
+        ]);
+
         $input = $request->all();
 
         $material = $this->materialService->create($input);
@@ -58,6 +65,10 @@ class MaterialController extends Controller
     // edit material
     public function updateApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:materials,name,'.$request->id
+        ]);
+
         $input = $request->all();
 
         if($request->has('id')) {
@@ -119,7 +130,7 @@ class MaterialController extends Controller
 
         $input['id'] = $model->id;
         $this->productMaterialService->delete($input);
-    }    
+    }
 
     // update material by given id
     public function updateProductMaterialByIdApi($id)
@@ -132,12 +143,23 @@ class MaterialController extends Controller
     }
 
     // get binded materials by product id
-    public function getBindedMaterialByProductId($productId)
+    public function getBindedMaterialByProductId(Request $request, $productId)
     {
-        $bindedMaterialId = ProductMaterial::where('product_id', $productId)->get('material_id')->toArray();
-        // dd($bindedMaterialId);
+        $input['product_id'] = $productId;
+        if($type = $request->type) {
+            $input['type'] = $type;
+        }
+        $bindedMaterialId = $this->productMaterialService->all($input);
 
-        $materials = Material::bindedProduct($bindedMaterialId)->get();
+        $materialKeys = [];
+        if($bindedMaterialId) {
+            foreach($bindedMaterialId as $binded) {
+                // if()
+                array_push($materialKeys, $binded->material_id);
+            }
+        }
+
+        $materials = Material::bindedProduct($materialKeys)->get();
 
         return $this->success(MaterialResource::collection($materials));
     }
@@ -150,6 +172,41 @@ class MaterialController extends Controller
         $materials = Material::excludeBindedProduct($bindedMaterialId)->get();
 
         return $this->success(MaterialResource::collection($materials));
+    }
+
+    public function bindingProduct(Request $request)
+    {
+        $material = Material::findOrFail($request->material_id);
+        $product = Product::findOrFail($request->product_id);
+
+        $material->products()->attach($product);
+    }
+
+    public function getProductBindings(Request $request)
+    {
+        $input = $request->all();
+        $className = 'materials';
+        $model = new Material();
+        $data = $this->hasProductBindings($input, $model, 'materials');
+        return [
+            'binded' => MaterialResource::collection($data['binded']),
+            'unbinded' => MaterialResource::collection($data['unbinded']),
+        ];
+    }
+
+    public function getMultiplierBindings(Request $request)
+    {
+        $input = $request->all();
+        $material = new Material();
+        // dd($input);
+        $data = $this->hasMultiplierBindings($material, $input);
+
+        return [
+            'binded' => MaterialResource::collection($data['binded']),
+            'unbinded' => MaterialResource::collection($data['unbinded']),
+            'bindedMultiplier' => MaterialResource::collection($data['bindedMultiplier']),
+            'unbindedMultiplier' => MaterialResource::collection($data['unbindedMultiplier']),
+        ];
     }
 
 }

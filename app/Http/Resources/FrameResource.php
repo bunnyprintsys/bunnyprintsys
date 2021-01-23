@@ -17,6 +17,7 @@ class FrameResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'products' => ProductResource::collection($this->products)
         ];
     }
 }

@@ -65,7 +65,8 @@ if(document.querySelector('#indexPriceController')) {
           multiplier: false,
           min: false,
           max: false,
-          qty: false
+          qty: false,
+          model: []
         }
       }
     }
@@ -86,9 +87,11 @@ if(document.querySelector('#indexPriceController')) {
           quantitymultipliers: [],
           form: this.getFormDefault(),
           formOptions: this.getFormOptionsDefault(),
+          radioOptions: this.getRadioOptionsDefault(),
           formUrl: '',
           formTitle: '',
-          formErrors: []
+          formErrors: [],
+          modelOptions: []
       }
   },
     mounted() {
@@ -164,13 +167,19 @@ if(document.querySelector('#indexPriceController')) {
           multiplier: false,
           min: false,
           max: false,
-          qty: false
+          qty: false,
+        }
+      },
+      getRadioOptionsDefault() {
+        return {
+          existing: 1
         }
       },
       getFormDefault() {
         return {
           product_id: 1,
           name: '',
+          model: '',
           multiplier: '',
           min: '',
           max: '',
@@ -180,30 +189,40 @@ if(document.querySelector('#indexPriceController')) {
       createSingleEntry(type) {
         this.formOptions = this.getFormOptionsDefault()
         this.form = this.getFormDefault()
+        this.optionUrl = ''
         this.formUrl = ''
         this.formTitle = type
         switch(type) {
           case 'shape':
             this.formOptions.name = true
+            this.formOptions.is_select_name = true
             this.formOptions.multiplier = true
+            this.optionUrl = '/api/shapes/product-shape/multiplier-binding'
             this.formUrl = '/api/shapes/product-shape/create'
             break;
           case 'material':
             this.formOptions.name = true
+            this.formOptions.is_select_name = true
             this.formOptions.multiplier = true
+            this.optionUrl = '/api/materials/product-material/multiplier-binding'
             this.formUrl = '/api/materials/product-material/create'
             break;
           case 'lamination':
             this.formOptions.name = true
+            this.formOptions.is_select_name = true
             this.formOptions.multiplier = true
+            this.optionUrl = '/api/laminations/product-lamination/multiplier-binding'
             this.formUrl = '/api/laminations/product-lamination/create'
             break;
           case 'deliveries':
             this.formOptions.name = true
+            this.formOptions.is_select_name = true
             this.formOptions.multiplier = true
+            this.optionUrl = '/api/deliveries/product-delivery/multiplier-binding'
             this.formUrl = '/api/deliveries/product-delivery/create'
             break;
           case 'quantitymultipliers':
+            this.formOptions.name = false
             this.formOptions.min = true
             this.formOptions.max = true
             this.formOptions.multiplier = true
@@ -211,14 +230,28 @@ if(document.querySelector('#indexPriceController')) {
             break;
           case 'orderquantities':
             this.formOptions.name = true
+            this.formOptions.is_select_name = false
             this.formOptions.qty = true
+            this.formOptions.existing = false
             this.formUrl = '/api/orderquantities/create'
             break;
+        }
+        // console.log(this.optionUrl)
+        if(this.optionUrl) {
+          console.log('hereman');
+          axios.post(this.optionUrl, {product_id: 1, type: this.type}).then((response) => {
+            this.modelOptions = response.data.unbindedMultiplier
+          })
         }
         this.action = 'create'
       },
       onSubmit() {
-        axios.post(this.formUrl, {...this.form, value: this.form.multiplier, type: this.type}).then((response) => {
+        axios.post(this.formUrl, {
+          ...this.form,
+          value: this.form.multiplier,
+          type: this.type,
+          existing: this.radioOptions.existing
+        }).then((response) => {
           this.getAllLaminations()
           this.getAllMaterials()
           this.getAllOrderquantities()
@@ -228,6 +261,12 @@ if(document.querySelector('#indexPriceController')) {
           $('.modal').modal('hide')
           this.formErrors = []
         })
+      },
+      resetExisting() {
+        this.form = this.getFormDefault()
+      },
+      customLabelName(option) {
+        return `${option.name}`
       },
     }
   });

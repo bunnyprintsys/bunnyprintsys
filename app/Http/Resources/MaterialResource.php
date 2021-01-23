@@ -17,8 +17,7 @@ class MaterialResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'productMaterials' => $this->productMaterials
-            'productMaterials' => ProductBindingResource::collection($this->productMaterials)
+            'products' => ProductResource::collection($this->products)
         ];
     }
 }

@@ -4,7 +4,7 @@
       <div class="col-md-11 col-sm-11 col-xs-12">
         <select2-must class="form-group" name="finishing" v-model="form.finishing_id">
             <option value="">Nope</option>
-            <option v-for="finishing in nonBindedFinishings" :value="finishing.id">
+            <option v-for="finishing in nonBindedFinishings" v-bind:key="finishing.id" :value="finishing.id">
                 @{{finishing.name}}
             </option>
         </select2-must>
@@ -33,7 +33,7 @@
               <th class="text-center">
               </th>
           </tr>
-          <tr v-for="(data, index) in bindedFinishings" class="row_edit">
+          <tr v-for="(data, index) in bindedFinishings" v-bind:key="data.id" class="row_edit">
               <td class="text-center">
                   @{{ index + 1}}
               </td>

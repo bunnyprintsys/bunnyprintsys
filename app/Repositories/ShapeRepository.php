@@ -25,8 +25,7 @@ class ShapeRepository
      */
     public function all($filter = [], $sortBy = [], $pagination = false)
     {
-        $query = Shape::with(['productShapes', 'productShapes.product']);
-        $query->select('shapes.*');
+        $query = Shape::query();
 
         if (!empty($filter)) {
             $query->filter($filter);

@@ -75,6 +75,10 @@ class ProductMaterial extends Model
         if (Arr::get($input, 'material_id', false)) {
             $query->materialId($input['material_id']);
         }
+        // dd($input, $query->get()->toArray());
+        if (Arr::get($input, 'type', false)) {
+            $query->type($input['type']);
+        }
 
         return $query;
     }

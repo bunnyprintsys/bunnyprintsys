@@ -11,11 +11,13 @@ use App\Services\ProductShapeService;
 use App\Services\ProductService;
 use App\Services\ShapeService;
 use App\Traits\Pagination;
+use App\Traits\HasProductBinding;
 use Illuminate\Support\Facades\Auth;
 
 class ShapeController extends Controller
 {
     use Pagination;
+    use HasProductBinding;
     // retrieve all shapes list
 
     private $productService;
@@ -90,6 +92,10 @@ class ShapeController extends Controller
     // create model
     public function createApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:shapes'
+        ]);
+
         $input = $request->all();
 
         $model = $this->shapeService->create($input);
@@ -100,6 +106,10 @@ class ShapeController extends Controller
     // edit model
     public function updateApi(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:shapes,name,'.$request->id
+        ]);
+
         $input = $request->all();
 
         if($request->has('id')) {
@@ -152,7 +162,6 @@ class ShapeController extends Controller
     public function getBindedShapeByProductId($productId)
     {
         $bindedShapeId = ProductShape::where('product_id', $productId)->get('shape_id')->toArray();
-        // dd($bindedMaterialId);
 
         $collections = Shape::bindedProduct($bindedShapeId)->get();
 
@@ -167,6 +176,39 @@ class ShapeController extends Controller
         $collections = Shape::excludeBindedProduct($bindedShapeId)->get();
 
         return $this->success(ShapeResource::collection($collections));
+    }
+
+    public function bindingProduct(Request $request)
+    {
+        $shape = Shape::findOrFail($request->shape_id);
+        $product = Product::findOrFail($request->product_id);
+
+        $material->shapes()->attach($shape);
+    }
+
+    public function getProductBindings(Request $request)
+    {
+        $input = $request->all();
+        $className = 'shapes';
+        $model = new Shape();
+        $data = $this->hasProductBindings($input, $model, 'shapes');
+        return [
+            'binded' => ShapeResource::collection($data['binded']),
+            'unbinded' => ShapeResource::collection($data['unbinded']),
+        ];
+    }
+
+    public function getMultiplierBindings(Request $request)
+    {
+        $input = $request->all();
+        $shape = new Shape();
+        $data = $this->hasMultiplierBindings($shape, $input);
+        return [
+            'binded' => ShapeResource::collection($data['binded']),
+            'unbinded' => ShapeResource::collection($data['unbinded']),
+            'bindedMultiplier' => ShapeResource::collection($data['bindedMultiplier']),
+            'unbindedMultiplier' => ShapeResource::collection($data['unbindedMultiplier']),
+        ];
     }
 
 }

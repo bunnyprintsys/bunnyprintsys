@@ -8,9 +8,40 @@ use Illuminate\Support\Arr;
 class Product extends Model
 {
     protected $fillable = [
-        'name', 'product_code',
+        'id', 'name', 'product_code',
         'is_material', 'is_shape', 'is_lamination', 'is_frame', 'is_finishing', 'is_delivery', 'is_quantity_multiplier', 'is_order_quantity'
     ];
+
+    // relationships
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class, 'product_materials', 'product_id', 'material_id');
+    }
+
+    public function shapes()
+    {
+        return $this->belongsToMany(Shape::class, 'product_shapes', 'product_id', 'shape_id');
+    }
+
+    public function laminations()
+    {
+        return $this->belongsToMany(Lamination::class, 'product_laminations', 'product_id', 'lamination_id');
+    }
+
+    public function frames()
+    {
+        return $this->belongsToMany(Frame::class, 'product_frames', 'product_id', 'frame_id');
+    }
+
+    public function finishings()
+    {
+        return $this->belongsToMany(Finishing::class, 'product_finishings', 'product_id', 'finishing_id');
+    }
+
+    public function deliveries()
+    {
+        return $this->belongsToMany(Delivery::class, 'product_deliveries', 'product_id', 'delivery_id');
+    }
 
     /**
      * @param $query

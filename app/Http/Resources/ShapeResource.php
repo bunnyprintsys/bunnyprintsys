@@ -17,7 +17,7 @@ class ShapeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'productShapes' => ProductBindingResource::collection($this->productShapes)
+            'products' => ProductResource::collection($this->products)
         ];
     }
 }
