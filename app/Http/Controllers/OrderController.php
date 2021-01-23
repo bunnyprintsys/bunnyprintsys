@@ -110,7 +110,6 @@ class OrderController extends Controller
             ->where('max', '>=', $formula)
             ->where('product_id', $product_id)
             ->first();
-        // dd($formula, $product_id, $quantitymultiplier);
 
         // dd(
         //     $material->customerMultipliers->first()->value,
@@ -133,17 +132,20 @@ class OrderController extends Controller
                 $shapeMultiplier = $shape ? $shape->customerMultipliers->first()->value : 1;
                 $laminationMultiplier = $lamination ? $lamination->customerMultipliers->first()->value : 1;
                 $deliveryMultiplier = $delivery ? $delivery->customerMultipliers->first()->value : 1;
+                $quantityMultiplier = $quantitymultiplier ? $quantitymultiplier->customerMultipliers->first()->value : 1;
                 break;
             case 'agent':
                 $materialMultiplier = $material ? $material->agentMultipliers->first()->value : 1;
                 $shapeMultiplier = $shape ? $shape->agentMultipliers->first()->value : 1;
                 $laminationMultiplier = $lamination ? $lamination->agentMultipliers->first()->value : 1;
                 $deliveryMultiplier = $delivery ? $delivery->agentMultipliers->first()->value : 1;
+                $quantityMultiplier = $quantitymultiplier ? $quantitymultiplier->agentMultipliers->first()->value : 1;
                 break;
         }
-        // dd($formula, $materialMultiplier, $shapeMultiplier, $laminationMultiplier, $deliveryMultiplier);
+        // dd($formula * (float)$materialMultiplier * (float)$shapeMultiplier * (float)$laminationMultiplier + (float)$deliveryMultiplier, $quantityMultiplier);
 
-        $total = ($formula * $quantityMultiplier * (float)$materialMultiplier * (float)$shapeMultiplier * (float)$laminationMultiplier) + (float)$deliveryMultiplier;
+        $total = $formula * (float)$quantityMultiplier * (float)$materialMultiplier * (float)$shapeMultiplier * (float)$laminationMultiplier + (float)$deliveryMultiplier;
+        // dd($total);
 
         return $total;
     }

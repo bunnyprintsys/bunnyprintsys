@@ -23,9 +23,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentTermSeeder::class);
         $this->call(MultiplierSeeder::class);
         $this->call(MultiplierTypeSeeder::class);
-        */
-
         $this->call(StickerProductSeeder::class);
         $this->call(AgentDeliveryMultiplierSeeder::class);
+        */
     }
 }
