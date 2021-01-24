@@ -238,7 +238,6 @@ if(document.querySelector('#indexPriceController')) {
         }
         // console.log(this.optionUrl)
         if(this.optionUrl) {
-          console.log('hereman');
           axios.post(this.optionUrl, {product_id: 1, type: this.type}).then((response) => {
             this.modelOptions = response.data.unbindedMultiplier
           })

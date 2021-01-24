@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Repositories\ProductFinishingRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\FinishingRepository;
+use App\Traits\HasMultiplierType;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ use DB;
 
 class ProductFinishingService
 {
-
+    use HasMultiplierType;
     private $productRepository;
     private $productFinishingRepository;
     private $finishingRepository;
@@ -58,7 +59,7 @@ class ProductFinishingService
         $filter = $input;
 
         return $this->productFinishingRepository->getOne($filter);
-    }      
+    }
 
     // create product material
     public function create($input)
@@ -69,12 +70,26 @@ class ProductFinishingService
             }
         }
 
+        if(! isset($input['type'])) {
+            $input['type'] = null;
+        }
+
         if(isset($input['name']) && $input['name']) {
+            // dd('here1');
             $finishing = $this->finishingRepository->create($input);
             $input['finishing_id'] = $finishing->id;
-        }            
+            $model = $this->productFinishingRepository->create($input);
+        }else {
+            $input['type_data'] = $input['type'];
+            $input['type'] = null;
+            $model = $this->getOneByFilter($input);
+            // dd($input, $model);
+        }
 
-        $model = $this->productFinishingRepository->create($input);
+        $input['type'] = $input['type_data'];
+        $input['type_data'] = null;
+        $this->createMultiplierWithType($model, $input);
+
         return $model;
     }
 

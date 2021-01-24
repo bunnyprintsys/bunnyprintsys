@@ -47,7 +47,7 @@ class ProductShapeController extends Controller
     public function createApi(Request $request)
     {
         $input = $request->all();
-        // dd($request->all());
+        // dd($input);
 
         $productShape = $this->productShapeService->create($input);
 

@@ -7,13 +7,14 @@ use App\Repositories\ProductLaminationRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\LaminationRepository;
 use App\Repositories\UserRepository;
+use App\Traits\HasMultiplierType;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
 class ProductLaminationService
 {
-
+    use HasMultiplierType;
     private $productRepository;
     private $productLaminationRepository;
     private $userRepository;
@@ -73,22 +74,25 @@ class ProductLaminationService
             }
         }
 
+        if(! isset($input['type'])) {
+            $input['type'] = null;
+        }
+
         if(isset($input['name']) && $input['name']) {
+            // dd('here1');
             $lamination = $this->laminationRepository->create($input);
             $input['lamination_id'] = $lamination->id;
+            $model = $this->productLaminationRepository->create($input);
+        }else {
+            $input['type_data'] = $input['type'];
+            $input['type'] = null;
+            $model = $this->getOneByFilter($input);
+            // dd($input, $model);
         }
 
-        $model = $this->productLaminationRepository->create($input);
-
-        $type = isset($input['type']) ? $input['type'] : 'customer';
-
-        if($type === 'customer') {
-            $input['multiplier_type_id'] = 1;
-        }
-        if($type === 'agent') {
-            $input['multiplier_type_id'] = 2;
-        }
-        $model->multipliers()->create($input);
+        $input['type'] = $input['type_data'];
+        $input['type_data'] = null;
+        $this->createMultiplierWithType($model, $input);
 
         return $model;
     }

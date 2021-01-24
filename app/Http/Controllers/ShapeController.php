@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 use App\Models\ProductShape;
 use App\Models\Shape;
 use App\Http\Resources\ProductShapeResource;
@@ -180,10 +181,12 @@ class ShapeController extends Controller
 
     public function bindingProduct(Request $request)
     {
-        $shape = Shape::findOrFail($request->shape_id);
+        // dd($request->all());
+        $input = $request->all();
+        $model = Shape::findOrFail($input['model']['id']);
         $product = Product::findOrFail($request->product_id);
 
-        $material->shapes()->attach($shape);
+        $product->shapes()->attach($model);
     }
 
     public function getProductBindings(Request $request)

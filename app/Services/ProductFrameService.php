@@ -7,13 +7,14 @@ use App\Repositories\ProductFrameRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\FrameRepository;
 use App\Repositories\UserRepository;
+use App\Traits\HasMultiplierType;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
 class ProductFrameService
 {
-
+    use HasMultiplierType;
     private $productRepository;
     private $productFrameRepository;
     private $frameRepository;
@@ -58,7 +59,7 @@ class ProductFrameService
         $filter = $input;
 
         return $this->productFrameRepository->getOne($filter);
-    }      
+    }
 
     // create product material
     public function create($input)
@@ -69,12 +70,26 @@ class ProductFrameService
             }
         }
 
+        if(! isset($input['type'])) {
+            $input['type'] = null;
+        }
+
         if(isset($input['name']) && $input['name']) {
+            // dd('here1');
             $frame = $this->frameRepository->create($input);
             $input['frame_id'] = $frame->id;
-        }        
+            $model = $this->productFrameRepository->create($input);
+        }else {
+            $input['type_data'] = $input['type'];
+            $input['type'] = null;
+            $model = $this->getOneByFilter($input);
+            // dd($input, $model);
+        }
 
-        $model = $this->productFrameRepository->create($input);
+        $input['type'] = $input['type_data'];
+        $input['type_data'] = null;
+        $this->createMultiplierWithType($model, $input);
+
         return $model;
     }
 
