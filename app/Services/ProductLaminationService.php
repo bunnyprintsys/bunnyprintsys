@@ -101,16 +101,11 @@ class ProductLaminationService
     public function update($input)
     {
         // dd($input);
-        $type = isset($input['type']) ? $input['type'] : 'customer';
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->productLaminationRepository->update($model, $input);
-            if($type === 'customer') {
-                $model->customerMultipliers->first()->update($input);
-            }
-            if($type === 'agent') {
-                $model->agentMultipliers->first()->update($input);
-            }
+
+            $this->updateMultiplierWithType($model, $input);
 
             return $model;
         }

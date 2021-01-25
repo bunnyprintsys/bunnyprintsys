@@ -7,6 +7,9 @@ use App\Http\Resources\DeliveryResource;
 use App\Models\Delivery;
 use App\Models\Product;
 use App\Models\ProductDelivery;
+use App\Services\DeliveryService;
+use App\Services\ProductDeliveryService;
+use App\Services\ProductService;
 use App\Traits\Pagination;
 use App\Traits\HasProductBinding;
 
@@ -14,6 +17,39 @@ class DeliveryController extends Controller
 {
     use Pagination;
     use HasProductBinding;
+    private $deliveryService;
+    private $productDeliveryService;
+    private $productService;
+
+    public function __construct(DeliveryService $deliveryService, ProductDeliveryService $productDeliveryService, ProductService $productService)
+    {
+        $this->middleware('auth');
+        $this->deliveryService = $deliveryService;
+        $this->productDeliveryService = $productDeliveryService;
+        $this->productService = $productService;
+    }
+
+    public function getAllApi(Request $request)
+    {
+        $input = $request->all();
+        $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
+        if (isset($input['sortkey']) && !empty($input['sortkey'])) {
+            $sortBy = [
+                $request->get('sortkey') => $order
+            ];
+        } else {
+            $sortBy = [
+                'name' => 'asc'
+            ];
+        }
+        $data = $this->deliveryService->all($input, $sortBy, $this->getPerPage());
+        if ($this->isWithoutPagination()) {
+            return $this->success(DeliveryResource::collection($data));
+        }
+        DeliveryResource::collection($data);
+        return $this->success($data);
+    }
+
 
     // retrieve all deliveries list
     public function getAllDeliveriesApi()
@@ -35,6 +71,35 @@ class DeliveryController extends Controller
             ->get();
 
         return $deliveries;
+    }
+
+    // create model
+    public function createApi(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:deliveries'
+        ]);
+
+        $input = $request->all();
+
+        $model = $this->deliveryService->create($input);
+
+        return $this->success(new DeliveryResource($model));
+    }
+
+    // edit model
+    public function updateApi(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:deliveries,name,'.$request->id
+        ]);
+
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $model = $this->deliveryService->update($input);
+        }
+        return $this->success(new DeliveryResource($model));
     }
 
     // update delivery by given id

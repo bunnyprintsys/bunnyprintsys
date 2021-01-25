@@ -51,13 +51,28 @@ class LaminationService
         return $this->laminationRepository->getOne($filter);
     }
 
-    // create product shape
+    // create product lamination
     public function create($input)
     {
         DB::beginTransaction();
+        foreach ($input as $key => $value) {
+            if (!$value) {
+                unset($input[$key]);
+            }
+        }
         $model = $this->laminationRepository->create($input);
         DB::commit();
         return $model;
+    }
+
+    // update  lamination
+    public function update($input)
+    {
+        if($input['id']){
+            $model = $this->getOneById($input['id']);
+            $model = $this->laminationRepository->update($model, $input);
+            return $model;
+        }
     }
 
     // delete product shape

@@ -168,7 +168,7 @@ class LaminationController extends Controller
         $input = $request->all();
         $className = 'laminations';
         $model = new Lamination();
-        $data = $this->hasProductBindings($input, $model, 'laminations');
+        $data = $this->hasProductBindings($input, $model, $className);
         return [
             'binded' => LaminationResource::collection($data['binded']),
             'unbinded' => LaminationResource::collection($data['unbinded']),

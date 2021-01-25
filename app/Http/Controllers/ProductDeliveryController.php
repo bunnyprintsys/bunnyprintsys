@@ -48,6 +48,10 @@ class ProductDeliveryController extends Controller
     {
         $input = $request->all();
 
+        if($request->model) {
+            $input['delivery_id'] = $request->model['id'];
+        }
+
         $model = $this->productDeliveryService->create($input);
 
         return $this->success(new ProductDeliveryResource($model));
@@ -74,5 +78,17 @@ class ProductDeliveryController extends Controller
         $model->save();
     }
 
+    // get not binded options
+    public function getExcludedDeliveryByProductId($productId)
+    {
+        $productDeliveryIds = ProductDelivery::where('product_id', $productId)->get('id');
 
+        $input['excluded_id'] = $productDeliveryIds;
+        $sortBy = [
+            'delivery_name' => 'asc'
+        ];
+        $data = $this->productDeliveryService->all($input, $sortBy, $this->getPerPage());
+
+        return $this->success(ProductDeliveryResource::collection($data));
+    }
 }

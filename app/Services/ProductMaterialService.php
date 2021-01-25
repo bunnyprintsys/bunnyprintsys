@@ -107,7 +107,7 @@ class ProductMaterialService
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->productMaterialRepository->update($model, $input);
-
+            // dd($model->toArray(), $input);
             $this->updateMultiplierWithType($model, $input);
 
             return $model;

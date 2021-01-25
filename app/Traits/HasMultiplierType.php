@@ -87,14 +87,16 @@ trait HasMultiplierType
     // update multiplier when type available
     public function updateMultiplierWithType($model, $input)
     {
-        if($type = isset($input['type']) and $input['type']) {
-            switch($type) {
-                case 'customer':
-                    $model->customerMultipliers->first()->update($input);
-                    break;
-                case 'agent':
-                    $model->agentMultipliers->first()->update($input);
-                    break;
+        if(isset($input['type'])) {
+            if($type = $input['type']) {
+                switch($type) {
+                    case 'customer':
+                        $model->customerMultipliers->first()->update($input);
+                        break;
+                    case 'agent':
+                        $model->agentMultipliers->first()->update($input);
+                        break;
+                }
             }
         }
     }

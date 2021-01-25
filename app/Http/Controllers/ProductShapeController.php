@@ -47,7 +47,10 @@ class ProductShapeController extends Controller
     public function createApi(Request $request)
     {
         $input = $request->all();
-        // dd($input);
+
+        if($request->model) {
+            $input['shape_id'] = $request->model['id'];
+        }
 
         $productShape = $this->productShapeService->create($input);
 
@@ -73,6 +76,20 @@ class ProductShapeController extends Controller
 
         $model->multiplier = $multiplier;
         $model->save();
+    }
+
+    // get not binded options
+    public function getExcludedShapeByProductId($productId)
+    {
+        $productShapeIds = ProductShape::where('product_id', $productId)->get('id');
+
+        $input['excluded_id'] = $productShapeIds;
+        $sortBy = [
+            'shape_name' => 'asc'
+        ];
+        $data = $this->productShapeService->all($input, $sortBy, $this->getPerPage());
+
+        return $this->success(ProductShapeResource::collection($data));
     }
 
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductShapeResource extends JsonResource
 {
+    use HasMultiplierType;
     /**
      * Transform the resource into an array.
      *

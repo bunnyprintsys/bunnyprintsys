@@ -99,6 +99,9 @@ class ProductFrameService
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->productFrameRepository->update($model, $input);
+
+            $this->updateMultiplierWithType($model, $input);
+
             return $model;
         }
     }

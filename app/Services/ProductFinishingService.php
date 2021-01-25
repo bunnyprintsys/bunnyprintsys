@@ -99,6 +99,9 @@ class ProductFinishingService
         if($input['id']){
             $model = $this->getOneById($input['id']);
             $model = $this->productFinishingRepository->update($model, $input);
+
+            $this->updateMultiplierWithType($model, $input);
+
             return $model;
         }
     }

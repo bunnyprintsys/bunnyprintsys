@@ -48,6 +48,10 @@ class ProductLaminationController extends Controller
     {
         $input = $request->all();
 
+        if($request->model) {
+            $input['lamination_id'] = $request->model['id'];
+        }
+
         $model = $this->productLaminationService->create($input);
 
         return $this->success(new ProductLaminationResource($model));
@@ -74,5 +78,17 @@ class ProductLaminationController extends Controller
         $model->save();
     }
 
+    // get not binded options
+    public function getExcludedLaminationByProductId($productId)
+    {
+        $productLaminationIds = ProductLamination::where('product_id', $productId)->get('id');
 
+        $input['excluded_id'] = $productLaminationIds;
+        $sortBy = [
+            'lamination_name' => 'asc'
+        ];
+        $data = $this->productLaminationService->all($input, $sortBy, $this->getPerPage());
+
+        return $this->success(ProductLaminationResource::collection($data));
+    }
 }

@@ -32,6 +32,28 @@ class ShapeController extends Controller
         $this->shapeService = $shapeService;
     }
 
+    public function getAllApi(Request $request)
+    {
+
+        $input = $request->all();
+        $order = $request->get('reverse') == 'true' ? 'asc' : 'desc';
+        if (isset($input['sortkey']) && !empty($input['sortkey'])) {
+            $sortBy = [
+                $request->get('sortkey') => $order
+            ];
+        } else {
+            $sortBy = [
+                'name' => 'asc'
+            ];
+        }
+        $data = $this->shapeService->all($input, $sortBy, $this->getPerPage());
+        if ($this->isWithoutPagination()) {
+            return $this->success(ShapeResource::collection($data));
+        }
+        ShapeResource::collection($data);
+        return $this->success($data);
+    }
+
     public function getAllShapesApi(Request $request)
     {
         $input = $request->all();
@@ -182,11 +204,10 @@ class ShapeController extends Controller
     public function bindingProduct(Request $request)
     {
         // dd($request->all());
-        $input = $request->all();
-        $model = Shape::findOrFail($input['model']['id']);
+        $shape = Shape::findOrFail($request->shape_id);
         $product = Product::findOrFail($request->product_id);
 
-        $product->shapes()->attach($model);
+        $shape->products()->attach($product);
     }
 
     public function getProductBindings(Request $request)
@@ -194,7 +215,7 @@ class ShapeController extends Controller
         $input = $request->all();
         $className = 'shapes';
         $model = new Shape();
-        $data = $this->hasProductBindings($input, $model, 'shapes');
+        $data = $this->hasProductBindings($input, $model, $className);
         return [
             'binded' => ShapeResource::collection($data['binded']),
             'unbinded' => ShapeResource::collection($data['unbinded']),

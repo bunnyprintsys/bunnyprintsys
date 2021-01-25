@@ -41,4 +41,53 @@ class ProductFinishingController extends Controller
         ProductFinishingResource::collection($data);
         return $this->success($data);
     }
+
+    // create product finishing
+    public function createApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->model) {
+            $input['finishing_id'] = $request->model['id'];
+        }
+
+        $model = $this->productFinishingService->create($input);
+
+        return $this->success(new ProductFinishingResource($model));
+    }
+
+    // edit product finishing
+    public function editApi(Request $request)
+    {
+        $input = $request->all();
+
+        if($request->has('id')) {
+            $model = $this->productFinishingService->update($input);
+        }
+        return $this->success(new ProductFinishingResource($model));
+    }
+
+    // update product finishing by given id
+    public function updateProductFinishingByIdApi($id)
+    {
+        $model = ProductFinishing::findOrFail($id);
+        $multiplier = request('multiplier');
+
+        $model->multiplier = $multiplier;
+        $model->save();
+    }
+
+    // get not binded options
+    public function getExcludedFinishingByProductId($productId)
+    {
+        $productFinishingIds = ProductFinishing::where('product_id', $productId)->get('id');
+
+        $input['excluded_id'] = $productFinishingIds;
+        $sortBy = [
+            'finishing_name' => 'asc'
+        ];
+        $data = $this->productFinishingService->all($input, $sortBy, $this->getPerPage());
+
+        return $this->success(ProductFinishingResource::collection($data));
+    }
 }
