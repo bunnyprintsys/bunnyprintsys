@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\HasMultiplierType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductShapeResource extends JsonResource
@@ -14,16 +15,7 @@ class ProductShapeResource extends JsonResource
      */
     public function toArray($request)
     {
-        $type = $request->type ? $request->type : 'customer';
-        $multiplier = '';
-        switch($type) {
-            case 'customer':
-                $multiplier = $this->customerMultipliers ? $this->customerMultipliers->first()->value : null;
-                break;
-            case 'agent':
-                $multiplier = $this->agentMultipliers ? $this->agentMultipliers->first()->value : null;
-                break;
-        }
+        $multiplier = $this->getSingleMultiplierWithType($request->type);
 
         return [
             'id' => $this->id,

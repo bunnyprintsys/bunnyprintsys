@@ -87,9 +87,9 @@ class ProductShapeService
             $input['type_data'] = $input['type'];
             $input['type'] = null;
             $model = $this->getOneByFilter($input);
-            // dd($input, $model);
-        }
 
+        }
+// dd($input, $model->toArray());
         $input['type'] = $input['type_data'];
         $input['type_data'] = null;
         $this->createMultiplierWithType($model, $input);

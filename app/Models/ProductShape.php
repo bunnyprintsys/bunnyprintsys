@@ -64,12 +64,20 @@ class ProductShape extends Model
             $query->id($input['id']);
         }
 
+        if (Arr::get($input, 'excluded_id', false)) {
+            $query->whereNotIn('id', $input['excluded_id']);
+        }
+
         if (Arr::get($input, 'product_id', false)) {
             $query->productId($input['product_id']);
         }
 
         if (Arr::get($input, 'shape_id', false)) {
             $query->shapeId($input['shape_id']);
+        }
+
+        if (Arr::get($input, 'type', false)) {
+            $query->type($input['type']);
         }
 
         return $query;

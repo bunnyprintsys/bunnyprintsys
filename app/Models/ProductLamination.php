@@ -72,6 +72,10 @@ class ProductLamination extends Model
             $query->laminationId($input['lamination_id']);
         }
 
+        if (Arr::get($input, 'type', false)) {
+            $query->type($input['type']);
+        }
+
         return $query;
     }
 

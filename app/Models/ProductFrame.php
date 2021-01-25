@@ -72,6 +72,10 @@ class ProductFrame extends Model
             $query->frameId($input['frame_id']);
         }
 
+        if (Arr::get($input, 'type', false)) {
+            $query->type($input['type']);
+        }
+
         return $query;
     }
 

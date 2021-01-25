@@ -72,6 +72,10 @@ class ProductFinishing extends Model
             $query->finishingId($input['finishing_id']);
         }
 
+        if (Arr::get($input, 'type', false)) {
+            $query->type($input['type']);
+        }
+
         return $query;
     }
 
