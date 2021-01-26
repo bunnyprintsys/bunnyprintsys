@@ -100,6 +100,11 @@
                     </div>
                     <hr>
                     <div class="section-title">Address</div>
+
+                    <div class="form-row">
+                        <table ></table>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group col-md-4 col-sm-4 col-xs-12">
                             <label class="control-label required">

@@ -10,7 +10,8 @@ class Address extends Model
     protected $fillable = [
         'block', 'unit', 'building_name', 'road_name', 'postcode', 'area', 'name',
         'state_id', 'country_id', 'is_primary', 'typeable_id', 'typeable_type',
-        'is_primary', 'is_delivery', 'is_billing', 'is_active'
+        'is_primary', 'is_delivery', 'is_billing', 'is_active',
+        'contact', 'alt_contact'
     ];
 
     // relationships

@@ -157,7 +157,7 @@ class OrderController extends Controller
         $total = $formula * (float)$quantityMultiplier * (float)$materialMultiplier * (float)$shapeMultiplier * (float)$laminationMultiplier + (float)$deliveryMultiplier;
         // dd($total);
 
-        return $total;
+        return ceil($total);
     }
 
     // return inkjet sticker index
@@ -235,7 +235,7 @@ class OrderController extends Controller
         // dd($delivery);
         $total = $total + ($delivery ? $delivery->multiplier : 0);
 
-        dd($total);
+        // dd($total);
 
         return $total;
 
