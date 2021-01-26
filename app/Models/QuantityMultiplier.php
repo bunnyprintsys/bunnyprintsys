@@ -39,6 +39,48 @@ class QuantityMultiplier extends Model
         return $query->where($columnName, $value);
     }
 
+    public function scopeMin($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('min');
+
+        return $query->where($columnName, '<=', $value);
+    }
+
+    public function scopeMax($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('max');
+
+        return $query->where($columnName, '>=', $value);
+    }
+
+
+    public function scopeMultiplierType($query, $value)
+    {
+        $query->type($value);
+        return $query;
+    }
+
+    public function scopeMultiplierUnbindType($query, $value)
+    {
+        $query->unbindType($value);
+        return $query;
+    }
+
+    public function scopeBindedProduct($query, $value = [])
+    {
+        return $query->whereHas('products');
+    }
+
+    public function scopeExcludeBindedProduct($query, $value = [])
+    {
+        $query->whereNotIn('id', $value);
+    }
+
+    public function scopeBindProduct($query, $value)
+    {
+        return $query->products()->create(['product_id', $value]);
+    }
+
     // filter
     public function scopeFilter($query, $input, $alias = null, $like = true)
     {
@@ -52,6 +94,26 @@ class QuantityMultiplier extends Model
 
         if (Arr::get($input, 'product_id', false)) {
             $query->productId($input['product_id']);
+        }
+
+        if (Arr::get($input, 'type', false)) {
+            $query->multiplierType($input['type']);
+        }
+
+        if (Arr::get($input, 'unbind_type', false)) {
+            $query->multiplierUnbindType($input['unbind_type']);
+        }
+
+        if(Arr::get($input, 'product_id', false)) {
+            $query->productId($input['product_id']);
+        }
+
+        if(Arr::get($input, 'min', false)) {
+            $query->min($input['min']);
+        }
+
+        if(Arr::get($input, 'max', false)) {
+            $query->max($input['max']);
         }
 
         return $query;

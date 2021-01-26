@@ -51,6 +51,15 @@ class QuantityMultiplierService
         return $this->quantityMultiplierRepository->getOne($filter);
     }
 
+    // get one by filter
+    public function getOneByFilter($input)
+    {
+        $filter = $input;
+        // dd($input);
+        $model = $this->quantityMultiplierRepository->getOne($filter);
+        return $model;
+    }
+
     // create QuantityMultiplier
     public function create($input)
     {

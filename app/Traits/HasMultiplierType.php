@@ -34,7 +34,7 @@ trait HasMultiplierType
     public function scopeType($query, $value)
     {
         $value = $this->setTypeValue($value);
-
+        // dd($value);
         $query = $query->whereHas('multipliers', function($query) use ($value) {
             $query->whereHas('multiplierType', function($query) use ($value) {
                 $query->where('multiplier_types.id', $value);

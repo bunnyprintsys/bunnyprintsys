@@ -9,12 +9,18 @@ use App\Models\ProductShape;
 use App\Models\ProductDelivery;
 use App\Models\ProductLamination;
 use App\Models\QuantityMultiplier;
+use App\Services\QuantityMultiplierService;
+use App\Traits\HasProductBinding;
 
 class OrderController extends Controller
 {
+    use HasProductBinding;
+
+    private $quantityMultiplierService;
     // constructor
-    public function __construct()
+    public function __construct(QuantityMultiplierService $quantityMultiplierService)
     {
+        $this->quantityMultiplierService = $quantityMultiplierService;
         $this->middleware('auth', ['except' => [
             'getLabelstickerQuotationApi'
         ]]);
@@ -50,6 +56,7 @@ class OrderController extends Controller
         $lamination_id = request('lamination_id')['id'];
         $shape_id = request('shape_id')['id'];
         $delivery_id = request('delivery_id')['id'];
+        $type = request('type') ? request('type') : 'customer';
         $dimension = [
             'width' => 0,
             'height' => 0
@@ -106,10 +113,13 @@ class OrderController extends Controller
 
         $formula = intval(round($orderquantity->qty/ $area) + 1);
 
-        $quantitymultiplier = QuantityMultiplier::where('min', '<=', $formula)
-            ->where('max', '>=', $formula)
-            ->where('product_id', $product_id)
-            ->first();
+        $input['product_id'] = $product_id;
+        $input['min'] = $formula;
+        $input['max'] = $formula;
+        $input['type'] = $type;
+        $quantitymultiplier = $this->quantityMultiplierService->getOneByFilter($input);
+            // ->get();
+            // dd($formula, $product_id, $quantitymultiplier->toArray());
 
         // dd(
         //     $material->customerMultipliers->first()->value,
@@ -119,12 +129,12 @@ class OrderController extends Controller
         //     $quantitymultiplier->customerMultipliers->first()->value
         // );
 
-        $type = $request->type ? $request->type : 'customer';
+
         $materialMultiplier = 0;
         $shapeMultiplier = 0;
         $laminationMultiplier = 0;
         $deliveryMultiplier = 0;
-        $quantityMultiplier = 0;
+        // $quantityMultiplier = 0;
 
         switch($type) {
             case 'customer':

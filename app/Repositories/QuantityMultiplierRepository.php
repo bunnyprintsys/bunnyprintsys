@@ -14,6 +14,7 @@ class QuantityMultiplierRepository
      */
     public function getOne($input)
     {
+        // dd($input, 'herebro');
         return QuantityMultiplier::filter($input)->first();
     }
 
