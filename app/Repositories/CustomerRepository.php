@@ -47,12 +47,12 @@ class CustomerRepository
      */
     public function create(User $user, $input)
     {
-        // dd($input->toArray());
+        // dd($input);
         $model = new Customer();
-        $model->fill($input);
         if($user) {
-            $model->profile_id = $user->profile_id;
+            $input['profile_id'] = $user->profile_id;
         }
+        $model->fill($input);
         $model->save();
         return $model;
     }
@@ -62,7 +62,7 @@ class CustomerRepository
      * @param $input
      * @return Customer
      */
-    public function update(User $user, Customer $model, $input)
+    public function update(User $user, $model, $input)
     {
         $model->fill($input);
         $model->save();

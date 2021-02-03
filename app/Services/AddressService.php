@@ -37,6 +37,11 @@ class AddressService
         return $this->addressRepository->all($filter, $sortBy, $pagination);
     }
 
+    public function getOneByFilter($input)
+    {
+        return $this->addressRepository->getOne($input);
+    }
+
     /**
      * @param $input
      * @return \App\Models\Address
@@ -93,6 +98,13 @@ class AddressService
         } */
         $filter['id'] = $id;
         return $this->addressRepository->getOne($filter);
+    }
+
+    // delete address
+    public function delete($input)
+    {
+        $model = $this->getOneById($input['id']);
+        $model->delete();
     }
 
     /**

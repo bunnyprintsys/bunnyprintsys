@@ -30,7 +30,24 @@ class Address extends Model
         return $this->belongsTo(Country::class);
     }
 
-    public function getFullAdress()
+    // setter
+    public function setIsPrimaryAttribute($value)
+    {
+        $this->attributes['is_primary'] = $value ? $value : 0;
+    }
+
+    public function setIsBillingAttribute($value)
+    {
+        $this->attributes['is_billing'] = $value ? $value : 0;
+    }
+
+    public function setIsDeliveryAttribute($value)
+    {
+        $this->attributes['is_delivery'] = $value ? $value : 0;
+    }
+
+    // getter
+    public function getFullAddressAttribute()
     {
         $full_address = '';
         if($this->unit) {
@@ -76,6 +93,27 @@ class Address extends Model
         return $query->where($columnName, $value);
     }
 
+    public function scopeIsPrimary($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('is_primary');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeIsBilling($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('is_billing');
+
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeIsDelivery($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('is_delivery');
+
+        return $query->where($columnName, $value);
+    }
+
     /**
      * @param $query
      * @param $input
@@ -95,6 +133,18 @@ class Address extends Model
 
         if (Arr::get($input, 'excluded_id', false)) {
             $query->whereNotIn('id', $input['excluded_id']);
+        }
+
+        if (Arr::get($input, 'is_primary', false)) {
+            $query->isPrimary($input['is_primary']);
+        }
+
+        if (Arr::get($input, 'is_billing', false)) {
+            $query->isBilling($input['is_billing']);
+        }
+
+        if (Arr::get($input, 'is_delivery', false)) {
+            $query->isDelivery($input['is_delivery']);
         }
 
         return $query;

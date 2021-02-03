@@ -76,35 +76,73 @@ class TransactionController extends Controller
     public function createTransactionApi(Request $request)
     {
         DB::beginTransaction();
-        $user = auth()->user();
-        // dd($request->all());
 
+        // current user
+        $user = auth()->user();
+
+        // form request
         $customerForm = $request->get('customer_form');
         $transactionForm = $request->get('transaction_form');
         $addressForm = $request->get('address_form');
+        $deliveryAddressForm = $request->get('delivery_address_form');
+        $billingAddressForm = $request->get('billing_address_form');
         $itemForm = $request->get('item_form');
+        $radioOption = $request->get('radio_option');
 
+        // customer management
         if(isset($customerForm['customer']['id'])) {
             $customer = $this->customerService->getOneById($customerForm['customer']['id']);
-            if(isset($addressForm['address']['id'])) {
-                $address = $this->addressService->getOneById($addressForm['address']['id']);
-            }else {
-                $address = $customer->addresses()->create($addressForm);
-            }
         }else {
             $customer = $this->customerService->createNewCustomer($customerForm);
-            $address = $customer->addresses()->create($addressForm);
         }
 
-        $transactionForm['address_id'] = $address->id;
         $transactionForm['customer_id'] = $customer->id;
         $transactionForm['sales_channel_id'] = isset($transactionForm['sales_channel']) ? $transactionForm['sales_channel']['id'] : null;
         $transactionForm['status_id'] = isset($transactionForm['status']) ? $transactionForm['status']['id'] : null;
         $transactionForm['is_artwork_provided'] = isset($transactionForm['is_artwork_provided']) ? $transactionForm['is_artwork_provided']['id'] : null;
         $transactionForm['is_design_required'] = isset($transactionForm['is_design_required']) ? $transactionForm['is_design_required']['id'] : null;
         $transactionForm['delivery_method_id'] = isset($transactionForm['delivery_method']) ? $transactionForm['delivery_method']['id'] : null;
+        $transactionForm['designed_by'] = isset($transactionForm['designed_by']) ? $transactionForm['designed_by']['id'] : null;
 
         $transaction = $this->transactionService->createNewTransaction($user, $transactionForm);
+
+        // address management
+        // delivery
+        $deliveryAddress = '';
+        if($radioOption['existingDeliveryAddress'] === 'true') {
+            if(isset($deliveryAddressForm['address'])) {
+                $deliveryAddress = $this->addressService->getOneById($deliveryAddressForm['address']['id']);
+            }
+        }else {
+            if(isset($deliveryAddressForm['unit']) and isset($deliveryAddressForm['postcode'])) {
+                $addressForm['is_delivery'] = 1;
+                $deliveryAddress = $customer->addresses()->create($addressForm);
+            }
+        }
+        if($deliveryAddress) {
+            $transaction->update(['delivery_address_id' => $deliveryAddress->id]);
+        }
+
+        // billing
+        if($deliveryAddress and $radioOption['sameBillingDeliveryAddress'] === 'true') {
+            $transaction->update(['billing_address_id' => $deliveryAddress->id]);
+            $deliveryAddress->update(['is_billing' => 1]);
+        } else if($radioOption['sameBillingDeliveryAddress'] === 'false') {
+            $billingAddress = '';
+            if($radioOption['existingBillingAddress'] === 'true') {
+                if(isset($billingAddressForm['address'])) {
+                    $billingAddress = $this->addressService->getOneById($billingAddressForm['address']['id']);
+                }
+            }else {
+                if(isset($billingAddressForm['unit']) and isset($billingAddressForm['postcode'])) {
+                    $addressForm['is_billing'] = 1;
+                    $billingAddress = $customer->addresses()->create($addressForm);
+                }
+            }
+            if($billingAddress) {
+                $transaction->update(['billing_address_id' => $billingAddress->id]);
+            }
+        }
 
         $items = [];
         foreach ($itemForm['items'] as $item) {
@@ -134,25 +172,24 @@ class TransactionController extends Controller
         DB::beginTransaction();
         $user = auth()->user();
 
+        // form request
         $customerForm = $request->get('customer_form');
         $transactionForm = $request->get('transaction_form');
         $addressForm = $request->get('address_form');
+        $deliveryAddressForm = $request->get('delivery_address_form');
+        $billingAddressForm = $request->get('billing_address_form');
         $itemForm = $request->get('item_form');
+        $radioOption = $request->get('radio_option');
+        // dd($radioOption, $deliveryAddressForm, $billingAddressForm);
 
+        // customer management
         if(isset($customerForm['customer']['id'])) {
             $customer = $this->customerService->getOneById($customerForm['customer']['id']);
-            if(isset($addressForm['address']['id'])) {
-                $address = $this->addressService->getOneById($addressForm['address']['id']);
-            }else {
-                $address = $customer->addresses()->create($addressForm);
-            }
         }else {
             $customer = $this->customerService->createNewCustomer($customerForm);
-            $address = $customer->addresses()->create($addressForm);
         }
 
         $transactionForm['id'] = $transactionId;
-        $transactionForm['address_id'] = $address->id;
         $transactionForm['customer_id'] = $customer->id;
         $transactionForm['sales_channel_id'] = isset($transactionForm['sales_channel']) ? $transactionForm['sales_channel']['id'] : null;
         $transactionForm['status_id'] = isset($transactionForm['status']) ? $transactionForm['status']['id'] : null;
@@ -161,9 +198,50 @@ class TransactionController extends Controller
         $transactionForm['delivery_method_id'] = isset($transactionForm['delivery_method']) ? $transactionForm['delivery_method']['id'] : null;
         $transactionForm['designed_by'] = isset($transactionForm['designed_by']) ? $transactionForm['designed_by']['id'] : null;
 
-        // dd($transactionForm);
         $transaction = $this->transactionService->updateTransaction($user, $transactionForm);
 
+        // address management
+        // delivery
+        // existing or new
+        $deliveryAddress = '';
+        if($radioOption['existingDeliveryAddress'] === 'true') {
+            if(isset($deliveryAddressForm['address'])) {
+                $deliveryAddress = $this->addressService->getOneById($deliveryAddressForm['address']['id']);
+            }
+        }else {
+            if(isset($deliveryAddressForm['unit']) and isset($deliveryAddressForm['postcode'])) {
+                $addressForm['is_delivery'] = 1;
+                $deliveryAddress = $customer->addresses()->create($addressForm);
+            }
+        }
+        if($deliveryAddress) {
+            // $transaction->deliveryAddress()->save($deliveryAddress);
+            $transaction->update(['delivery_address_id' => $deliveryAddress->id]);
+        }
+
+        // billing
+        // same or existing or new
+        if($deliveryAddress and $radioOption['sameBillingDeliveryAddress'] === 'true') {
+            $transaction->update(['billing_address_id' => $deliveryAddress->id]);
+            $deliveryAddress->update(['is_billing' => 1]);
+        } else if($radioOption['sameBillingDeliveryAddress'] === 'false') {
+            $billingAddress = '';
+            if($radioOption['existingBillingAddress'] === 'true') {
+                if(isset($billingAddressForm['address'])) {
+                    $billingAddress = $this->addressService->getOneById($billingAddressForm['address']['id']);
+                }
+            }else {
+                if(isset($billingAddressForm['unit']) and isset($billingAddressForm['postcode'])) {
+                    $addressForm['is_billing'] = 1;
+                    $billingAddress = $customer->addresses()->create($addressForm);
+                }
+            }
+            if($billingAddress) {
+                $transaction->update(['billing_address_id' => $billingAddress->id]);
+            }
+        }
+
+        // itemised item management
         $items = [];
         foreach ($itemForm['items'] as $item) {
             // dd($item, $itemForm);

@@ -78,7 +78,7 @@ if (document.querySelector('#indexCustomerController')) {
         },
         createSingleCustomer() {
           this.clearform = {}
-          this.formdata = '';
+          this.formdata = {}
         },
         editSingleCustomer(data) {
           this.clearform = {}
@@ -121,6 +121,8 @@ if (document.querySelector('#indexCustomerController')) {
           paymentTermOptions: [],
           states: [],
           countries: [],
+          showAddAddress: false,
+          // addressList: [],
         }
       },
       mounted() {
@@ -129,6 +131,26 @@ if (document.querySelector('#indexCustomerController')) {
         this.getCountryOptions()
       },
       methods: {
+        onShowAddressClicked() {
+          this.showAddAddress = !this.showAddAddress
+        },
+        addSingleAddress(data) {
+          axios.post('/api/customer/address/create/' + this.form.id, this.addressForm).then((response) => {
+            this.$emit('updatetable')
+            for (var key in this.addressForm) {
+              this.addressForm[key] = null;
+            }
+            this.form.addresses.push(response.data.data)
+            flash('Entry has successfully created', 'success');
+          })
+        },
+        removeSingleAddress(data, index) {
+          axios.delete('/api/customer/address/delete/' + data.id).then((response) => {
+            this.form.addresses.splice(index, 1)
+            this.$emit('updatetable')
+            flash('Entry has successfully deleted', 'success');
+          })
+        },
         onSubmit() {
           axios.post('/api/customer/store-update', {form: this.form, addressForm: this.addressForm})
           .then((response) => {
@@ -160,6 +182,10 @@ if (document.querySelector('#indexCustomerController')) {
             this.form.phone_country_id = this.countries[0]
           })
         },
+        closeModal(modelId) {
+          let model = '#' + modelId
+          $(model).modal('hide');
+        },
         getFormDefault() {
           return {
             id: '',
@@ -168,11 +194,15 @@ if (document.querySelector('#indexCustomerController')) {
             roc: '',
             phone_number: '',
             email: '',
-            is_company: 'false'
+            is_company: 'false',
+            phone_country_id: '',
+            payment_term_id: '',
+            addresses: []
           }
         },
         getAddressFormDefault() {
           return {
+            id: '',
             unit: '',
             block: '',
             building_name: '',
@@ -181,11 +211,19 @@ if (document.querySelector('#indexCustomerController')) {
             postcode: '',
             state: '',
             country: '',
+            phone_country: '',
             status: '',
             items: [],
             address: '',
-            addresses: ''
+            addresses: '',
+            name: '',
+            is_primary: false,
+            is_billing: false,
+            is_delivery: true
           }
+        },
+        customLabelCountriesOption(option) {
+          return `${option.symbol} (+${option.code})`
         },
       },
       watch: {

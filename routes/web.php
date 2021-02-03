@@ -60,6 +60,8 @@ Route::group(['prefix' => 'api'], function() {
         Route::get('/', 'CustomerController@getCustomersApi');
         Route::post('/store-update', 'CustomerController@storeUpdateCustomerApi');
         Route::post('/address', 'CustomerController@getAddressApi');
+        Route::post('/address/create/{id}', 'CustomerController@createAddressApi');
+        Route::delete('/address/delete/{id}', 'CustomerController@deleteSingleAddressApi');
     });
     Route::group(['prefix' => 'deliveries'], function() {
         Route::get('/all', 'DeliveryController@getAllDeliveriesApi');

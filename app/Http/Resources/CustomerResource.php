@@ -22,11 +22,13 @@ class CustomerResource extends JsonResource
             'roc' => $this->roc,
             'email' => $this->user ? $this->user->email : null,
             'phone_number' => $this->user ? $this->user->phone_number : null,
+            'phone_country_id' => $this->user ? $this->user->phone_country_id : null,
             'alt_phone_number' => $this->user ? $this->user->alt_phone_number : null,
             'status' => $this->user ? $this->user->status : null,
             'is_company' => $this->is_company ? 'true' : 'false',
             'user_id' => $this->user ? $this->user->id : null,
             'payment_term_id' => $this->payment_term_id,
+            'addresses' => AddressResource::collection($this->addresses)
         ];
     }
 }

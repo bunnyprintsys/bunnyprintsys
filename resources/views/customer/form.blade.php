@@ -7,7 +7,7 @@
                     <div class="modal-title">
                         @{{form.id ? 'Edit Customer' : 'New Customer'}}
                     </div>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" @click="closeModal('customer_modal')">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
@@ -57,7 +57,17 @@
 
                         <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-row">
-                                <div class="form-group col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group col-md-3 col-sm-3 col-xs-12">
+                                    <label class="control-label required">
+                                        Country Code
+                                    </label>
+                                    <select2-must v-model="form.phone_country_id">
+                                        <option v-for="country in countries" :value="country.id">
+                                            +@{{country.code}}
+                                        </option>
+                                    </select2-must>
+                                </div>
+                                <div class="form-group col-md-5 col-sm-8 col-xs-12">
                                     <label class="control-label required">
                                         Phone Number
                                     </label>
@@ -65,12 +75,6 @@
                                     <span class="invalid-feedback" role="alert" v-if="formErrors['phone_number']">
                                         <strong>@{{ formErrors['phone_number'][0] }}</strong>
                                     </span>
-                                </div>
-                                <div class="form-group col-md-4 col-sm-6 col-xs-12">
-                                    <label class="control-label">
-                                        Alt Phone Number
-                                    </label>
-                                    <input type="text" name="alt_phone_number" class="form-control" v-model="form.alt_phone_number">
                                 </div>
                                 <div class="form-group col-md-4 col-sm-6 col-xs-12">
                                     <label class="control-label required">
@@ -99,101 +103,9 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="section-title">Address</div>
-
-                    <div class="form-row">
-                        <table ></table>
+                    <div>
+                        @include('customer.form-address-table')
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Unit #
-                            </label>
-                            <input type="text" name="unit" class="form-control" v-model="addressForm.unit" :class="{ 'is-invalid' : formErrors['unit'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['unit']">
-                                <strong>@{{ formErrors['unit'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Block #
-                            </label>
-                            <input type="text" name="block" class="form-control" v-model="addressForm.block" :class="{ 'is-invalid' : formErrors['block'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['block']">
-                                <strong>@{{ formErrors['block'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Building Name
-                            </label>
-                            <input type="text" name="building_name" class="form-control" v-model="addressForm.building_name" :class="{ 'is-invalid' : formErrors['building_name'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['building_name']">
-                                <strong>@{{ formErrors['building_name'][0] }}</strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-8 col-sm-8 col-xs-12">
-                            <label class="control-label required">
-                                Street Name
-                            </label>
-                            <input type="text" name="road_name" class="form-control" v-model="addressForm.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
-                                <strong>@{{ formErrors['road_name'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Area
-                            </label>
-                            <input type="text" name="area" class="form-control" v-model="addressForm.area" :class="{ 'is-invalid' : formErrors['area'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['area']">
-                                <strong>@{{ formErrors['area'][0] }}</strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Postcode
-                            </label>
-                            <input type="text" name="postcode" class="form-control" v-model="addressForm.postcode" :class="{ 'is-invalid' : formErrors['postcode'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['postcode']">
-                                <strong>@{{ formErrors['postcode'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label">
-                                State
-                            </label>
-                            <select2-must class="form-group" name="state" v-model="addressForm.state">
-                                <option value="">Nope</option>
-                                <option v-for="state in states" :value="state.id">
-                                    @{{state.name}}
-                                </option>
-                            </select2-must>
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['state']">
-                                <strong>@{{ formErrors['state'][0] }}</strong>
-                            </span>
-                        </div>
-                        <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                            <label class="control-label required">
-                                Country
-                            </label>
-                            <select2-must class="form-group" name="country" v-model="addressForm.country">
-                                <option value="">Nope</option>
-                                <option v-for="country in countries" :value="country.id">
-                                    @{{country.name}}
-                                </option>
-                            </select2-must>
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['country']">
-                                <strong>@{{ formErrors['country'][0] }}</strong>
-                            </span>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">

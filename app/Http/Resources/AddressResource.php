@@ -14,32 +14,6 @@ class AddressResource extends JsonResource
      */
     public function toArray($request)
     {
-        $full_address = '';
-        if($this->unit) {
-            $full_address .= $this->unit.', ';
-        }
-        if($this->block) {
-            $full_address .= $this->block.', ';
-        }
-        if($this->building_name) {
-            $full_address .= $this->building_name.', ';
-        }
-        if($this->road_name) {
-            $full_address .= $this->road_name.', ';
-        }
-        if($this->postcode) {
-            $full_address .= $this->postcode.' ';
-        }
-        if($this->area) {
-            $full_address .= $this->area.', ';
-        }
-        if($this->state) {
-            $full_address .= $this->state->name.', ';
-        }
-        if($this->country) {
-            $full_address .= $this->country->name.'.';
-        }
-
 
         return [
             'id' => $this->id,
@@ -53,7 +27,12 @@ class AddressResource extends JsonResource
             'state_id' => $this->state_id,
             'country' => $this->country ? $this->country->name : '',
             'is_primary' => $this->is_primary ? true : false,
-            'full_address' => $full_address
+            'full_address' => $this->fullAddress,
+            'is_billing' => $this->is_billing ? true : false,
+            'is_delivery' => $this->is_delivery ? true : false,
+            'contact' => $this->contact,
+            'alt_contact' => $this->alt_contact,
+            'name' => $this->name,
         ];
     }
 }

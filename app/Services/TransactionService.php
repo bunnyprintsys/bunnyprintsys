@@ -58,6 +58,10 @@ class TransactionService
         DB::beginTransaction();
 
         $input['job_id'] = $user->profile->generateNextJobId();
+
+        if(isset($input['is_convert_invoice'])) {
+            $input['invoice_id'] = $user->profile->generateNextInvoiceId();
+        }
         // remove null value
         foreach ($input as $key => $value) {
             if (!$value) {
@@ -86,6 +90,10 @@ class TransactionService
         if (!$model) {
             throw new \Exception('Member not found', 404);
         }
+        if(isset($input['is_convert_invoice']) and $model->invoice_id === null) {
+            $input['invoice_id'] = $user->profile->generateNextInvoiceId();
+        }
+
         unset($input['created_by']);
         $data = $this->transactionRepository->update($user, $model, $input);
 
@@ -121,6 +129,7 @@ class TransactionService
             $total = 0;
             $items = [];
             $transaction->deals()->delete();
+            // dd($inputs);
             foreach ($inputs as $index => $input) {
                 if (!isset($input['item_id'])) {
                     throw new \Exception('Items.' . $index . ' item_id not found');
@@ -180,7 +189,7 @@ class TransactionService
             ]);
             $pdf = $pdf->setPaper('A4');
 
-            $name = $transaction->job_id . '_' .time() . '.pdf';
+            $name = $transaction->invoice_id . '_' .time() . '.pdf';
 
             return $pdf->stream($name);
     }

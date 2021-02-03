@@ -44,8 +44,9 @@ class TransactionResource extends JsonResource
             'customer' => new CustomerResource($this->customer),
             'customer_id' => $this->customer_id,
             'customer_name' => $this->customer->user->name,
-            'full_address' => $this->address->getFullAdress(),
-            'address' => new AddressResource($this->address),
+            // 'full_address' => $this->address->getFullAdress(),
+            'delivery_address' => new AddressResource($this->deliveryAddress),
+            'billing_address' => new AddressResource($this->billingAddress),
             'addresses' => AddressResource::collection($this->customer->addresses),
             'phone_number' => $this->customer->user->phone_number,
             'alt_phone_number' => $this->customer->user->alt_phone_number,
@@ -61,7 +62,8 @@ class TransactionResource extends JsonResource
                 'name' => $this->status->name
             ],
             'items' => DealResource::collection($this->deals),
-            'remarks' => $this->remarks
+            'remarks' => $this->remarks,
+            'is_convert_invoice' => $this->is_convert_invoice ? true : false,
         ];
     }
 }

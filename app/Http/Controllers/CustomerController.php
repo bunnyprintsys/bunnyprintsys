@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\AddressResource;
+use App\Services\AddressService;
 use App\Services\CustomerService;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -16,9 +17,10 @@ class CustomerController extends Controller
     private $customerService;
 
     // middleware auth
-    public function __construct(CustomerService $customerService)
+    public function __construct(AddressService $addressService, CustomerService $customerService)
     {
         $this->middleware('auth');
+        $this->addressService = $addressService;
         $this->customerService = $customerService;
     }
 
@@ -81,14 +83,12 @@ class CustomerController extends Controller
 
         try {
             $input = $request->all();
-            /** @var User $user */
-            $user = Auth::user();
-            // dd($input);
-            if ($request->form['id']) { // update
+            $input = $input['form'];
+            if (isset($request->form['id'])) { // update
                 // dd($input);
-                $customer = $this->customerService->updateCustomer($user, $input);
+                $customer = $this->customerService->updateCustomer($input);
             } else { // create
-                $customer = $this->customerService->createNewCustomer($user, $input);
+                $customer = $this->customerService->createNewCustomer($input);
             }
             return $this->success(new CustomerResource($customer));
         } catch (\Exception $e) {
@@ -104,5 +104,35 @@ class CustomerController extends Controller
         $addresses = AddressResource::collection($customer->addresses);
 
         return $this->success($addresses);
+    }
+
+    // create address by customer id
+    public function createAddressApi(Request $request, $id)
+    {
+        $input = $request->all();
+        // dd($input);
+        $customer = $this->customerService->getOneById($id);
+
+        if($input['is_primary']) {
+            $searchInput['is_primary'] = $input['is_primary'];
+            $isPrimary = $this->addressService->getOneByFilter($searchInput);
+            if($isPrimary) {
+                $isPrimary->is_primary = 0;
+                $isPrimary->save();
+            }
+            // dd($customer->toArray(), $isPrimary->toArray());
+        }
+// dd($input);
+        $address = $customer->addresses()->create($input);
+// dd($address->toArray());
+        return $this->success(new AddressResource($address));
+
+    }
+
+    // delete single address
+    public function deleteSingleAddressApi($id)
+    {
+        $model = $this->addressService->getOneById($id);
+        $model->delete();
     }
 }

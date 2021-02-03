@@ -14,15 +14,20 @@ class Transaction extends Model
         'order_date', 'job_id', 'job', 'cost', 'receiver_id',
         'is_artwork_provided', 'is_design_required', 'dispatch_date', 'status_id',
         'tracking_number', 'subtotal', 'grandtotal', 'remarks',
-        'customer_id', 'admin_id', 'profile_id', 'invoice_id', 'invoice_number',
-        'address_id', 'sales_channel_id', 'delivery_method_id',
-        'created_by', 'updated_by', 'designed_by'
+        'customer_id', 'admin_id', 'profile_id', 'invoice_id', 'invoice_number', 'sales_channel_id', 'delivery_method_id',
+        'created_by', 'updated_by', 'designed_by', 'delivery_address_id', 'billing_address_id',
+        'is_same_address', 'is_convert_invoice'
     ];
 
     // relationships
-    public function address()
+    public function deliveryAddress()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(Address::class, 'delivery_address_id');
+    }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(Address::class, 'billing_address_id');
     }
 
     public function customer()
@@ -70,6 +75,11 @@ class Transaction extends Model
         return $this->belongsTo(Status::class);
     }
 
+    public function transactionFiles()
+    {
+        return $this->hasMany(TransactionFile::class);
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -103,6 +113,23 @@ class Transaction extends Model
         if (is_array($value)) {
             return $query->whereIn($columnName, $value);
         }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeInvoiceId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('invoice_id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
+    public function scopeIsConvertInvoice($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('is_convert_invoice');
+
         return $query->where($columnName, $value);
     }
 
@@ -185,6 +212,14 @@ class Transaction extends Model
                     ]);
                 });
             });
+        }
+
+        if (Arr::get($input, 'invoice_id', false)) {
+            $query->invoiceId($input['invoice_id'], $like);
+        }
+
+        if (Arr::get($input, 'is_convert_invoice', false)) {
+            $query->isConvertInvoice($input['is_convert_invoice']);
         }
 
         if (Arr::get($input, 'job_id', false)) {

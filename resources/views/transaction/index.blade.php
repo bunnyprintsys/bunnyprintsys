@@ -55,6 +55,14 @@
                         </option>
                     </select2>
                 </div>
+                <div class="form-group col-md-3 col-sm-6 col-xs-12">
+                    <label for="city" class="control-label">Is Invoice?</label>
+                    <select2 v-model="search.is_convert_invoice" @input="onFilterChanged">
+                        <option value="">All</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select2>
+                </div>
             </div>
         <div class="form-row">
             <div class="mr-auto">
@@ -108,6 +116,11 @@
                             <a href="#" @click="sortBy('job_id')">Job ID</a>
                             <span v-if="sortkey == 'job_id' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'job_id' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('job_id')">Invoice #</a>
+                            <span v-if="sortkey == 'invoice_id' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'invoice_id' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
                             <a href="#" @click="sortBy('customer_name')">Customer Name</a>
@@ -182,6 +195,9 @@
                             @{{ data.job_id }}
                         </td>
                         <td class="text-center">
+                            @{{ data.invoice_id }}
+                        </td>
+                        <td class="text-center">
                             @{{ data.customer_name }}
                         </td>
                         <td class="text-center">
@@ -190,7 +206,7 @@
                             @{{ data.alt_phone_number }}
                         </td>
                         <td class="text-center">
-                            @{{ data.address.full_address }}
+                            @{{ data.delivery_address ? data.delivery_address.full_address : '' }}
                         </td>
                         <td class="text-right">
                             @{{ data.grandtotal }}

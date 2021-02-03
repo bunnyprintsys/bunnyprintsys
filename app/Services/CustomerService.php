@@ -68,10 +68,10 @@ class CustomerService
      * @return \App\Models\Customer
      * @throws \Exception
      */
-    public function updateCustomer(User $user, $input)
+    public function updateCustomer($input)
     {
-        $addressInput = $input['addressForm'];
-        $input = $input['form'];
+        // dd($input);
+        // $input = $input['form'];
 
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
@@ -80,7 +80,7 @@ class CustomerService
         if (!$model) {
             throw new \Exception('Member not found', 404);
         }
-        // dd($model->toArray(), $input);
+        $user = Auth::user();
         $data = $this->customerRepository->update($user, $model, $input);
 
 /*
@@ -97,6 +97,7 @@ class CustomerService
         unset($input['is_company']);
         unset($input['payment_term_id']);
         unset($input['id']);
+        unset($input['addresses']);
         $data->user()->update($input);
 
         return $data;

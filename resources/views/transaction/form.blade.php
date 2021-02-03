@@ -1,11 +1,16 @@
 <template id="form-transaction-template">
     <div class="modal" id="transaction_modal">
         <div class="modal-dialog modal-xl">
-            <form action="#" @submit.prevent="onSubmit" method="POST" autocomplete="off">
+            {{-- <form action="#" @submit.prevent="onSubmit" method="POST" autocomplete="off"> --}}
             <div class="modal-content">
                 <div class="modal-header text-white">
                     <div class="modal-title">
-                        @{{transactionForm.id ? 'Edit Transaction ' + transactionForm.job_id : 'New Transaction'}}
+                        <span v-if="!transactionForm.is_convert_invoice">
+                            @{{transactionForm.id ? 'Edit Job ' + transactionForm.job_id : 'New Job'}}
+                        </span>
+                        <span v-if="transactionForm.is_convert_invoice">
+                            Edit Invoice: @{{transactionForm.invoice_id}}
+                        </span>
                     </div>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -269,137 +274,271 @@
                                 </span>
                             </h4>
                         </div>
+                        <div class="card form-row">
+                            <div class="card-body">
+                                <h4>
+                                    <span class="badge badge-success">
+                                        Delivery Address
+                                    </span>
+                                </h4>
 
-                        <div class="form-row pt-2">
-                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" value="true" v-model="radioOption.existingAddress" @change="resetObject('existingAddress')">
-                                    <label class="form-check-label">Existing Address</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" value="false" v-model="radioOption.existingAddress" @change="resetObject('existingAddress')">
-                                    <label class="form-check-label">Create New Address</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-12 col-sm-12 col-xs-12" v-if="radioOption.existingAddress === 'true'">
-                                <multiselect
-                                v-model="addressForm.address"
-                                :options="addressForm.addresses"
-                                :close-on-select="true"
-                                placeholder="Select..."
-                                :custom-label="customLabelFullAddress"
-                                track-by="id"
-                                ></multiselect>
-                            </div>
-    {{--
-                                <div v-for="address in addresses">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" :value="address.id">
-                                        <label class="form-check-label">
-                                            @{{address.full_address}}
-                                        </label>
-                                    </div>
-                                </div> --}}
-                            {{-- </div> --}}
-
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div v-if="radioOption.existingAddress === 'false'">
                                 <div class="form-row pt-2">
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Unit #
-                                        </label>
-                                        <input type="text" name="unit" class="form-control" v-model="addressForm.unit" :class="{ 'is-invalid' : formErrors['unit'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['unit']">
-                                            <strong>@{{ formErrors['unit'][0] }}</strong>
-                                        </span>
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="true" v-model="radioOption.existingDeliveryAddress" @change="resetObject('existingDeliveryAddress')" :disabled="addressForm.addresses.length === 0">
+                                            <label class="form-check-label">Existing Address</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="false" v-model="radioOption.existingDeliveryAddress" @change="resetObject('existingDeliveryAddress')">
+                                            <label class="form-check-label">Create New Address</label>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Block #
-                                        </label>
-                                        <input type="text" name="block" class="form-control" v-model="addressForm.block" :class="{ 'is-invalid' : formErrors['block'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['block']">
-                                            <strong>@{{ formErrors['block'][0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Building Name
-                                        </label>
-                                        <input type="text" name="building_name" class="form-control" v-model="addressForm.building_name" :class="{ 'is-invalid' : formErrors['building_name'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['building_name']">
-                                            <strong>@{{ formErrors['building_name'][0] }}</strong>
-                                        </span>
+
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12" v-if="radioOption.existingDeliveryAddress === 'true'">
+                                        <multiselect
+                                        v-model="deliveryAddressForm.address"
+                                        :options="addressForm.addresses"
+                                        :close-on-select="true"
+                                        placeholder="Select..."
+                                        :custom-label="customLabelFullAddress"
+                                        track-by="id"
+                                        ></multiselect>
                                     </div>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-8 col-sm-8 col-xs-12">
-                                        <label class="control-label required">
-                                            Street Name
-                                        </label>
-                                        <input type="text" name="road_name" class="form-control" v-model="addressForm.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
-                                            <strong>@{{ formErrors['road_name'][0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Area
-                                        </label>
-                                        <input type="text" name="area" class="form-control" v-model="addressForm.area" :class="{ 'is-invalid' : formErrors['area'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['area']">
-                                            <strong>@{{ formErrors['area'][0] }}</strong>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Postcode
-                                        </label>
-                                        <input type="text" name="postcode" class="form-control" v-model="addressForm.postcode" :class="{ 'is-invalid' : formErrors['postcode'] }">
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['postcode']">
-                                            <strong>@{{ formErrors['postcode'][0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label">
-                                            State
-                                        </label>
-                                        <select2-must class="form-group" name="state" v-model="addressForm.state">
-                                            <option value="">Nope</option>
-                                            <option v-for="state in states" :value="state.id">
-                                                @{{state.name}}
-                                            </option>
-                                        </select2-must>
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['state']">
-                                            <strong>@{{ formErrors['state'][0] }}</strong>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-md-4 col-sm-4 col-xs-12">
-                                        <label class="control-label required">
-                                            Country
-                                        </label>
-                                        <select2-must class="form-group" name="country" v-model="addressForm.country">
-                                            <option value="">Nope</option>
-                                            <option v-for="country in countries" :value="country.id">
-                                                @{{country.name}}
-                                            </option>
-                                        </select2-must>
-                                        <span class="invalid-feedback" role="alert" v-if="formErrors['country']">
-                                            <strong>@{{ formErrors['country'][0] }}</strong>
-                                        </span>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div v-if="radioOption.existingDeliveryAddress === 'false'">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label class="control-label">
+                                                    Name OR Company OR Nickname (Optional)
+                                                </label>
+                                                <input type="text" name="name" class="form-control" v-model="deliveryAddressForm.name" :class="{ 'is-invalid' : formErrors['name'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
+                                                    <strong>@{{ formErrors['name'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label required">
+                                                    Unit #
+                                                </label>
+                                                <input type="text" name="unit" class="form-control" v-model="deliveryAddressForm.unit" :class="{ 'is-invalid' : formErrors['unit'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['unit']">
+                                                    <strong>@{{ formErrors['unit'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label">
+                                                    Block #
+                                                </label>
+                                                <input type="text" name="block" class="form-control" v-model="deliveryAddressForm.block" :class="{ 'is-invalid' : formErrors['block'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['block']">
+                                                    <strong>@{{ formErrors['block'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label">
+                                                    Building Name
+                                                </label>
+                                                <input type="text" name="building_name" class="form-control" v-model="deliveryAddressForm.building_name" :class="{ 'is-invalid' : formErrors['building_name'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['building_name']">
+                                                    <strong>@{{ formErrors['building_name'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-8 col-sm-8 col-xs-12">
+                                                <label class="control-label required">
+                                                    Street Name
+                                                </label>
+                                                <input type="text" name="road_name" class="form-control" v-model="deliveryAddressForm.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
+                                                    <strong>@{{ formErrors['road_name'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label required">
+                                                    Area
+                                                </label>
+                                                <input type="text" name="area" class="form-control" v-model="deliveryAddressForm.area" :class="{ 'is-invalid' : formErrors['area'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['area']">
+                                                    <strong>@{{ formErrors['area'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label class="control-label required">
+                                                    Postcode
+                                                </label>
+                                                <input type="text" name="postcode" class="form-control" v-model="deliveryAddressForm.postcode" :class="{ 'is-invalid' : formErrors['postcode'] }">
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['postcode']">
+                                                    <strong>@{{ formErrors['postcode'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label class="control-label required">
+                                                    State
+                                                </label>
+                                                <multiselect
+                                                    v-model="deliveryAddressForm.state"
+                                                    :options="states"
+                                                    :close-on-select="true"
+                                                    placeholder="Select..."
+                                                    :custom-label="customLabelName"
+                                                    track-by="id"
+                                                ></multiselect>
+                                                <span class="invalid-feedback" role="alert" v-if="formErrors['state']">
+                                                    <strong>@{{ formErrors['state'][0] }}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2" v-if="deliveryAddressForm.address || (deliveryAddressForm.unit && deliveryAddressForm.postcode)">
+                        {{-- <div class="form-group col-md-12 col-sm-12 col-xs-12" v-if="addressForm.delivery_address && !form.id"> --}}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="true" v-model="radioOption.sameBillingDeliveryAddress" @change="resetObject('sameBillingDeliveryAddress')">
+                                <label class="form-check-label">Same Billing Address</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="false" v-model="radioOption.sameBillingDeliveryAddress" @change="resetObject('sameBillingDeliveryAddress')">
+                                <label class="form-check-label">Different Billing Address</label>
+                            </div>
+                        </div>
+
+                        <div class="card form-row" v-if="radioOption.sameBillingDeliveryAddress === 'false' && (deliveryAddressForm.address || (deliveryAddressForm.unit && deliveryAddressForm.postcode))">
+                            <div class="card-body">
+                                <h4>
+                                    <span class="badge badge-success">
+                                        Billing Address
+                                    </span>
+                                </h4>
+
+                                <div class="form-row pt-2">
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="true" v-model="radioOption.existingBillingAddress" @change="resetObject('existingBillingAddress')" :disabled="addressForm.addresses.length === 0">
+                                            <label class="form-check-label">Existing Address</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="false" v-model="radioOption.existingBillingAddress" @change="resetObject('existingBillingAddress')">
+                                            <label class="form-check-label">Create New Address</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12 col-sm-12 col-xs-12" v-if="radioOption.existingBillingAddress === 'true'">
+                                        <multiselect
+                                        v-model="billingAddressForm.address"
+                                        :options="addressForm.addresses"
+                                        :close-on-select="true"
+                                        placeholder="Select..."
+                                        :custom-label="customLabelFullAddress"
+                                        track-by="id"
+                                        ></multiselect>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div v-if="radioOption.existingBillingAddress === 'false'">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                    <label class="control-label">
+                                                        Name OR Company OR Nickname (Optional)
+                                                    </label>
+                                                    <input type="text" name="name" class="form-control" v-model="billingAddressForm.name" :class="{ 'is-invalid' : formErrors['name'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
+                                                        <strong>@{{ formErrors['name'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label required">
+                                                        Unit #
+                                                    </label>
+                                                    <input type="text" name="unit" class="form-control" v-model="billingAddressForm.unit" :class="{ 'is-invalid' : formErrors['unit'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['unit']">
+                                                        <strong>@{{ formErrors['unit'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label">
+                                                        Block #
+                                                    </label>
+                                                    <input type="text" name="block" class="form-control" v-model="billingAddressForm.block" :class="{ 'is-invalid' : formErrors['block'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['block']">
+                                                        <strong>@{{ formErrors['block'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label">
+                                                        Building Name
+                                                    </label>
+                                                    <input type="text" name="building_name" class="form-control" v-model="billingAddressForm.building_name" :class="{ 'is-invalid' : formErrors['building_name'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['building_name']">
+                                                        <strong>@{{ formErrors['building_name'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-8 col-sm-8 col-xs-12">
+                                                    <label class="control-label required">
+                                                        Street Name
+                                                    </label>
+                                                    <input type="text" name="road_name" class="form-control" v-model="billingAddressForm.road_name" :class="{ 'is-invalid' : formErrors['road_name'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['road_name']">
+                                                        <strong>@{{ formErrors['road_name'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label required">
+                                                        Area
+                                                    </label>
+                                                    <input type="text" name="area" class="form-control" v-model="billingAddressForm.area" :class="{ 'is-invalid' : formErrors['area'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['area']">
+                                                        <strong>@{{ formErrors['area'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label required">
+                                                        Postcode
+                                                    </label>
+                                                    <input type="text" name="postcode" class="form-control" v-model="billingAddressForm.postcode" :class="{ 'is-invalid' : formErrors['postcode'] }">
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['postcode']">
+                                                        <strong>@{{ formErrors['postcode'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label required">
+                                                        State
+                                                    </label>
+                                                    <multiselect
+                                                        v-model="billingAddressForm.state"
+                                                        :options="states"
+                                                        :close-on-select="true"
+                                                        placeholder="Select..."
+                                                        :custom-label="customLabelName"
+                                                        track-by="id"
+                                                    ></multiselect>
+                                                    <span class="invalid-feedback" role="alert" v-if="formErrors['state']">
+                                                        <strong>@{{ formErrors['state'][0] }}</strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <hr>
+
                     <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                        {{-- <div class="text-left"> --}}
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-primary" @click.prevent="show_add_item = !show_add_item">
                                     <span v-if="!show_add_item">
@@ -413,7 +552,6 @@
                                     <i class="fas fa-caret-right" v-else></i>
                                 </button>
                             </div>
-                        {{-- </div> --}}
                     </div>
                     <div class="border border-info" v-if="show_add_item">
                         <div class="form-group col-md-12 col-sm-12 col-xs-12 pt-2">
@@ -530,6 +668,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-12 col-sm-12 col-xs-12 pt-2">
                         <div class="text-center">
                             <h4>
@@ -567,7 +706,7 @@
                                     @{{index + 1}}
                                 </td>
                                 <td class="text-left">
-                                    <span class="font-weight-bold text-uppercase">
+                                    <span class="font-weight-bold text-uppercase" v-if="data.item">
                                         @{{data.item.name}}
                                     </span>
                                     <div class="pl-2 pt-0">
@@ -632,13 +771,21 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
-                      <button type="submit" class="btn btn-success" v-if="!transactionForm.id">Create</button>
-                      <a :href="'/transaction/invoice/' + transactionForm.id"  target="_blank" class="btn btn-outline-primary" v-if="transactionForm.id">Generate Invoice</a>
-                      <button type="submit" class="btn btn-success" v-if="transactionForm.id">Save</button>
-                      <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-success" v-if="!transactionForm.id" @click.prevent="onSubmit()">Create</button>
+                      <button type="button" class="btn btn-outline-success" v-if="!transactionForm.id && !transactionForm.is_convert_invoice" @click.prevent="onSubmit(true)">Create & Convert Invoice</button>
+                      <button type="button" class="btn btn-primary" v-if="transactionForm.id && ! transactionForm.is_convert_invoice" @click.prevent="onSubmit(true)">Convert Invoice</button>
+
                     </div>
+                    <div class="btn-group">
+                        <a :href="'/transaction/invoice/' + transactionForm.id"  target="_blank" class="btn btn-outline-primary" v-if="transactionForm.id && transactionForm.is_convert_invoice">
+                            <i class="far fa-file-pdf"></i>
+                            Invoice PDF
+                        </a>
+                        <button type="button" class="btn btn-success" v-if="transactionForm.id" @click.prevent="onSubmit()">Save</button>
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                      </div>
                 </div>
-                </form>
+                {{-- </form> --}}
             </div>
         </div>
     </div>

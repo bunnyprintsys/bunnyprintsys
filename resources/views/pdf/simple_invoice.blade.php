@@ -92,7 +92,7 @@
                         <td>Inv#</td>
                         <td>:</td>
                         <th class="text-right">
-                            {{ $data->job_id }}
+                            {{ $data->invoice_id }}
                         </th>
                     </tr>
 
@@ -100,6 +100,39 @@
             </td>
         </tr>
     </table>
+
+    @php
+        $billingToName = '';
+        $deliveryToName = '';
+        $billingToAddress = '';
+        $deliveryToAddress = '';
+
+        if($data->billingAddress) {
+            if($data->billingAddress->name) {
+                $billingToName = $data->billingAddress->name;
+            }else {
+                if($data->customer->is_company) {
+                    $billingToName = $data->customer->company_name;
+                }else {
+                    $data->customer->user->name;
+                }
+            }
+            $billingToAddress = $data->billingAddress->fullAddress;
+        }
+
+        if($data->deliveryAddress) {
+            if($data->deliveryAddress->name) {
+                $deliveryToName = $data->deliveryAddress->name;
+            }else {
+                if($data->customer->is_company) {
+                    $deliveryToName = $data->customer->name;
+                }else {
+                    $data->customer->user->name;
+                }
+            }
+            $deliveryToAddress = $data->deliveryAddress->fullAddress;
+        }
+    @endphp
 
     <div class="row row-cols-2 pt-3">
         <div class="col-6 float-left">
@@ -111,17 +144,12 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
+                        {{ $billingToName }}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        {{ $data->customer->user->phone_number }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{ $data->customer->user->email }}
+                        {{ $billingToAddress }}
                     </td>
                 </tr>
             </table>
@@ -135,17 +163,12 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ $data->customer->is_company ?  $data->customer->company_name : $data->customer->user->name}}
+                        {{ $deliveryToName }}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        {{ $data->customer->user->phone_number }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        {{ $data->customer->user->email }}
+                        {{ $deliveryToAddress }}
                     </td>
                 </tr>
             </table>

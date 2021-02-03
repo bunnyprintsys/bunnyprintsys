@@ -10,7 +10,8 @@ if (document.querySelector('#indexTransactionController')) {
             job_id: '',
             customer_name: '',
             customer_phone_number: '',
-            status: ''
+            status: '',
+            is_convert_invoice: ''
           },
           searching: false,
           sortkey: '',
@@ -48,7 +49,8 @@ if (document.querySelector('#indexTransactionController')) {
             name: this.search.name,
             phone_number: this.search.phone_number,
             email: this.search.email,
-            status: this.search.status
+            status: this.search.status,
+            is_convert_invoice: this.search.is_convert_invoice,
           };
           axios.get(
             // subject to change (search list and pagination)
@@ -59,7 +61,8 @@ if (document.querySelector('#indexTransactionController')) {
             '&name=' + data.name +
             '&phone_number=' + data.phone_number +
             '&email=' + data.email +
-            '&status=' + data.status
+            '&status=' + data.status +
+            '&is_convert_invoice=' + data.is_convert_invoice
           ).then((response) => {
             const result = response.data;
             if (result) {
@@ -143,12 +146,15 @@ if (document.querySelector('#indexTransactionController')) {
           transactionForm: this.getTransactionFormDefault(),
           customerForm: this.getCustomerFormDefault(),
           addressForm: this.getAddressFormDefault(),
+          deliveryAddressForm: this.getDeliveryAddressFormDefault(),
+          billingAddressForm: this.getBillingAddressFormDefault(),
           booleans: [],
           radioOption: {
             existingCustomer: 'true',
             isCompanyCustomer: 'false',
-            createNewAddress: 'true',
-            existingAddress: 'false',
+            existingDeliveryAddress: 'false',
+            existingBillingAddress: 'false',
+            sameBillingDeliveryAddress: 'true'
           },
           formErrors: {},
           itemOptions: [],
@@ -177,7 +183,15 @@ if (document.querySelector('#indexTransactionController')) {
         this.getPaymentTermOptions()
       },
       methods: {
-        onSubmit() {
+        onSubmit(isConvertInvoice = false) {
+
+          if(isConvertInvoice) {
+            this.transactionForm = {
+              ...this.transactionForm,
+              is_convert_invoice: 1
+            }
+          }
+
           this.transactionForm.order_date = moment(this.transactionForm.order_date).format('YYYY-MM-DD')
           this.transactionForm.dispatch_date = moment(this.transactionForm.dispatch_date).format('YYYY-MM-DD')
           if(this.action === 'create') {
@@ -185,7 +199,10 @@ if (document.querySelector('#indexTransactionController')) {
               transaction_form: this.transactionForm,
               customer_form: this.customerForm,
               address_form: this.addressForm,
-              item_form: this.itemForm
+              delivery_address_form: this.deliveryAddressForm,
+              billing_address_form: this.billingAddressForm,
+              item_form: this.itemForm,
+              radio_option: this.radioOption
             })
             .then((response) => {
               $('.modal').modal('hide');
@@ -214,7 +231,10 @@ if (document.querySelector('#indexTransactionController')) {
                 transaction_form: this.transactionForm,
                 customer_form: this.customerForm,
                 address_form: this.addressForm,
-                item_form: this.itemForm
+                delivery_address_form: this.deliveryAddressForm,
+                billing_address_form: this.billingAddressForm,
+                item_form: this.itemForm,
+                radio_option: this.radioOption
               })
               .then((response) => {
                 $('.modal').modal('hide');
@@ -400,6 +420,14 @@ if (document.querySelector('#indexTransactionController')) {
         },
         getAddressFormDefault() {
           return {
+            addresses: '',
+            is_same_address: true
+          }
+        },
+        getBillingAddressFormDefault() {
+          return {
+            address: '',
+            name: '',
             unit: '',
             block: '',
             building_name: '',
@@ -407,11 +435,19 @@ if (document.querySelector('#indexTransactionController')) {
             area: '',
             postcode: '',
             state: '',
-            country: '',
-            status: '',
-            items: [],
+          }
+        },
+        getDeliveryAddressFormDefault() {
+          return {
             address: '',
-            addresses: ''
+            name: '',
+            unit: '',
+            block: '',
+            building_name: '',
+            road_name: '',
+            area: '',
+            postcode: '',
+            state: '',
           }
         },
         getItemFormDefault() {
@@ -450,26 +486,20 @@ if (document.querySelector('#indexTransactionController')) {
             invoice_number: '',
             tracking_number: '',
             delivery_method: '',
-            unit: '',
-            block: '',
-            building_name: '',
-            road_name: '',
-            postcode: '',
-            state: '',
-            country: '',
             status: '',
             items: [],
-            address: '',
             addresses: ''
           }
         },
         onExistingCustomerChosen(customer) {
           axios.post('/api/customer/address', customer).then((response) => {
-            this.customerForm.addresses = response.data.data
-            if(this.customerForm.addresses.length > 0) {
-              this.radioOption.existingAddress = 'true'
+            this.addressForm.addresses = response.data.data
+            if(this.addressForm.addresses.length > 0) {
+              this.radioOption.existingDeliveryAddress = 'true'
+              this.radioOption.existingBillingAddress = 'true'
             }else {
-              this.radioOption.existingAddress = 'false'
+              this.radioOption.existingDeliveryAddress = 'false'
+              this.radioOption.existingBillingAddress = 'false'
             }
           })
         },
@@ -518,7 +548,19 @@ if (document.querySelector('#indexTransactionController')) {
           return `${option.symbol} (+${option.code})`
         },
         customLabelFullAddress(option) {
-          return `${option.full_address}`
+          // console.log(JSON.parse(JSON.stringify(option)))
+          let address = `${option.full_address}`
+          if(option.is_primary) {
+            address += ` (primary)`
+          }
+          if(option.is_billing) {
+            address += ` (billing)`
+          }
+          if(option.is_delivery) {
+            address += ` (delivery)`
+          }
+
+          return address
         },
         customMaterialLabelName(option) {
           return `${option.material.name}`
@@ -561,7 +603,9 @@ if (document.querySelector('#indexTransactionController')) {
             this.customerForm = this.form
             this.addressForm = this.form
             this.itemForm = this.form
-            // console.log(JSON.parse(JSON.stringify(this.itemForm)))
+            this.deliveryAddressForm.address = this.form.delivery_address
+            this.billingAddressForm.address = this.form.billing_address
+            // console.log(JSON.parse(JSON.stringify(this.form)))
           }
 
           if(this.action === 'create') {
@@ -570,11 +614,16 @@ if (document.querySelector('#indexTransactionController')) {
             this.transactionForm = this.getTransactionFormDefault()
             this.customerForm = this.getCustomerFormDefault()
             this.addressForm = this.getAddressFormDefault()
+            this.deliveryAddressForm = this.getDeliveryAddressFormDefault()
+            this.billingAddressForm = this.getBillingAddressFormDefault()
           }
 
           this.formErrors = [];
-          if(this.addressForm.address) {
-            this.radioOption.existingAddress = 'true'
+          if(this.addressForm.delivery_address) {
+            this.radioOption.existingDeliveryAddress = 'true'
+          }
+          if(this.addressForm.billing_address) {
+            this.radioOption.existingBillingAddress = 'true'
           }
         },
         'clearform'(val) {
@@ -584,7 +633,8 @@ if (document.querySelector('#indexTransactionController')) {
         },
         'action'() {
             this.show_add_item = this.action === 'create';
-            this.radioOption.existingAddress = this.action == 'update' ? 'true' : 'false';
+            this.radioOption.existingDeliveryAddress = this.action == 'update' ? 'true' : 'false';
+            this.radioOption.existingBillingAddress = this.action == 'update' ? 'true' : 'false';
         }
       }
     });
