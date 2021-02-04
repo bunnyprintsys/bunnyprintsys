@@ -191,7 +191,7 @@ class TransactionService
 
             $name = $transaction->invoice_id . '_' .time() . '.pdf';
 
-            return $pdf->download($name);
+            return $pdf->stream($name);
     }
 
     /**
