@@ -66,7 +66,7 @@
                 </div>
                 @endif
                 <div>
-                    {{ $data->profile->address ? $data->profile->address->getFullAdress() : null }}
+                    {{ $data->profile->address ? $data->profile->address->fullAddress : null }}
                 </div>
                 <div>
                     {{-- {{ $data->profile->getPostCodeCityState() }} --}}

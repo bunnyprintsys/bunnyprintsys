@@ -21,7 +21,7 @@ class ProfileResource extends JsonResource
             'company_name' => $this->name,
             'roc' => $this->roc,
             'address' => $this->address ? new AddressResource($this->address) : null,
-            'full_address' => $this->address ? $this->address->getFullAdress() : null,
+            'full_address' => $this->address ? $this->address->fullAddress : null,
             'unit' => $this->address ? $this->address->unit : null,
             'block' => $this->address ? $this->address->block : null,
             'building_name' => $this->address ? $this->address->building_name : null,
