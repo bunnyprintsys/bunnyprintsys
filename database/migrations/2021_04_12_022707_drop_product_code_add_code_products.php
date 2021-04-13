@@ -14,7 +14,7 @@ class DropProductCodeAddCodeProducts extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('product_code');
+            // $table->dropColumn('product_code');
             $table->string('code')->nullable();
         });
     }
