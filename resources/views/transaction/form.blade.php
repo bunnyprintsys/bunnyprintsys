@@ -5,10 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header text-white">
                     <div class="modal-title">
-                        <span v-if="!transactionForm.is_convert_invoice">
-                            @{{transactionForm.id ? 'Edit Job ' + transactionForm.job_id : 'New Job'}}
-                        </span>
-                        <span v-if="transactionForm.is_convert_invoice">
+                        <span>
                             Edit Invoice: @{{transactionForm.invoice_id}}
                         </span>
                     </div>
@@ -766,18 +763,37 @@
                         </label>
                         <textarea name="remarks" class="form-control" rows="3" v-model="transactionForm.remarks"></textarea>
                     </div>
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="control-label">
+                            Internal Remarks (Hidden)
+                        </label>
+                        <textarea name="hidden_remarks" class="form-control" rows="3" v-model="transactionForm.hidden_remarks"></textarea>
+                    </div>
+{{--
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <label class="control-label">
+                            Attachments
+                        </label>
+                        <input ref="logoInput" type="file" name="logo" class="form-control-file" v-on:change="onFileChange">
+                    </div>
 
+                    <div v-if="form.attachment" class="form-group col-md-12 col-sm-12 col-xs-12" style="position: relative;">
+                        <img :src="form.attachment" alt="No photo found" height="100%">
+                        <button type="button" class='btn btn-sm btn-danger' style="position: absolute; top: 0" @click="removeLogo()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div> --}}
 
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
                       <button type="button" class="btn btn-success" v-if="!transactionForm.id" @click.prevent="onSubmit()">Create</button>
-                      <button type="button" class="btn btn-outline-success" v-if="!transactionForm.id && !transactionForm.is_convert_invoice" @click.prevent="onSubmit(true)">Create & Convert Invoice</button>
-                      <button type="button" class="btn btn-primary" v-if="transactionForm.id && ! transactionForm.is_convert_invoice" @click.prevent="onSubmit(true)">Convert Invoice</button>
+                      <button type="button" class="btn btn-outline-success" v-if="!transactionForm.id" @click.prevent="onSubmit(true)">Create & Convert Invoice</button>
+                      <button type="button" class="btn btn-primary" v-if="transactionForm.id" @click.prevent="onSubmit(true)">Convert Invoice</button>
 
                     </div>
                     <div class="btn-group">
-                        <a :href="'/transaction/invoice/' + transactionForm.id"  target="_blank" class="btn btn-outline-primary" v-if="transactionForm.id && transactionForm.is_convert_invoice">
+                        <a :href="'/transaction/invoice/' + transactionForm.id"  target="_blank" class="btn btn-outline-primary" v-if="transactionForm.id">
                             <i class="far fa-file-pdf"></i>
                             Invoice PDF
                         </a>

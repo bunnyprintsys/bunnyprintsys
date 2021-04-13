@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->belongsTo(Country::class, 'phone_country_id');
     }
 
+    public function altPhoneCountry()
+    {
+        return $this->belongsTo(Country::class, 'alt_phone_country_id');
+    }
+
     public function profile()
     {
         return $this->belongsTo(Profile::class);

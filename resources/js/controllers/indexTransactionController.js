@@ -7,11 +7,9 @@ if (document.querySelector('#indexTransactionController')) {
           unit_options: [],
           statuses: [],
           search: {
-            job_id: '',
             customer_name: '',
             customer_phone_number: '',
-            status: '',
-            is_convert_invoice: ''
+            status: ''
           },
           searching: false,
           sortkey: '',
@@ -49,8 +47,7 @@ if (document.querySelector('#indexTransactionController')) {
             name: this.search.name,
             phone_number: this.search.phone_number,
             email: this.search.email,
-            status: this.search.status,
-            is_convert_invoice: this.search.is_convert_invoice,
+            status: this.search.status
           };
           axios.get(
             // subject to change (search list and pagination)
@@ -61,8 +58,7 @@ if (document.querySelector('#indexTransactionController')) {
             '&name=' + data.name +
             '&phone_number=' + data.phone_number +
             '&email=' + data.email +
-            '&status=' + data.status +
-            '&is_convert_invoice=' + data.is_convert_invoice
+            '&status=' + data.status
           ).then((response) => {
             const result = response.data;
             if (result) {
@@ -184,14 +180,6 @@ if (document.querySelector('#indexTransactionController')) {
       },
       methods: {
         onSubmit(isConvertInvoice = false) {
-
-          if(isConvertInvoice) {
-            this.transactionForm = {
-              ...this.transactionForm,
-              is_convert_invoice: 1
-            }
-          }
-
           this.transactionForm.order_date = moment(this.transactionForm.order_date).format('YYYY-MM-DD')
           this.transactionForm.dispatch_date = moment(this.transactionForm.dispatch_date).format('YYYY-MM-DD')
           if(this.action === 'create') {
@@ -404,6 +392,8 @@ if (document.querySelector('#indexTransactionController')) {
             designed_by: '',
             status: '',
             items: [],
+            remarks: '',
+            hidden_remarks: ''
           }
         },
         getCustomerFormDefault() {
@@ -488,7 +478,8 @@ if (document.querySelector('#indexTransactionController')) {
             delivery_method: '',
             status: '',
             items: [],
-            addresses: ''
+            addresses: '',
+            attachment: ''
           }
         },
         onExistingCustomerChosen(customer) {
@@ -575,6 +566,9 @@ if (document.querySelector('#indexTransactionController')) {
           this.total = this.itemForm.items.reduce(function (total, item) {
               return total + parseFloat(item.amount);
           }, 0).toFixed(2);
+        },
+        onFileChange(e) {
+          this.form.attachment = e.target.files[0];
         },
 
         resetObject(radioOption) {

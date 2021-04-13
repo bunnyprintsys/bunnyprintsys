@@ -26,5 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call(StickerProductSeeder::class);
         $this->call(AgentDeliveryMultiplierSeeder::class);
         */
+       // $this->call(LocalisedPhoneCodeSeeder::class);
+        $this->call(PaymentStatusSeeder::class);
+        $this->call(StatusSecondSeeder::class);
     }
 }

@@ -20,7 +20,8 @@ class CountryResource extends JsonResource
             'symbol' => $this->symbol,
             'code' => $this->code,
             'currency_name' => $this->currency_name,
-            'currency_symbol' => $this->currency_symbol
+            'currency_symbol' => $this->currency_symbol,
+            'localised_phone_code' =>$this->localised_phone_code
         ];
     }
 }

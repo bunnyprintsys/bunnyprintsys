@@ -17,7 +17,6 @@ class TransactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'job_id' => $this->job_id,
             'order_date' => Carbon::parse($this->order_date)->toDateString(),
             'job' => $this->job,
             'cost' => $this->cost,
@@ -49,7 +48,9 @@ class TransactionResource extends JsonResource
             'billing_address' => new AddressResource($this->billingAddress),
             'addresses' => AddressResource::collection($this->customer->addresses),
             'phone_number' => $this->customer->user->phone_number,
+            'phone_number_country_code' => new CountryResource($this->customer->user->phoneCountry),
             'alt_phone_number' => $this->customer->user->alt_phone_number,
+            'alt_phone_number_country_code' => new CountryResource($this->customer->user->altPhoneCountry),
             'grandtotal' => $this->grandtotal,
             'creator' => $this->creator ? $this->creator->name : null,
             'sales_channel' => [
@@ -62,8 +63,7 @@ class TransactionResource extends JsonResource
                 'name' => $this->status->name
             ],
             'items' => DealResource::collection($this->deals),
-            'remarks' => $this->remarks,
-            'is_convert_invoice' => $this->is_convert_invoice ? true : false,
+            'remarks' => $this->remarks
         ];
     }
 }

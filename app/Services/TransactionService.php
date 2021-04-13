@@ -57,11 +57,8 @@ class TransactionService
 
         DB::beginTransaction();
 
-        $input['job_id'] = $user->profile->generateNextJobId();
+        $input['invoice_id'] = $user->profile->generateNextInvoiceId();
 
-        if(isset($input['is_convert_invoice'])) {
-            $input['invoice_id'] = $user->profile->generateNextInvoiceId();
-        }
         // remove null value
         foreach ($input as $key => $value) {
             if (!$value) {
@@ -90,7 +87,7 @@ class TransactionService
         if (!$model) {
             throw new \Exception('Member not found', 404);
         }
-        if(isset($input['is_convert_invoice']) and $model->invoice_id === null) {
+        if($model->invoice_id === null) {
             $input['invoice_id'] = $user->profile->generateNextInvoiceId();
         }
 

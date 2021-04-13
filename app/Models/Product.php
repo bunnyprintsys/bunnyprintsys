@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Product extends Model
 {
     protected $fillable = [
-        'id', 'name', 'product_code',
+        'id', 'name', 'code', 'desc1', 'desc2',
         'is_material', 'is_shape', 'is_lamination', 'is_frame', 'is_finishing', 'is_delivery', 'is_quantity_multiplier', 'is_order_quantity'
     ];
 
@@ -68,9 +68,9 @@ class Product extends Model
         return $query->where($columnName, $value);
     }
 
-    public function scopeProductCode($query, $value, $like = true)
+    public function scopeCode($query, $value, $like = true)
     {
-        $columnName = $this->getAliasColumnName('product_code');
+        $columnName = $this->getAliasColumnName('code');
 
         if ($like) {
             return $query->where($columnName, 'LIKE', '%'.$value.'%');
@@ -103,8 +103,8 @@ class Product extends Model
             $query->name($input['name'], $like);
         }
 
-        if (Arr::get($input, 'product_code', false)) {
-            $query->productCode($input['product_code'], $like);
+        if (Arr::get($input, 'code', false)) {
+            $query->code($input['code'], $like);
         }
 
         return $query;

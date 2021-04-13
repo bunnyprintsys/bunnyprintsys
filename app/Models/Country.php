@@ -8,7 +8,8 @@ use Illuminate\Support\Arr;
 class Country extends Model
 {
     protected $fillable = [
-        'name', 'symbol', 'code', 'currency_name', 'currency_symbol'
+        'name', 'symbol', 'code', 'currency_name', 'currency_symbol',
+        'localised_phone_code'
     ];
 
     /**

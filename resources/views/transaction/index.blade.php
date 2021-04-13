@@ -55,14 +55,6 @@
                         </option>
                     </select2>
                 </div>
-                <div class="form-group col-md-3 col-sm-6 col-xs-12">
-                    <label for="city" class="control-label">Is Invoice?</label>
-                    <select2 v-model="search.is_convert_invoice" @input="onFilterChanged">
-                        <option value="">All</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select2>
-                </div>
             </div>
         <div class="form-row">
             <div class="mr-auto">
@@ -201,9 +193,9 @@
                             @{{ data.customer_name }}
                         </td>
                         <td class="text-center">
-                            @{{ data.phone_number }}
+                            @{{data.phone_number ? data.phone_number_country_code.localised_phone_code : ''}}@{{ data.phone_number }}
                             <br>
-                            @{{ data.alt_phone_number }}
+                            @{{data.alt_phone_number ? data.alt_phone_number_country_code.localised_phone_code : ''}}@{{ data.alt_phone_number }}
                         </td>
                         <td class="text-center">
                             @{{ data.delivery_address ? data.delivery_address.full_address : '' }}

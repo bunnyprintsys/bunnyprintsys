@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 class Status extends Model
 {
     protected $fillable = [
-        'name'
+        'id', 'name'
     ];
 
     // relationship

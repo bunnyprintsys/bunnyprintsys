@@ -9,7 +9,7 @@ class Customer extends Model
 {
     protected $fillable = [
         'is_company', 'company_name', 'roc', 'latest_otp',
-        'is_verified', 'profile_id', 'payment_term_id'
+        'is_verified', 'profile_id', 'payment_term_id', 'code', 'name'
 
     ];
 
@@ -38,6 +38,11 @@ class Customer extends Model
     public function setIsCompanyAttribute($value)
     {
         $this->attributes['is_company'] = $value == 'true' ? 1 : 0;
+    }
+
+    public function setProfileIdAttribute($value)
+    {
+        $this->attributes['profile_id'] = $value ? $value : auth()->user()->profile->id;
     }
 
     /**

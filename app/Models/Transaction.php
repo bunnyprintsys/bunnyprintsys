@@ -11,12 +11,12 @@ class Transaction extends Model
     use RunningNumber;
 
     protected $fillable = [
-        'order_date', 'job_id', 'job', 'cost', 'receiver_id',
+        'order_date', 'cost', 'receiver_id',
         'is_artwork_provided', 'is_design_required', 'dispatch_date', 'status_id',
-        'tracking_number', 'subtotal', 'grandtotal', 'remarks',
+        'tracking_number', 'subtotal', 'grandtotal', 'remarks', 'hidden_remarks',
         'customer_id', 'admin_id', 'profile_id', 'invoice_id', 'invoice_number', 'sales_channel_id', 'delivery_method_id',
         'created_by', 'updated_by', 'designed_by', 'delivery_address_id', 'billing_address_id',
-        'is_same_address', 'is_convert_invoice'
+        'is_same_address'
     ];
 
     // relationships
@@ -126,23 +126,6 @@ class Transaction extends Model
         return $query->where($columnName, $value);
     }
 
-    public function scopeIsConvertInvoice($query, $value)
-    {
-        $columnName = $this->getAliasColumnName('is_convert_invoice');
-
-        return $query->where($columnName, $value);
-    }
-
-    public function scopeJobId($query, $value)
-    {
-        $columnName = $this->getAliasColumnName('job_id');
-
-        if (is_array($value)) {
-            return $query->whereIn($columnName, $value);
-        }
-        return $query->where($columnName, $value);
-    }
-
     public function scopeRoc($query, $value)
     {
         $columnName = $this->getAliasColumnName('roc');
@@ -218,14 +201,6 @@ class Transaction extends Model
             $query->invoiceId($input['invoice_id'], $like);
         }
 
-        if (Arr::get($input, 'is_convert_invoice', false)) {
-            $query->isConvertInvoice($input['is_convert_invoice']);
-        }
-
-        if (Arr::get($input, 'job_id', false)) {
-            $query->jobId($input['job_id'], $like);
-        }
-
         if (Arr::get($input, 'roc', false)) {
             $query->roc($input['roc'], $like);
         }
@@ -275,13 +250,14 @@ class Transaction extends Model
      * Make sure got DB transaction cover this function
      * @return string
      */
-    public function generateNextJobId()
-    {
-        $number = $this->getRunningNumByYearMonth($this->job_id);
-        $this->job_id = $number;
-        $this->save();
-        return $number;
-    }
+
+    // public function generateNextJobId()
+    // {
+    //     $number = $this->getRunningNumByYearMonth($this->job_id);
+    //     $this->job_id = $number;
+    //     $this->save();
+    //     return $number;
+    // }
 
     /**
      * @param $columnName

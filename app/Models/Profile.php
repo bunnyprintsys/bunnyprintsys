@@ -191,7 +191,7 @@ class Profile extends Model
      * Make sure got DB transaction cover this function
      * @return string
      */
-    public function generateNextJobId()
+    public function generateNextJobCode()
     {
         $number = $this->getRunningNumByYearMonth($this->job_running_number);
         $this->job_running_number = $number;

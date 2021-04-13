@@ -16,6 +16,11 @@ Route::group(['prefix' => 'member'], function() {
 Route::group(['prefix' => 'admin'], function() {
     Route::get('/', 'AdminController@index')->name('admin.index');
 });
+
+Route::group(['prefix' => 'job-ticket'], function() {
+    Route::get('/', 'JobTicketController@index')->name('job-ticket.index');
+});
+
 Route::group(['prefix' => 'order'], function() {
     Route::get('/{type}', 'OrderController@index')->name('order.index');
 });
@@ -114,6 +119,15 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/product-frame/product-binding', 'FrameController@getProductBindings');
         Route::post('/product-frame/bind', 'FrameController@bindingProduct');
     });
+
+    Route::group(['prefix' => 'job-tickets'], function() {
+        Route::get('/', 'JobTicketController@getAllApi');
+        Route::post('/', 'JobTicketController@createApi');
+        Route::post('/update/{id}', 'JobTicketController@updateApi');
+        Route::get('/last-five-excel', 'JobTicketController@getFiveLatestExcel');
+        Route::post('/upload-excel', 'JobTicketController@uploadExcel');
+    });
+
     Route::group(['prefix' => 'laminations'], function() {
         Route::post('/all', 'LaminationController@getAllApi');
         Route::get('/product/{product_id}', 'LaminationController@getAllLaminationsByProductIdApi');

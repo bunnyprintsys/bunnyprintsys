@@ -16,8 +16,9 @@ class CustomerResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'name' => $this->user ? $this->user->name : null,
-            'optionName' => $this->is_company  ? $this->company_name.' ('.$this->user->name.': '.$this->user->phoneCountry->code. $this->user->phone_number.')' : $this->user->name.' ('.$this->user->phoneCountry->code.$this->user->phone_number.')',
+            // 'optionName' => $this->is_company  ? $this->company_name.' ('.$this->user->name.': '.$this->user->phoneCountry->code. $this->user->phone_number.')' : $this->user->name.' ('.$this->user->phoneCountry->code.$this->user->phone_number.')',
             'company_name' => $this->company_name,
             'roc' => $this->roc,
             'email' => $this->user ? $this->user->email : null,

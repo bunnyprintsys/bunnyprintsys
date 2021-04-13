@@ -71,6 +71,7 @@ Vue.component('v-select', vSelect);
 require('./controllers/accountUserController');
 require('./controllers/indexAdminController');
 require('./controllers/indexCustomerController');
+require('./controllers/indexJobTicketController');
 require('./controllers/indexMemberController');
 require('./controllers/indexOrderController');
 require('./controllers/indexPriceController');

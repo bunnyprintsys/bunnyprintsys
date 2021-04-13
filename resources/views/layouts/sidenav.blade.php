@@ -33,10 +33,14 @@
 
           <li class="{{ $name == 'order.index' ? 'active' : '' }}">
             <a href="{{ route('order.index', ['type' => 'agent']) }}"><i class="fas fa-cart-plus"></i>Orders (Agent)</a>
-        </li>
+          </li>
 
           <li class="{{ $name == 'transaction.index' ? 'active' : '' }}">
               <a href="{{ route('transaction.index') }}"><i class="far fa-credit-card"></i>Transactions</a>
+          </li>
+
+          <li class="{{ $name == 'job-ticket.index' ? 'active' : '' }}">
+              <a href="{{ route('job-ticket.index') }}"><i class="far fa-list-alt"></i>Job Tickets</a>
           </li>
 
           <li class="header-menu">
