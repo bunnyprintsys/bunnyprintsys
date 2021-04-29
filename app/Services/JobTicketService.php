@@ -69,6 +69,7 @@ class JobTicketService
     public function update($input)
     {
         $model = $this->getOneById($input['id']);
+        // dd($model->toArray(), $input);
         $this->jobTicketRepository->update($model, $input);
         return $model;
     }

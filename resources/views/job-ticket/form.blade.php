@@ -116,6 +116,47 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div v-if="form.address">
+                            <div class="form-row text-center">
+                                <h4>
+                                    <span class="badge badge-primary">
+                                        Address
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="form-row pt-2">
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                            <label class="control-label">
+                                                Attn Name
+                                            </label>
+                                            <input type="text" name="address_name" class="form-control" v-model="form.address.name" :class="{ 'is-invalid' : formErrors['address_name'] }">
+                                            <span class="invalid-feedback" role="alert" v-if="formErrors['address_name']">
+                                                <strong>@{{ formErrors['address_name'][0] }}</strong>
+                                            </span>
+                                        </div>
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                            <label class="control-label">
+                                                Contact Num
+                                            </label>
+                                            <input type="text" name="address_contact" class="form-control" v-model="form.address.contact" :class="{ 'is-invalid' : formErrors['address_contact'] }">
+                                            <span class="invalid-feedback" role="alert" v-if="formErrors['address_contact']">
+                                                <strong>@{{ formErrors['address_contact'][0] }}</strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <label class="control-label">
+                                        Address
+                                    </label>
+                                    <textarea name="slug_address" rows="3" class="form-control" v-model="form.address.slug_address" :class="{ 'is-invalid' : formErrors['slug_address'] }"></textarea>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['slug_address']">
+                                        <strong>@{{ formErrors['slug_address'][0] }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                         <hr>
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -177,16 +218,6 @@
                         </div>
                         <hr>
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                            <label class="control-label required">
-                                Qty
-                            </label>
-                            <input type="text" name="number" class="form-control" v-model="form.qty" :class="{ 'is-invalid' : formErrors['qty'] }">
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['qty']">
-                                <strong>@{{ formErrors['qty'][0] }}</strong>
-                            </span>
-                        </div>
-
-                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <label class="control-label">
                                 Remarks
                             </label>
@@ -194,6 +225,59 @@
                             <span class="invalid-feedback" role="alert" v-if="formErrors['qty']">
                                 <strong>@{{ formErrors['qty'][0] }}</strong>
                             </span>
+                        </div>
+
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <label class="control-label required">
+                                        Qty
+                                    </label>
+                                    <input type="text" name="qty" class="form-control" v-model="form.qty" :class="{ 'is-invalid' : formErrors['qty'] }">
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['qty']">
+                                        <strong>@{{ formErrors['qty'][0] }}</strong>
+                                    </span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12" v-if="form.uom">
+                                    <label class="control-label">
+                                        UOM
+                                    </label>
+                                    <input type="text" name="uom" class="form-control" v-model="form.uom.name" :class="{ 'is-invalid' : formErrors['uom'] }" disabled>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['uom']">
+                                        <strong>@{{ formErrors['uom'][0] }}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <label class="control-label required">
+                                        Delivery Method
+                                    </label>
+                                    <multiselect
+                                    v-model="form.delivery_method"
+                                    :options="deliveryMethods"
+                                    :close-on-select="true"
+                                    placeholder="Select..."
+                                    :custom-label="customLabelName"
+                                    track-by="id"
+                                    ></multiselect>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_method']">
+                                        <strong>@{{ formErrors['delivery_method'][0] }}</strong>
+                                    </span>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <label class="control-label">
+                                        Delivery Remarks
+                                    </label>
+                                    <textarea name="delivery_remarks" rows="2" class="form-control" v-model="form.delivery_remarks" :class="{ 'is-invalid' : formErrors['delivery_remarks'] }"></textarea>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_remarks']">
+                                        <strong>@{{ formErrors['delivery_remarks'][0] }}</strong>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

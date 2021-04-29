@@ -8,8 +8,8 @@ use Illuminate\Support\Arr;
 class JobTicket extends Model
 {
     protected $fillable = [
-        'code', 'doc_no', 'doc_date', 'qty', 'remarks',
-        'customer_id', 'product_id', 'status_id'
+        'code', 'doc_no', 'doc_date', 'qty', 'remarks', 'delivery_method_id', 'delivery_remarks',
+        'customer_id', 'product_id', 'status_id', 'delivery_address_id'
     ];
 
     // relationships
@@ -17,6 +17,15 @@ class JobTicket extends Model
     // {
     // return $this->morphMany(ExcelUpload::class, 'modelable')->latest()->take(5);
     // }
+    public function deliveryAddress()
+    {
+        return $this->belongsTo(Address::class, 'delivery_address_id');
+    }
+
+    public function deliveryMethod()
+    {
+        return $this->belongsTo(DeliveryMethod::class, 'delivery_method_id');
+    }
 
     public function customer()
     {

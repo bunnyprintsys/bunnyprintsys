@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropProductCodeAddCodeProducts extends Migration
+class AddNameUoms extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class DropProductCodeAddCodeProducts extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('product_code');
-            $table->string('code')->nullable();
+        Schema::table('uoms', function (Blueprint $table) {
+            $table->string('name');
         });
     }
 
@@ -26,8 +25,8 @@ class DropProductCodeAddCodeProducts extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('code');
+        Schema::table('uoms', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 }

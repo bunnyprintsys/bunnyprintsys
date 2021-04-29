@@ -55,7 +55,7 @@ class AddressController extends Controller
             $input = $request->all();
             $user = Auth::user();
             if ($request->id) { // update
-                $data = $this->addressService->updateAddress($user, $input);
+                $data = $this->addressService->updateAddress($input);
             } else { // create
                 $data = $this->addressService->createNewAddress($user, $input);
             }

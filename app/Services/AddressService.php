@@ -69,7 +69,7 @@ class AddressService
      * @return \App\Models\Address
      * @throws \Exception
      */
-    public function updateAddress(User $user, $input)
+    public function updateAddress($input)
     {
         if (!isset($input['id']) || !$input['id']) {
             throw new \Exception('ID must defined', 404);
@@ -79,9 +79,9 @@ class AddressService
             throw new \Exception('Member not found', 404);
         }
 
-        $data = $this->addressRepository->update($user, $model, $input);
+        $data = $this->addressRepository->update($model, $input);
 
-        $data->user()->update($input);
+        // $data->user()->update($input);
 
         return $data;
     }

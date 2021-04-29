@@ -33,6 +33,7 @@ class AddressResource extends JsonResource
             'contact' => $this->contact,
             'alt_contact' => $this->alt_contact,
             'name' => $this->name,
+            'slug_address' => $this->slug_address ? $this->slug_address : null
         ];
     }
 }

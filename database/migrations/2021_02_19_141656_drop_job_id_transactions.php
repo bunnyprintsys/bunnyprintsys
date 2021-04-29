@@ -14,9 +14,9 @@ class DropJobIdTransactions extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            // $table->dropColumn('job_id');
-            // $table->dropColumn('job');
-            // $table->dropColumn('is_convert_invoice');
+            $table->dropColumn('job_id');
+            $table->dropColumn('job');
+            $table->dropColumn('is_convert_invoice');
         });
     }
 

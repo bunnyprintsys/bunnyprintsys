@@ -6,6 +6,7 @@ use App\Http\Resources\JobTicketResource;
 use App\Imports\JobTicketExcelImport;
 use App\Models\ExcelUpload;
 use App\Models\JobTicket;
+use App\Services\AddressService;
 use App\Services\CustomerService;
 use App\Services\JobTicketService;
 use App\Services\ProductService;
@@ -27,9 +28,10 @@ class JobTicketController extends Controller
     private $productService;
 
     // middleware auth
-    public function __construct(CustomerService $customerService, JobTicketService $jobTicketService, ProductService $productService)
+    public function __construct(AddressService $addressService, CustomerService $customerService, JobTicketService $jobTicketService, ProductService $productService)
     {
         $this->middleware('auth');
+        $this->addressService = $addressService;
         $this->customerService = $customerService;
         $this->jobTicketService = $jobTicketService;
         $this->productService = $productService;
@@ -128,6 +130,7 @@ class JobTicketController extends Controller
         // dd($input);
         $customerInput = $input;
         $productInput = $input;
+        $addressInput = $input;
         $user = auth()->user();
 
         // customer management
@@ -147,6 +150,11 @@ class JobTicketController extends Controller
             $productInput['code'] = $productInput['product_code'];
             $productInput['name'] = $productInput['product_name'];
             $product = $this->productService->create($productInput);
+        }
+
+        if(isset($addressInput['address'])) {
+            // $address = $this->addressService->getOneById($addressInput['address']['id']);
+            $this->addressService->updateAddress($addressInput['address']);
         }
 
         $input['customer_id'] = $customer->id;

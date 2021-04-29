@@ -59,7 +59,7 @@ class AddressRepository
      * @param $input
      * @return Address
      */
-    public function update(User $user, Address $model, $input)
+    public function update(Address $model, $input)
     {
         $model->fill($input);
         $model->save();

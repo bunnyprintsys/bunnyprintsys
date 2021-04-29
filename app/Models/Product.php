@@ -9,7 +9,7 @@ class Product extends Model
 {
     protected $fillable = [
         'id', 'name', 'code', 'desc1', 'desc2',
-        'is_material', 'is_shape', 'is_lamination', 'is_frame', 'is_finishing', 'is_delivery', 'is_quantity_multiplier', 'is_order_quantity'
+        'is_material', 'is_shape', 'is_lamination', 'is_frame', 'is_finishing', 'is_delivery', 'is_quantity_multiplier', 'is_order_quantity', 'uom_id'
     ];
 
     // relationships
@@ -41,6 +41,11 @@ class Product extends Model
     public function deliveries()
     {
         return $this->belongsToMany(Delivery::class, 'product_deliveries', 'product_id', 'delivery_id');
+    }
+
+    public function uom()
+    {
+        return $this->belongsTo(Uom::class);
     }
 
     /**

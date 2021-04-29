@@ -15,6 +15,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @stack('custom-style')
 </head>
 <body>
     <div id="app" v-cloak>

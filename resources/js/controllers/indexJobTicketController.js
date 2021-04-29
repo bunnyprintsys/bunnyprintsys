@@ -182,11 +182,13 @@ if (document.querySelector('#indexJobTicketController')) {
           },
           customers: [],
           products: [],
-          statuses: []
+          statuses: [],
+          deliveryMethods: []
         }
       },
       mounted() {
         this.getCustomerOptions()
+        this.getDeliveryMethodOptions()
         this.getProductOptions()
         this.fetchStatusOptions()
       },
@@ -227,7 +229,10 @@ if (document.querySelector('#indexJobTicketController')) {
         getFormDefault() {
           return {
             id: '',
+            address: '',
             code: '',
+            delivery_method: '',
+            delivery_remarks: '',
             doc_no: '',
             doc_date: '',
             customer: '',
@@ -238,13 +243,37 @@ if (document.querySelector('#indexJobTicketController')) {
             product_name: '',
             status: '',
             remarks: '',
-            qty: ''
+            qty: '',
+            uom: '',
           }
         },
-        getCustomerOptions() {
-          axios.get('/api/customer').then((response) => {
-            this.customers = response.data.data
+        getDeliveryMethodOptions() {
+          axios.get('/api/delivery-method/all')
+          .then((response) => {
+              return response.data;
           })
+          .catch((error) => {
+              flash('Something wrong...', 'danger');
+              return error;
+          })
+          .then((result) => {
+              this.deliveryMethods = result.data;
+              // console.log(JSON.parse(JSON.stringify(this.itemOptions)))
+          });
+        },
+        getCustomerOptions() {
+          axios.get('/api/customer')
+          .then((response) => {
+              return response.data;
+          })
+          .catch((error) => {
+              flash('Something wrong...', 'danger');
+              return error;
+          })
+          .then((result) => {
+              this.customers = result.data;
+              // console.log(JSON.parse(JSON.stringify(this.itemOptions)))
+          });
         },
         getProductOptions() {
           axios.get('/api/product/all')
@@ -272,7 +301,7 @@ if (document.querySelector('#indexJobTicketController')) {
           return `${option.name}`
         },
         onDateChanged(modelName) {
-          this.form[modelName] = moment(this[modelName]).format('YYYY-MM-DD')
+          this.form[modelName] = moment(this.form[modelName]).format('YYYY-MM-DD')
         },
       },
       watch: {

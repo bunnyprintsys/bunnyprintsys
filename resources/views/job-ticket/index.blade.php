@@ -6,6 +6,30 @@
     </a>
 @stop
 @section('content')
+    @push('custom-style')
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            th {
+                background-color:black;
+                color:white;
+            }
+            th:first-child, td:first-child {
+                position:sticky;
+                left:0px;
+            }
+            td:first-child {
+                background-color:lightgrey;
+            }
+        </style>
+    @endpush
 <div>
     <div class="panel panel-default">
         <div class="panel-body screen-panel">
@@ -154,6 +178,16 @@
                             <span v-if="sortkey == 'status' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
+                            <a href="#" @click="sortBy('customer_code')">Cust Code</a>
+                            <span v-if="sortkey == 'customer_code' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'customer_code' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('customer_name')">Cust Name</a>
+                            <span v-if="sortkey == 'customer_name' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'customer_name' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
                             <a href="#" @click="sortBy('item_code')">Item Code</a>
                             <span v-if="sortkey == 'item_code' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'item_code' && reverse" class="fa fa-caret-up"></span>
@@ -172,6 +206,16 @@
                             <a href="#" @click="sortBy('qty')">Qty</a>
                             <span v-if="sortkey == 'qty' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'qty' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('delivery_method')">Delivery Method</a>
+                            <span v-if="sortkey == 'delivery_method' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'delivery_method' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('delivery_remarks')">Delivery Remarks</a>
+                            <span v-if="sortkey == 'delivery_remarks' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'delivery_remarks' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th></th>
                     </tr>
@@ -192,17 +236,29 @@
                         <td class="text-center">
                             @{{ data.status.name }}
                         </td>
-                        <td class="text-center">
+                        <td class="text-left">
+                            @{{ data.customer.code }}
+                        </td>
+                        <td class="text-left">
+                            @{{ data.customer.name }}
+                        </td>
+                        <td class="text-left">
                             @{{ data.product.code }}
                         </td>
-                        <td class="text-center">
+                        <td class="text-left">
                             @{{ data.product.name }}
                         </td>
-                        <td class="text-center">
+                        <td class="text-left">
                             @{{ data.remarks }}
                         </td>
                         <td class="text-right">
                             @{{ data.qty }}
+                        </td>
+                        <td class="text-left">
+                            @{{ data.delivery_method ? data.delivery_method.name : '' }}
+                        </td>
+                        <td class="text-left">
+                            @{{ data.delivery_remarks }}
                         </td>
 
                         <td class="text-center">
