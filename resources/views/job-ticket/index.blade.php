@@ -16,6 +16,7 @@
                 border: 1px solid #dddddd;
                 text-align: left;
                 padding: 8px;
+                font-size: 13px;
             }
             th {
                 background-color:black;
@@ -157,16 +158,19 @@
                         <th class="text-center">
                             #
                         </th>
+
                         <th class="text-center">
                             <a href="#" @click="sortBy('code')">Job ID</a>
                             <span v-if="sortkey == 'code' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'code' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        @can('job-tickets-exec-read')
                         <th class="text-center">
                             <a href="#" @click="sortBy('doc_no')">Doc No</a>
                             <span v-if="sortkey == 'doc_no' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'doc_no' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        @endcan
                         <th class="text-center">
                             <a href="#" @click="sortBy('doc_date')">Doc Date</a>
                             <span v-if="sortkey == 'doc_date' && !reverse" class="fa fa-caret-down"></span>
@@ -177,21 +181,21 @@
                             <span v-if="sortkey == 'status' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'status' && reverse" class="fa fa-caret-up"></span>
                         </th>
-                        <th class="text-center">
+                        <!-- <th class="text-center">
                             <a href="#" @click="sortBy('customer_code')">Cust Code</a>
                             <span v-if="sortkey == 'customer_code' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'customer_code' && reverse" class="fa fa-caret-up"></span>
-                        </th>
+                        </th> -->
                         <th class="text-center">
                             <a href="#" @click="sortBy('customer_name')">Cust Name</a>
                             <span v-if="sortkey == 'customer_name' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'customer_name' && reverse" class="fa fa-caret-up"></span>
                         </th>
-                        <th class="text-center">
+                        <!-- <th class="text-center">
                             <a href="#" @click="sortBy('item_code')">Item Code</a>
                             <span v-if="sortkey == 'item_code' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'item_code' && reverse" class="fa fa-caret-up"></span>
-                        </th>
+                        </th> -->
                         <th class="text-center">
                             <a href="#" @click="sortBy('item_name')">Item Name</a>
                             <span v-if="sortkey == 'item_name' && !reverse" class="fa fa-caret-down"></span>
@@ -208,6 +212,11 @@
                             <span v-if="sortkey == 'qty' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
+                            <a href="#" @click="sortBy('uom')">UOM</a>
+                            <span v-if="sortkey == 'uom' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'uom' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
                             <a href="#" @click="sortBy('delivery_method')">Delivery Method</a>
                             <span v-if="sortkey == 'delivery_method' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'delivery_method' && reverse" class="fa fa-caret-up"></span>
@@ -217,6 +226,23 @@
                             <span v-if="sortkey == 'delivery_remarks' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'delivery_remarks' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('address')">Delivery Address</a>
+                            <span v-if="sortkey == 'address' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'address' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        @can('job-tickets-exec-read')
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('address_name')">Attn Name</a>
+                            <span v-if="sortkey == 'address_name' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'address_name' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('address_contact')">Contact Num</a>
+                            <span v-if="sortkey == 'address_contact' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'address_contact' && reverse" class="fa fa-caret-up"></span>
+                        </th>
+                        @endcan
                         <th></th>
                     </tr>
 
@@ -227,24 +253,26 @@
                         <td class="text-center">
                             @{{ data.code }}
                         </td>
+                        @can('job-tickets-exec-read')
                         <td class="text-center">
                             @{{ data.doc_no }}
                         </td>
+                        @endcan
                         <td class="text-center">
                             @{{ data.doc_date }}
                         </td>
                         <td class="text-center">
                             @{{ data.status.name }}
                         </td>
-                        <td class="text-left">
+                        <!-- <td class="text-left">
                             @{{ data.customer.code }}
-                        </td>
+                        </td> -->
                         <td class="text-left">
                             @{{ data.customer.name }}
                         </td>
-                        <td class="text-left">
+                        <!-- <td class="text-left">
                             @{{ data.product.code }}
-                        </td>
+                        </td> -->
                         <td class="text-left">
                             @{{ data.product.name }}
                         </td>
@@ -254,13 +282,26 @@
                         <td class="text-right">
                             @{{ data.qty }}
                         </td>
+                        <td class="text-right">
+                            @{{ data.uom ? data.uom.name : '' }}
+                        </td>
                         <td class="text-left">
                             @{{ data.delivery_method ? data.delivery_method.name : '' }}
                         </td>
                         <td class="text-left">
                             @{{ data.delivery_remarks }}
                         </td>
-
+                        <td class="text-left">
+                            @{{ data.address ? data.address.slug_address : ''}}
+                        </td>
+                        @can('job-tickets-exec-read')
+                        <td class="text-center">
+                            @{{ data.address ? data.address.name : ''}}
+                        </td>
+                        <td class="text-center">
+                            @{{ data.address ? data.address.contact : ''}}
+                        </td>
+                        @endcan
                         <td class="text-center">
                             <div class="btn-group">
                             <button type="button" class="btn btn-light btn-outline-secondary btn-sm" data-toggle="modal" data-target="#single_modal" @click="editSingleEntry(data)">

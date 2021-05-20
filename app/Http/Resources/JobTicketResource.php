@@ -18,6 +18,8 @@ class JobTicketResource extends JsonResource
         // dd($this->product->toArray());
         return [
             'id' => $this->id,
+            'address' => $this->deliveryAddress ? new AddressResource($this->deliveryAddress) : null,
+            'agent_name' => $this->agent_name,
             'code' => $this->code,
             'doc_no' => $this->doc_no,
             'doc_date' => $this->doc_date ? Carbon::parse($this->doc_date)->toDateString() : '',
@@ -29,7 +31,7 @@ class JobTicketResource extends JsonResource
             'product' => $this->product ? new ProductResource($this->product) : null,
             'status' => $this->status ? new StatusResource($this->status) : null,
             'uom' => $this->product->uom ? new UomResource($this->product->uom) : null,
-            'address' => $this->deliveryAddress ? new AddressResource($this->deliveryAddress) : null,
+            'url_link' => $this->url_link,
         ];
     }
 }

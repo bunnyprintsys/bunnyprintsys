@@ -29,6 +29,7 @@
                         </div>
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <div class="form-row">
+                                @can('job-tickets-exec-read')
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <label class="control-label required">
                                         Doc No
@@ -38,6 +39,7 @@
                                         <strong>@{{ formErrors['doc_no'][0] }}</strong>
                                     </span>
                                 </div>
+                                @endcan
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <label class="control-label required">
                                         Doc Date
@@ -127,6 +129,7 @@
                             </div>
                             <div class="form-row pt-2">
                                 <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    @can('job-tickets-exec-read')
                                     <div class="form-row">
                                         <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                             <label class="control-label">
@@ -147,6 +150,7 @@
                                             </span>
                                         </div>
                                     </div>
+                                    @endcan
                                     <label class="control-label">
                                         Address
                                     </label>
@@ -268,7 +272,7 @@
                                         <strong>@{{ formErrors['delivery_method'][0] }}</strong>
                                     </span>
                                 </div>
-                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                <!-- <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <label class="control-label">
                                         Delivery Remarks
                                     </label>
@@ -276,8 +280,39 @@
                                     <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_remarks']">
                                         <strong>@{{ formErrors['delivery_remarks'][0] }}</strong>
                                     </span>
+                                </div> -->
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <label class="control-label required">
+                                        Ship Info
+                                    </label>
+                                    <datepicker
+                                        name="delivery_remarks"
+                                        v-model="form.delivery_remarks"
+                                        format="yyyy-MM-dd"
+                                        :monday-first="true"
+                                        :bootstrap-styling="true"
+                                        placeholder="Date From"
+                                        autocomplete="off"
+                                        @input=onDateChanged('delivery_remarks')
+                                        >
+                                    </datepicker>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_remarks']">
+                                        <strong>@{{ formErrors['delivery_remarks'][0] }}</strong>
+                                    </span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <label class="control-label">
+                                Artwork URL
+                            </label>
+                            <input type="text" name="url_link" class="form-control" v-model="form.url_link" :class="{ 'is-invalid' : formErrors['url_link'] }">
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['url_link']">
+                                        <strong>@{{ formErrors['url_link'][0] }}</strong>
+                                    </span>
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['status']">
+                                <strong>@{{ formErrors['url_link'][0] }}</strong>
+                            </span>
                         </div>
                     </div>
                 </div>

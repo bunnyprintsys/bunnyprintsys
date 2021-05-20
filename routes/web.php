@@ -7,38 +7,56 @@ Route::get('/', 'HomeController@index')->name('home.index');
 
 Route::get('/home', 'HomeController@index')->name('home.index');
 
-Route::group(['prefix' => 'customer'], function() {
-    Route::get('/', 'CustomerController@index')->name('customer.index');
-});
-Route::group(['prefix' => 'member'], function() {
-    Route::get('/', 'MemberController@index')->name('member.index');
-});
-Route::group(['prefix' => 'admin'], function() {
-    Route::get('/', 'AdminController@index')->name('admin.index');
-});
-
-Route::group(['prefix' => 'job-ticket'], function() {
-    Route::get('/', 'JobTicketController@index')->name('job-ticket.index');
+Route::group(['middleware' => ['permission:user-management-access']], function() {
+    Route::group(['prefix' => 'customer'], function() {
+        Route::get('/', 'CustomerController@index')->name('customer.index');
+    });
+    Route::group(['prefix' => 'member'], function() {
+        Route::get('/', 'MemberController@index')->name('member.index');
+    });
+    Route::group(['prefix' => 'admin'], function() {
+        Route::get('/', 'AdminController@index')->name('admin.index');
+    });
 });
 
-Route::group(['prefix' => 'order'], function() {
-    Route::get('/{type}', 'OrderController@index')->name('order.index');
+Route::group(['middleware' => ['permission:job-tickets-access']], function() {
+    Route::group(['prefix' => 'job-ticket'], function() {
+        Route::get('/', 'JobTicketController@index')->name('job-ticket.index');
+    });
 });
 
-Route::group(['prefix' => 'transaction'], function() {
-    Route::get('/', 'TransactionController@index')->name('transaction.index');
-    Route::get('/data', 'TransactionController@getDataSettingIndex')->name('transaction.data');
-    Route::get('/invoice/{transactionId}', 'TransactionController@getInvoice');
+Route::group(['middleware' => ['permission:orders-access']], function() {
+    Route::group(['prefix' => 'order'], function() {
+        Route::get('/{type}', 'OrderController@index')->name('order.index');
+    });
 });
-Route::group(['prefix' => 'price'], function() {
-    Route::get('/{type}', 'PriceController@index')->name('price.index');
+
+Route::group(['middleware' => ['permission:transactions-access']], function() {
+    Route::group(['prefix' => 'transaction'], function() {
+        Route::get('/', 'TransactionController@index')->name('transaction.index');
+        Route::get('/data', 'TransactionController@getDataSettingIndex')->name('transaction.data');
+        Route::get('/invoice/{transactionId}', 'TransactionController@getInvoice');
+    });
 });
-Route::group(['prefix' => 'product'], function() {
-    Route::get('/', 'ProductController@index')->name('product.index');
+
+Route::group(['middleware' => ['permission:setting-pricing-access']], function() {
+    Route::group(['prefix' => 'price'], function() {
+        Route::get('/{type}', 'PriceController@index')->name('price.index');
+    });
 });
-Route::group(['prefix' => 'profile'], function() {
-    Route::get('/', 'ProfileController@index')->name('profile.index');
+
+Route::group(['middleware' => ['permission:setting-product-binding-access']], function() {
+    Route::group(['prefix' => 'product'], function() {
+        Route::get('/', 'ProductController@index')->name('product.index');
+    });
 });
+
+Route::group(['middleware' => ['permission:setting-profile-access']], function() {
+    Route::group(['prefix' => 'profile'], function() {
+        Route::get('/', 'ProfileController@index')->name('profile.index');
+    });
+});
+
 Route::group(['prefix' => 'voucher'], function() {
     Route::get('/', 'VoucherController@index')->name('voucher.index');
 });

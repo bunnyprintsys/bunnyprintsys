@@ -70,15 +70,18 @@ class OrderController extends Controller
         // dd($orderquantity_id);
 
         $dimension = [
-            'width' => 305,
-            'height' => 455
+            'width' => 310,
+            'height' => 460
         ];
         $this->validate(request(), [
-            'width' => 'lte:305',
-            'height' => 'lte:455'
+            'width' => 'lte:310',
+            'height' => 'lte:460'
+            // 305
+            // 455
         ]);
 
-
+// 310/(50+3)== 5
+// (qty 1000)/5 = 20 * 53 == 10600mm == 10.6m
 /*
         $width = floor($dimension['width'] / ($width + 3)); [get the floor value, etc 2.38 ---> 2]
         $height = floor($dimension['height']/ ($height + 3));
