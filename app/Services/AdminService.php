@@ -10,6 +10,7 @@ use App\Services\OtpService;
 use App\Services\UserService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class AdminService
 {
@@ -46,8 +47,10 @@ class AdminService
      */
     public function createNewAdmin(User $user, $input)
     {
+
         $this->validateMandatoryFields($input);
         // remove null value
+        DB::beginTransaction();
         foreach ($input as $key => $value) {
             if (!$value) {
                 unset($input[$key]);
@@ -64,18 +67,23 @@ class AdminService
             $inputUser['password'] = bcrypt($inputUser['password']);
         }
 
+        if(isset($inputUser['phone_number_country_code'])) {
+            $inputUser['phone_country_id'] = $inputUser['phone_number_country_code']['id'];
+        }
         unset($inputUser['phone_number_country_code']);
         unset($inputUser['role']);
         unset($inputUser['password_confirmation']);
 
-        $userId = $data->user()->create($inputUser);
+        $user = $data->user()->create($inputUser);
 
-        $user = $this->userService->getOneById($userId);
+        // $user = $this->userService->getOneById($userId);
 
         if(isset($input['role'])) {
+            // dd($userId->toArray(), $user);
             $user->roles()->detach();
             $user->assignRole($input['role']['name']);
         }
+        DB::commit();
 
         return $data;
     }
@@ -96,6 +104,7 @@ class AdminService
             throw new \Exception('Member not found', 404);
         }
 
+        DB::beginTransaction();
         $data = $this->adminRepository->update($user, $model, $input);
 
         $inputUser = $input;
@@ -104,6 +113,10 @@ class AdminService
             unset($inputUser['password']);
         }else {
             $inputUser['password'] = bcrypt($inputUser['password']);
+        }
+
+        if(isset($inputUser['phone_number_country_code'])) {
+            $inputUser['phone_country_id'] = $inputUser['phone_number_country_code']['id'];
         }
         unset($inputUser['phone_number_country_code']);
         unset($inputUser['role']);
@@ -118,6 +131,7 @@ class AdminService
             $user->roles()->detach();
             $user->assignRole($input['role']['name']);
         }
+        DB::commit();
 
         return $data;
     }
