@@ -81,7 +81,10 @@ class CustomerService
             throw new \Exception('Member not found', 404);
         }
         $user = Auth::user();
-        $data = $this->customerRepository->update($user, $model, $input);
+
+        $inputCustomer = $input;
+        unset($inputCustomer['name']);
+        $data = $this->customerRepository->update($user, $model, $inputCustomer);
 
 /*
         $address = $data->addresses;
