@@ -21,10 +21,12 @@ class AdminResource extends JsonResource
             'leave_date' => Carbon::parse($this->leave_date)->toDateString(),
             'name' => $this->user->name,
             'email' => $this->user->email,
+            'phone_number_country_code' => new CountryResource($this->user->phoneCountry),
             'phone_number' => $this->user->phone_number,
             'alt_phone_number' => $this->user->alt_phone_number,
             'status' => $this->user->status,
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
+            'role' => $this->user->roles ? $this->user->roles[0] : null,
         ];
     }
 }

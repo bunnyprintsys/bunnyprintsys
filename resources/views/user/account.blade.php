@@ -23,6 +23,7 @@
         Change User Password
       </div>
       <div class="card-body">
+        <flash message="{{ session('flash') }}"></flash>
         <div class="form-group col-md-12 col-sm-12 col-xs-12">
           <label class="control-label">
               Name

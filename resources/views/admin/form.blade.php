@@ -22,7 +22,20 @@
 
                   <div class="col-md-12 col-sm-12 col-xs-12">
                       <div class="form-row">
-                            <div class="form-group col-md-4 col-sm-6 col-xs-12">
+                            <div class="col-md-4 col-md-4 col-xs-12">
+                                <label class="control-label required">
+                                    Country
+                                </label>
+                                <multiselect
+                                    v-model="form.phone_number_country_code"
+                                    :options="countries"
+                                    :close-on-select="true"
+                                    placeholder="Select..."
+                                    :custom-label="customLabelCountriesOption"
+                                    track-by="id"
+                                ></multiselect>
+                            </div>
+                            <div class="form-group col-md-8 col-sm-8 col-xs-12">
                                 <label class="control-label required">
                                     Phone Number
                                 </label>
@@ -31,13 +44,9 @@
                                     <strong>@{{ formErrors['phone_number'][0] }}</strong>
                                 </span>
                             </div>
-                            <div class="form-group col-md-4 col-sm-6 col-xs-12">
-                                <label class="control-label">
-                                    Alt Phone Number
-                                </label>
-                                <input type="text" name="alt_phone_number" class="form-control" v-model="form.alt_phone_number">
-                            </div>
-                            <div class="form-group col-md-4 col-sm-6 col-xs-12">
+                      </div>
+                      <div class="form-row">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
                                 <label class="control-label required">
                                     Email
                                 </label>
@@ -47,6 +56,41 @@
                                 </span>
                             </div>
                       </div>
+                      <div class="form-row">
+                          <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                              <label class="control-label required">
+                                  Role
+                              </label>
+                              <multiselect
+                              v-model="form.role"
+                              :options="roles"
+                              :close-on-select="true"
+                              placeholder="Select..."
+                              :custom-label="customLabelNameOption"
+                              track-by="id"
+                          ></multiselect>
+                          </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <label class="control-label">
+                                Password
+                            </label>
+                            <input type="password" name="password" class="form-control" v-model="form.password" :class="{ 'is-invalid' : formErrors['password'] }" v-bind:placeholder="form.id ? 'Remain blank to use the same password' : ''">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['password']">
+                                <strong>@{{ formErrors['password'][0] }}</strong>
+                            </span>
+                        </div>
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <label class="control-label">
+                                Password Confirmation
+                            </label>
+                            <input type="password" name="password_confirmation" class="form-control" v-model="form.password_confirmation" :class="{ 'is-invalid' : formErrors['password_confirmation'] }" v-bind:placeholder="form.id ? 'Remain blank to use the same password' : ''">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['password_confirmation']">
+                                <strong>@{{ formErrors['password_confirmation'][0] }}</strong>
+                            </span>
+                            </div>
+                        </div>
                   </div>
                 </div>
                 <div class="modal-footer">

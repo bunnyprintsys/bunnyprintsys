@@ -237,6 +237,9 @@ Route::group(['prefix' => 'api'], function() {
         Route::post('/create-otp', 'Auth\RegisterController@createOtp');
         Route::post('/validate-otp', 'Auth\RegisterController@validateOtp');
     });
+    Route::group(['prefix' => 'roles'], function() {
+        Route::post('/all', 'RoleController@getAllRolesApi');
+    });
     Route::group(['prefix' => 'sales-channel'], function() {
         Route::get('/all', 'SalesChannelController@getAllSalesChannelsApi');
         Route::post('/', 'SalesChannelController@storeSalesChannelsApi');

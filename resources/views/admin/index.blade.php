@@ -128,7 +128,7 @@
                             @{{ data.name }}
                         </td>
                         <td class="text-left">
-                            @{{ data.phone_number }}
+                            @{{data.phone_number ? data.phone_number_country_code.localised_phone_code : ''}}@{{ data.phone_number }}
                         </td>
                         <td class="text-left">
                             @{{ data.email }}

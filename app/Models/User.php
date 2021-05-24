@@ -123,6 +123,16 @@ class User extends Authenticatable
         return $query->where($columnName, $value);
     }
 
+    public function scopeProfileId($query, $value)
+    {
+        $columnName = $this->getAliasColumnName('profile_id');
+
+        if (is_array($value)) {
+            return $query->whereIn($columnName, $value);
+        }
+        return $query->where($columnName, $value);
+    }
+
 
     /**
      * @param $query

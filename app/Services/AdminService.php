@@ -6,6 +6,8 @@ use App\Models\Admin;
 use App\Models\User;
 use App\Repositories\AdminRepository;
 use App\Repositories\UserRepository;
+use App\Services\OtpService;
+use App\Services\UserService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,11 +16,15 @@ class AdminService
 
     private $adminRepository;
     private $userRepository;
+    private $otpService;
+    private $userService;
 
-    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository)
+    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository, OtpService $otpService, UserService $userService)
     {
         $this->adminRepository = $adminRepository;
         $this->userRepository = $userRepository;
+        $this->otpService = $otpService;
+        $this->userService = $userService;
     }
 
     /**
@@ -47,14 +53,29 @@ class AdminService
                 unset($input[$key]);
             }
         }
-
+        $input['profile_id'] = $user->profile_id;
         $data = $this->adminRepository->create($user, $input);
 
-        $data->user()->create([
-            'name' => $input['name'],
-            'phone_number' => $input['phone_number'],
-            'email' => $input['email']
-        ]);
+        $inputUser = $input;
+
+        if (empty($inputUser['password'])) {
+            unset($inputUser['password']);
+        }else {
+            $inputUser['password'] = bcrypt($inputUser['password']);
+        }
+
+        unset($inputUser['phone_number_country_code']);
+        unset($inputUser['role']);
+        unset($inputUser['password_confirmation']);
+
+        $userId = $data->user()->create($inputUser);
+
+        $user = $this->userService->getOneById($userId);
+
+        if(isset($input['role'])) {
+            $user->roles()->detach();
+            $user->assignRole($input['role']['name']);
+        }
 
         return $data;
     }
@@ -76,13 +97,27 @@ class AdminService
         }
 
         $data = $this->adminRepository->update($user, $model, $input);
-        // dd('here');
 
-        $data->user()->update([
-            'name' => $input['name'],
-            'phone_number' => $input['phone_number'],
-            'email' => $input['email']
-        ]);
+        $inputUser = $input;
+
+        if (empty($inputUser['password'])) {
+            unset($inputUser['password']);
+        }else {
+            $inputUser['password'] = bcrypt($inputUser['password']);
+        }
+        unset($inputUser['phone_number_country_code']);
+        unset($inputUser['role']);
+        unset($inputUser['password_confirmation']);
+
+        // dd($inputUser);
+        $userId = $data->user()->update($inputUser);
+
+        $user = $this->userService->getOneById($userId);
+
+        if(isset($input['role'])) {
+            $user->roles()->detach();
+            $user->assignRole($input['role']['name']);
+        }
 
         return $data;
     }
