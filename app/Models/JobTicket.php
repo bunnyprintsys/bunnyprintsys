@@ -9,7 +9,8 @@ class JobTicket extends Model
 {
     protected $fillable = [
         'code', 'doc_no', 'doc_date', 'qty', 'remarks', 'delivery_method_id', 'delivery_remarks',
-        'customer_id', 'product_id', 'status_id', 'delivery_address_id', 'agent_name', 'url_link'
+        'customer_id', 'product_id', 'status_id', 'delivery_address_id', 'agent_name', 'url_link',
+        'delivery_date',
     ];
 
     // relationships

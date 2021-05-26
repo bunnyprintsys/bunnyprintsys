@@ -233,6 +233,7 @@ if (document.querySelector('#indexJobTicketController')) {
           code: '',
           delivery_method: '',
           delivery_remarks: '',
+          delivery_date: '',
           doc_no: '',
           doc_date: '',
           customer: '',

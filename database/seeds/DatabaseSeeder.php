@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
        $this->call(LocalisedPhoneCodeSeeder::class);
         $this->call(PaymentStatusSeeder::class);
         $this->call(StatusSecondSeeder::class);
-        */
         $this->call(RolePermissionSeeder::class);
+        */
+
     }
 }

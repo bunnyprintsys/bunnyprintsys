@@ -72,7 +72,7 @@ class JobTicketExcelImport implements ToModel, WithHeadingRow
             'delivery_address_id' => $address ? $address->id : null,
             'delivery_method_id' => $deliveryMethod ? $deliveryMethod->id : null,
             // 'delivery_remarks' => $row['ship_info'],
-            'delivery_remarks' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['ship_info']),
+            'delivery_date' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['delivery_date']),
             'agent_name' => $row['agent'],
             'url_link' => $row['remark_4'],
         ]);

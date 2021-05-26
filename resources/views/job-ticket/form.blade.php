@@ -283,21 +283,21 @@
                                 </div> -->
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <label class="control-label required">
-                                        Ship Info
+                                        Delivery Date
                                     </label>
                                     <datepicker
-                                        name="delivery_remarks"
-                                        v-model="form.delivery_remarks"
+                                        name="delivery_date"
+                                        v-model="form.delivery_date"
                                         format="yyyy-MM-dd"
                                         :monday-first="true"
                                         :bootstrap-styling="true"
                                         placeholder="Date From"
                                         autocomplete="off"
-                                        @input=onDateChanged('delivery_remarks')
+                                        @input=onDateChanged('delivery_date')
                                         >
                                     </datepicker>
-                                    <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_remarks']">
-                                        <strong>@{{ formErrors['delivery_remarks'][0] }}</strong>
+                                    <span class="invalid-feedback" role="alert" v-if="formErrors['delivery_date']">
+                                        <strong>@{{ formErrors['delivery_date'][0] }}</strong>
                                     </span>
                                 </div>
                             </div>

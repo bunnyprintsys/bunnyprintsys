@@ -222,9 +222,9 @@
                             <span v-if="sortkey == 'delivery_method' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
-                            <a href="#" @click="sortBy('delivery_remarks')">Delivery Remarks</a>
-                            <span v-if="sortkey == 'delivery_remarks' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'delivery_remarks' && reverse" class="fa fa-caret-up"></span>
+                            <a href="#" @click="sortBy('delivery_date')">Delivery Date</a>
+                            <span v-if="sortkey == 'delivery_date' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'delivery_date' && reverse" class="fa fa-caret-up"></span>
                         </th>
                         <th class="text-center">
                             <a href="#" @click="sortBy('address')">Delivery Address</a>
@@ -289,7 +289,7 @@
                             @{{ data.delivery_method ? data.delivery_method.name : '' }}
                         </td>
                         <td class="text-left">
-                            @{{ data.delivery_remarks }}
+                            @{{ data.delivery_date }}
                         </td>
                         <td class="text-left">
                             @{{ data.address ? data.address.slug_address : ''}}
