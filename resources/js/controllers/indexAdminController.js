@@ -145,7 +145,6 @@ if (document.querySelector('#indexAdminController')) {
             flash('Entry has successfully created or updated', 'success');
           })
           .catch((error) => {
-            console.log(JSON.parse(JSON.stringify(error)))
             this.formErrors = error.response.data.errors
             flash(error.response.data.msg, error.response.data.status)
           });
