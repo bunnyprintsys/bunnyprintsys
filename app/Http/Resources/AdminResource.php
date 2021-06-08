@@ -26,7 +26,7 @@ class AdminResource extends JsonResource
             'alt_phone_number' => $this->user->alt_phone_number,
             'status' => $this->user->status,
             'user_id' => $this->user->id,
-            'role' => $this->user->roles ? $this->user->roles[0] : null,
+            'role' => count($this->user->roles) > 0 ? $this->user->roles[0] : null,
         ];
     }
 }
