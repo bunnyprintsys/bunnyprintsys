@@ -122,15 +122,16 @@ class AdminService
         unset($inputUser['role']);
         unset($inputUser['password_confirmation']);
 
-        // dd($inputUser);
-        $userId = $data->user()->update($inputUser);
-
-        $user = $this->userService->getOneById($userId);
+        // dd($inputUser, $input);
+        $data->user()->update($inputUser);
 
         if(isset($input['role'])) {
-            $user->roles()->detach();
-            $user->assignRole($input['role']['name']);
+
+            $data->user->roles()->detach();
+            $data->user->assignRole($input['role']['name']);
+            // dd($data->user->roles->toArray());
         }
+        // dd('ops');
         DB::commit();
 
         return $data;
