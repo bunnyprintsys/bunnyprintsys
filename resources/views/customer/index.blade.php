@@ -101,21 +101,22 @@
                             #
                         </th>
                         <th class="text-center">
-                            Name
-                        </th>
-                        <th class="text-center">
-                            Phone Number
-                        </th>
-                        <th class="text-center">
-                            <a href="#" @click="sortBy('is_company')">Is Company</a>
-                            <span v-if="sortkey == 'is_company' && !reverse" class="fa fa-caret-down"></span>
-                            <span v-if="sortkey == 'is_company' && reverse" class="fa fa-caret-up"></span>
-                        </th>
-                        <th class="text-center">
                             <a href="#" @click="sortBy('company_name')">Company Name</a>
                             <span v-if="sortkey == 'company_name' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'company_name' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        <th class="text-center">
+                            Attention
+                        </th>
+                        <th class="text-center">
+                            Phone Number
+                        </th>
+                        {{-- <th class="text-center">
+                            <a href="#" @click="sortBy('is_company')">Is Company</a>
+                            <span v-if="sortkey == 'is_company' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'is_company' && reverse" class="fa fa-caret-up"></span>
+                        </th> --}}
+
                         <th class="text-center">
                             Email
                         </th>
@@ -130,16 +131,6 @@
                             @{{ index + pagination.from }}
                         </td>
                         <td class="text-left">
-                            @{{ data.name }}
-                        </td>
-                        <td class="text-left">
-                            @{{ data.phone_number }}
-                        </td>
-                        <td class="text-center">
-                            <i class="fas fa-check-circle" style="color: green" v-if="data.is_company == 'true'"></i>
-                            <i class="fas fa-times-circle" style="color: red" v-else></i>
-                        </td>
-                        <td class="text-left">
                             @{{ data.company_name }}
                             <span v-if="data.roc">
                                 <br>
@@ -148,6 +139,16 @@
                                 </small>
                             </span>
                         </td>
+                        <td class="text-left">
+                            @{{ data.name }}
+                        </td>
+                        <td class="text-left">
+                            @{{ data.phone_number }}
+                        </td>
+                        {{-- <td class="text-center">
+                            <i class="fas fa-check-circle" style="color: green" v-if="data.is_company == 'true'"></i>
+                            <i class="fas fa-times-circle" style="color: red" v-else></i>
+                        </td> --}}
                         <td class="text-left">
                             @{{ data.email }}
                         </td>

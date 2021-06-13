@@ -51,9 +51,9 @@
               Job Ticket
           </span>
         <div class="btn-group" role="group">
-            <button type="button" class="btn bg-primary text-white btn-sm ml-auto" data-toggle="modal" data-target="#single_modal" @click="createSingleEntry">
+            {{-- <button type="button" class="btn bg-primary text-white btn-sm ml-auto" data-toggle="modal" data-target="#single_modal" @click="createSingleEntry">
                 <i class="fas fa-plus"></i>
-            </button>
+            </button> --}}
             <button type="button" class="btn bg-success text-white btn-sm ml-auto" data-toggle="modal" data-target="#excel_modal" @click="onExcelModalClicked">
                 Excel
                 <i class="far fa-file-excel"></i>
@@ -242,6 +242,11 @@
                             <span v-if="sortkey == 'address_contact' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'address_contact' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        <th class="text-center">
+                            <a href="#" @click="sortBy('agent_name')">Agent</a>
+                            <span v-if="sortkey == 'agent_name' && !reverse" class="fa fa-caret-down"></span>
+                            <span v-if="sortkey == 'agent_name' && reverse" class="fa fa-caret-up"></span>
+                        </th>
                         @endcan
                         <th></th>
                     </tr>
@@ -268,7 +273,8 @@
                             @{{ data.customer.code }}
                         </td> -->
                         <td class="text-left">
-                            @{{ data.customer.name }}
+                            @{{data.customer ? data.customer.name : null}}
+                            {{-- @{{ data.customer.name }} --}}
                         </td>
                         <!-- <td class="text-left">
                             @{{ data.product.code }}
@@ -300,6 +306,9 @@
                         </td>
                         <td class="text-center">
                             @{{ data.address ? data.address.contact : ''}}
+                        </td>
+                        <td class="text-center">
+                            @{{ data.agent_name }}
                         </td>
                         @endcan
                         <td class="text-center">
@@ -349,7 +358,7 @@
                                     <div class="input-group input-group-sm">
                                         <input type="file" ref="files" name="file" @change="onFilesChosen($event)">
                                         <div class="input-group-append">
-                                        <button type="submit" class="btn btn-success btn-sm" :disabled="!is_file_selected || uploading">
+                                        <button type="submit" class="btn btn-success btn-sm">
                                             <i class="far fa-check-circle" ></i>
                                             <span>
                                                 Upload

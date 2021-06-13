@@ -247,6 +247,7 @@ if (document.querySelector('#indexJobTicketController')) {
           qty: '',
           uom: '',
           url_link: '',
+          agent_name: '',
         }
       },
       getDeliveryMethodOptions() {

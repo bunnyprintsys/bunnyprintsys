@@ -307,11 +307,18 @@
                                 Artwork URL
                             </label>
                             <input type="text" name="url_link" class="form-control" v-model="form.url_link" :class="{ 'is-invalid' : formErrors['url_link'] }">
-                                    <span class="invalid-feedback" role="alert" v-if="formErrors['url_link']">
-                                        <strong>@{{ formErrors['url_link'][0] }}</strong>
-                                    </span>
-                            <span class="invalid-feedback" role="alert" v-if="formErrors['status']">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['url_link']">
                                 <strong>@{{ formErrors['url_link'][0] }}</strong>
+                            </span>
+                        </div>
+
+                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                            <label class="control-label">
+                                Agent Name
+                            </label>
+                            <input type="text" name="agent_name" class="form-control" v-model="form.agent_name" :class="{ 'is-invalid' : formErrors['agent_name'] }">
+                            <span class="invalid-feedback" role="alert" v-if="formErrors['agent_name']">
+                                <strong>@{{ formErrors['agent_name'][0] }}</strong>
                             </span>
                         </div>
                     </div>

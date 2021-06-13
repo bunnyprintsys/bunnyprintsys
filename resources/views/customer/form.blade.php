@@ -47,7 +47,7 @@
                         </div>
                         <div class="form-group col-md-12 col-sm-12 col-xs-12">
                             <label class="control-label required">
-                                Name
+                                Attention
                             </label>
                             <input type="text" name="name" class="form-control" v-model="form.name" :class="{ 'is-invalid' : formErrors['name'] }">
                             <span class="invalid-feedback" role="alert" v-if="formErrors['name']">
