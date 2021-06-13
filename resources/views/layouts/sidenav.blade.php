@@ -61,10 +61,11 @@
           <li class="{{ $name == 'member.index' ? 'active' : '' }}">
             <a href="{{ route('member.index') }}"><i class="fas fa-address-card"></i>Members</a>
           </li> --}}
-
+          @role('admin')
           <li class="{{ $name == 'admin.index' ? 'active' : '' }}">
             <a href="{{ route('admin.index') }}"><i class="fas fa-users-cog"></i>Admin</a>
           </li>
+          @endrole
           @endcan
 
           <li class="header-menu">
