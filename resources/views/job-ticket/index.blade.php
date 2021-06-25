@@ -242,12 +242,13 @@
                             <span v-if="sortkey == 'address_contact' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'address_contact' && reverse" class="fa fa-caret-up"></span>
                         </th>
+                        @endcan
                         <th class="text-center">
                             <a href="#" @click="sortBy('agent_name')">Agent</a>
                             <span v-if="sortkey == 'agent_name' && !reverse" class="fa fa-caret-down"></span>
                             <span v-if="sortkey == 'agent_name' && reverse" class="fa fa-caret-up"></span>
                         </th>
-                        @endcan
+
                         <th></th>
                     </tr>
 
@@ -307,10 +308,10 @@
                         <td class="text-center">
                             @{{ data.address ? data.address.contact : ''}}
                         </td>
+                        @endcan
                         <td class="text-center">
                             @{{ data.agent_name }}
                         </td>
-                        @endcan
                         <td class="text-center">
                             <div class="btn-group">
                             <button type="button" class="btn btn-light btn-outline-secondary btn-sm" data-toggle="modal" data-target="#single_modal" @click="editSingleEntry(data)">
