@@ -28,7 +28,7 @@
         "@fortawesome/fontawesome-free": "^5.14.0",
         "bootstrap-datepicker": "^1.9.0",
         "font-awesome": "^4.7.0",
-        "moment": "^2.27.0",
+        "moment": "^2.29.2",
         "moment-timezone": "^0.5.31",
         "select2": "^4.0.13",
         "vue-file-agent": "^1.7.3",
