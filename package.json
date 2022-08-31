@@ -29,7 +29,7 @@
         "bootstrap-datepicker": "^1.9.0",
         "font-awesome": "^4.7.0",
         "moment": "^2.27.0",
-        "moment-timezone": "^0.5.31",
+        "moment-timezone": "^0.5.35",
         "select2": "^4.0.13",
         "vue-file-agent": "^1.7.3",
         "vue-flash": "^2.1.3",
